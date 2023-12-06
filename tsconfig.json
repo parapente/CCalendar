@@ -1,4 +1,5 @@
 {
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
@@ -9,7 +10,8 @@
         "moduleResolution": "Bundler",
         "types": ["vite/client"],
         "allowJs": true,
-        "noEmit": true
+        "noEmit": true,
+        "strict": true
     },
     "exclude": ["vendor", "node_modules", "public"]
 }
