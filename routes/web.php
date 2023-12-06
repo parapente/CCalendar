@@ -33,3 +33,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+Route::get('/calendar', function() {
+    return Inertia::render('Calendar');
+})->name('calendar');

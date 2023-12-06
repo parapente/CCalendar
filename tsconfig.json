@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["resources/ts/*"],
+            "ziggy": ["vendor/tightenco/ziggy/dist"]
+        },
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "types": ["vite/client"],
+        "allowJs": true,
+        "noEmit": true
+    },
+    "exclude": ["vendor", "node_modules", "public"]
+}
