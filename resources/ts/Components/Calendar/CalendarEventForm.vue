@@ -2,6 +2,7 @@
 import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import { watch } from "vue";
+import type { CalendarEvent } from "./types";
 
 const props = withDefaults(
     defineProps<{
@@ -32,7 +33,26 @@ const form = useForm<{
     url: "",
 });
 
-const onSubmit = () => {};
+const emit = defineEmits<{
+    save: [value: CalendarEvent];
+    "update:visible": [value: boolean];
+}>();
+
+const onSubmit = () => {
+    emit("save", {
+        id: 0,
+        title: form.title,
+        description: form.description,
+        event_type: form.event_type,
+        start_date: form.start_date,
+        end_date: form.end_date,
+        location: form.location,
+        url: form.url,
+    });
+
+    form.reset();
+    emit("update:visible", false);
+};
 
 watch(
     () => props.eventDate,
@@ -99,7 +119,7 @@ watch(
                 <button
                     type="button"
                     class="px-3 py-2 border border-red-600 bg-red-600 text-white hover:bg-red-400 rounded-lg"
-                    @click="$emit('update:visible', false)"
+                    @click="emit('update:visible', false)"
                 >
                     Άκυρο
                 </button>

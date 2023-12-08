@@ -148,6 +148,10 @@ const addCalendarEvent = (day: number) => {
     calendarEventVisible.value = true;
 };
 
+const saveCalendarEvent = (event: CalendarEvent) => {
+    events.value.push(event);
+};
+
 const calendarEventVisible = ref(false);
 const newEventDate = ref(DateTime.local().toISODate());
 const events: Ref<CalendarEvent[]> = ref([]);
@@ -205,6 +209,7 @@ const holidays = ref(greekHolidays(`${view.year.value}`));
     <CalendarEventForm
         :eventDate="newEventDate"
         v-model:visible="calendarEventVisible"
+        @save="saveCalendarEvent"
     />
-    <CalendarEventList />
+    <CalendarEventList :events="events" />
 </template>
