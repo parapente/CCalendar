@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import type { CalendarDay, CalendarView } from "./types";
+import { computed, ref, watch, type Ref } from "vue";
+import type { CalendarDay, CalendarView, CalendarEvent } from "./types";
 import { DateTime, Info } from "luxon";
 import DayName from "./DayName.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -10,7 +10,9 @@ import {
     faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import Day from "./Day.vue";
-import CalendarEvent from "./CalendarEvent.vue";
+import CalendarEventForm from "./CalendarEventForm.vue";
+import { greekHolidays } from "greek-holidays";
+import CalendarEventList from "./CalendarEventList.vue";
 
 const props = defineProps<{
     modelValue?: boolean;
@@ -55,6 +57,7 @@ const daysOfMonth = () => {
                     i
                 ).toFormat("yyyy-MM-dd"),
                 isDisabled: true,
+                isHoliday: false,
                 isToday:
                     DateTime.local(
                         view.year.value,
@@ -67,15 +70,21 @@ const daysOfMonth = () => {
         previousMonthDisplayed = true;
     }
     for (let i = 1; i <= endOfCurrentMonth; i++) {
+        const dateString = DateTime.local(
+            view.year.value,
+            view.month.value,
+            i
+        ).toFormat("yyyy-MM-dd");
+        const holidayIndex = holidays.value
+            .map((holiday) => holiday.date)
+            .indexOf(dateString);
         days.push({
-            date: DateTime.local(view.year.value, view.month.value, i).toFormat(
-                "yyyy-MM-dd"
-            ),
+            date: dateString,
             isDisabled: false,
-            isToday:
-                DateTime.local(view.year.value, view.month.value, i).toFormat(
-                    "yyyy-MM-dd"
-                ) === DateTime.local().toFormat("yyyy-MM-dd"),
+            isHoliday: holidayIndex !== -1,
+            holiday:
+                holidayIndex !== -1 ? holidays.value[holidayIndex].name : "",
+            isToday: dateString === DateTime.local().toFormat("yyyy-MM-dd"),
         });
     }
 
@@ -83,20 +92,16 @@ const daysOfMonth = () => {
         const missingDays = 7 - (days.length % 7);
 
         for (let i = 1; i <= missingDays; i++) {
+            const dateString = DateTime.local(
+                view.month.value === 12 ? view.year.value + 1 : view.year.value,
+                view.month.value === 12 ? 1 : view.month.value + 1,
+                i
+            ).toFormat("yyyy-MM-dd");
             days.push({
-                date: DateTime.local(
-                    view.year.value,
-                    view.month.value + 1,
-                    i
-                ).toFormat("yyyy-MM-dd"),
+                date: dateString,
                 isDisabled: true,
-                isToday:
-                    DateTime.local(
-                        view.year.value,
-                        view.month.value + 1,
-                        i
-                    ).toFormat("yyyy-MM-dd") ===
-                    DateTime.local().toFormat("yyyy-MM-dd"),
+                isHoliday: false,
+                isToday: dateString === DateTime.local().toFormat("yyyy-MM-dd"),
             });
         }
     }
@@ -122,6 +127,7 @@ const prevMonth = () => {
     view.month.value--;
     if (view.month.value < 1) {
         view.month.value = 12;
+        holidays.value = greekHolidays(`${view.year.value - 1}`);
         view.year.value--;
     }
 };
@@ -130,6 +136,7 @@ const nextMonth = () => {
     view.month.value++;
     if (view.month.value > 12) {
         view.month.value = 1;
+        holidays.value = greekHolidays(`${view.year.value + 1}`);
         view.year.value++;
     }
 };
@@ -143,6 +150,9 @@ const addCalendarEvent = (day: number) => {
 
 const calendarEventVisible = ref(false);
 const newEventDate = ref(DateTime.local().toISODate());
+const events: Ref<CalendarEvent[]> = ref([]);
+const holidays = ref(greekHolidays(`${view.year.value}`));
+console.log(holidays.value);
 </script>
 
 <template>
@@ -193,8 +203,9 @@ const newEventDate = ref(DateTime.local().toISODate());
         </div>
         <div class="flex justify-between"></div>
     </div>
-    <CalendarEvent
+    <CalendarEventForm
         :eventDate="newEventDate"
         v-model:visible="calendarEventVisible"
     />
+    <CalendarEventList />
 </template>
