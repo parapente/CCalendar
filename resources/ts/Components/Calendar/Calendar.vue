@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import type { CalendarView } from "./types";
+import { computed, ref, watch } from "vue";
+import type { CalendarDay, CalendarView } from "./types";
 import { DateTime, Info } from "luxon";
 import DayName from "./DayName.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
-    faCalendar,
     faCalendarAlt,
     faArrowLeft,
     faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import Day from "./Day.vue";
+import CalendarEvent from "./CalendarEvent.vue";
 
 const props = defineProps<{
     modelValue?: boolean;
@@ -26,7 +26,7 @@ const view: CalendarView = {
 
 const monthName = computed(() => Info.months("long")[view.month.value - 1]);
 const daysOfMonth = () => {
-    const days = [];
+    const days: CalendarDay[] = [];
     const firstDay = DateTime.local(
         view.year.value,
         view.month.value,
@@ -49,16 +49,33 @@ const daysOfMonth = () => {
     if (!previousMonthDisplayed) {
         for (let i = firstDay; i <= endOfPreviousMonth; i++) {
             days.push({
-                day: i,
-                disabled: true,
+                date: DateTime.local(
+                    view.year.value,
+                    view.month.value - 1,
+                    i
+                ).toFormat("yyyy-MM-dd"),
+                isDisabled: true,
+                isToday:
+                    DateTime.local(
+                        view.year.value,
+                        view.month.value - 1,
+                        i
+                    ).toFormat("yyyy-MM-dd") ===
+                    DateTime.local().toFormat("yyyy-MM-dd"),
             });
         }
         previousMonthDisplayed = true;
     }
     for (let i = 1; i <= endOfCurrentMonth; i++) {
         days.push({
-            day: i,
-            disabled: false,
+            date: DateTime.local(view.year.value, view.month.value, i).toFormat(
+                "yyyy-MM-dd"
+            ),
+            isDisabled: false,
+            isToday:
+                DateTime.local(view.year.value, view.month.value, i).toFormat(
+                    "yyyy-MM-dd"
+                ) === DateTime.local().toFormat("yyyy-MM-dd"),
         });
     }
 
@@ -67,8 +84,19 @@ const daysOfMonth = () => {
 
         for (let i = 1; i <= missingDays; i++) {
             days.push({
-                day: i,
-                disabled: true,
+                date: DateTime.local(
+                    view.year.value,
+                    view.month.value + 1,
+                    i
+                ).toFormat("yyyy-MM-dd"),
+                isDisabled: true,
+                isToday:
+                    DateTime.local(
+                        view.year.value,
+                        view.month.value + 1,
+                        i
+                    ).toFormat("yyyy-MM-dd") ===
+                    DateTime.local().toFormat("yyyy-MM-dd"),
             });
         }
     }
@@ -89,23 +117,56 @@ const daysToRows = () => {
 
 const months = Info.months();
 const daysOfWeek = Info.weekdays("short");
-console.log(daysOfMonth);
+
+const prevMonth = () => {
+    view.month.value--;
+    if (view.month.value < 1) {
+        view.month.value = 12;
+        view.year.value--;
+    }
+};
+
+const nextMonth = () => {
+    view.month.value++;
+    if (view.month.value > 12) {
+        view.month.value = 1;
+        view.year.value++;
+    }
+};
+
+const addCalendarEvent = (day: number) => {
+    newEventDate.value =
+        DateTime.local(view.year.value, view.month.value, day).toISODate() ??
+        DateTime.local().toISODate();
+    calendarEventVisible.value = true;
+};
+
+const calendarEventVisible = ref(false);
+const newEventDate = ref(DateTime.local().toISODate());
 </script>
 
 <template>
     <div class="m-1 border border-black rounded-t-lg">
-        <div class="px-1 w-full flex justify-between">
-            <button><FontAwesomeIcon :icon="faArrowLeft" /></button>
-            <div>{{ view.year }}</div>
-            <button><FontAwesomeIcon :icon="faArrowRight" /></button>
+        <div class="px-1 flex text-center">
+            <div class="w-full text-2xl font-bold">{{ view.year }}</div>
         </div>
-        <div class="w-full text-center border-black border-y">
-            <FontAwesomeIcon class="px-1" :icon="faCalendarAlt" />Ημερολόγιο
-            {{ monthName }}
+        <div
+            class="px-1 w-full flex justify-between text-center border-black border-y"
+        >
+            <button @click="prevMonth" type="button">
+                <FontAwesomeIcon :icon="faArrowLeft" size="xl" />
+            </button>
+            <div class="text-lg font-bold py-2">
+                <FontAwesomeIcon class="px-1" :icon="faCalendarAlt" />Ημερολόγιο
+                {{ monthName }}
+            </div>
+            <button @click="nextMonth" type="button">
+                <FontAwesomeIcon :icon="faArrowRight" size="xl" />
+            </button>
         </div>
         <div class="flex border-black border-b">
             <DayName
-                class="w-1/6"
+                class="w-1/6 text-center"
                 :day-of-week="index"
                 v-for="(day, index) in daysOfWeek"
                 :key="day"
@@ -127,8 +188,13 @@ console.log(daysOfMonth);
                             : 'bg-blue-300 border-r border-black'
                         : 'border-r border-black'
                 "
+                @triggered="addCalendarEvent"
             ></Day>
         </div>
         <div class="flex justify-between"></div>
     </div>
+    <CalendarEvent
+        :eventDate="newEventDate"
+        v-model:visible="calendarEventVisible"
+    />
 </template>

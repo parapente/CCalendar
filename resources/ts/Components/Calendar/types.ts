@@ -5,3 +5,9 @@ export type CalendarView = {
     month: Ref<number>;
     day: Ref<number>;
 };
+
+export type CalendarDay = {
+    date: string;
+    isToday: boolean;
+    isDisabled: boolean;
+};
