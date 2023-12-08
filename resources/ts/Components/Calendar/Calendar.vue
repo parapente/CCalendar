@@ -152,7 +152,6 @@ const calendarEventVisible = ref(false);
 const newEventDate = ref(DateTime.local().toISODate());
 const events: Ref<CalendarEvent[]> = ref([]);
 const holidays = ref(greekHolidays(`${view.year.value}`));
-console.log(holidays.value);
 </script>
 
 <template>
@@ -176,7 +175,7 @@ console.log(holidays.value);
         </div>
         <div class="flex border-black border-b">
             <DayName
-                class="w-1/6 text-center"
+                class="w-[14.3%] text-center"
                 :day-of-week="index"
                 v-for="(day, index) in daysOfWeek"
                 :key="day"
@@ -190,7 +189,7 @@ console.log(holidays.value);
             <Day
                 v-for="(day, index) in row"
                 :day="day"
-                class="w-1/6 h-16 text-center"
+                class="w-[14.3%] h-16 text-center max-w-[14.3%] overflow-hidden"
                 :class="
                     index > 4
                         ? index === 6

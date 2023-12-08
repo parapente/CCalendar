@@ -24,6 +24,9 @@ const dayNumber = computed(() => {
         }"
         @click="!props.day.isDisabled ? $emit('triggered', dayNumber) : null"
     >
-        {{ dayNumber }}
+        <div>{{ dayNumber }}</div>
+        <div class="text-xs text-ellipsis overflow-hidden">
+            {{ props.day?.holiday }}
+        </div>
     </div>
 </template>
