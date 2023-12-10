@@ -4,7 +4,7 @@
         "baseUrl": ".",
         "paths": {
             "@/*": ["resources/ts/*"],
-            "ziggy": ["vendor/tightenco/ziggy/dist"]
+            "ziggy": ["vendor/tightenco/ziggy/src/js"]
         },
         "module": "ESNext",
         "moduleResolution": "Bundler",

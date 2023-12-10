@@ -4,7 +4,7 @@ import vue from "@vitejs/plugin-vue";
 import path from "path";
 import { exit } from "process";
 
-export default defineConfig(({mode}) => {
+export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd(), "") };
 
     // Εύρεση resource path από το APP_URL
@@ -53,12 +53,8 @@ export default defineConfig(({mode}) => {
         resolve: {
             alias: {
                 "@": path.resolve(__dirname, "resources/ts/"),
-                "ziggy-js": path.resolve(
-                    __dirname,
-                    "vendor/tightenco/ziggy/dist/index.es"
-                ),
+                ziggy: path.resolve(__dirname, "vendor/tightenco/ziggy/src/js"),
             },
         },
-    }
-
+    };
 });
