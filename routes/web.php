@@ -16,12 +16,13 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return Inertia::render('Welcome');
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
 });
 
 Route::middleware([
@@ -34,6 +35,10 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/calendar', function() {
-    return Inertia::render('Calendar');
-})->name('calendar');
+Route::middleware([
+    'cas.auth'
+])->group(function () {
+    Route::get('/calendar', function() {
+        return Inertia::render('Calendar');
+    })->name('calendar');
+});

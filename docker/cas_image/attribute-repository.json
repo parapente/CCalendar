@@ -1,0 +1,26 @@
+{
+    "tstsch": {
+        "uid": ["999"],
+        "mail": ["tst@sch.gr"],
+        "cn": ["Dokimastiki monada"]
+    },
+    "tstuser": {
+        "uid":["111"],
+        "mail":["a@a.net"],
+        "cn":["Dokimastikos xrhsths"]
+    },
+    "tstteacher": {
+        "uid": ["112"],
+        "mail": ["a@a.net"],
+        "employeenumber": ["111111"],
+        "cn": ["Dokimastikos ekpaideytikos"],
+        "businesscategory": ["ΕΚΠΑΙΔΕΥΤΙΚΟΣ"]
+    },
+    "tstteacher2": {
+        "uid": ["113"],
+        "mail": ["a@a.net"],
+        "employeenumber": ["999999"],
+        "cn": ["Dokimastikos ekpaideytikos 2"],
+        "businesscategory": ["ΕΚΠΑΙΔΕΥΤΙΚΟΣ"]
+    }
+}

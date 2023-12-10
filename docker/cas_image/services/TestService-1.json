@@ -1,0 +1,11 @@
+{
+	"@class" : "org.apereo.cas.services.RegexRegisteredService",
+	"serviceId":"^http://.+/.+",
+	"name" : "casTest",
+	"id" : 1,
+	"evaluationOrder" : 1,
+	"attributeReleasePolicy" : {
+		"@class" : "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+		"allowedAttributes": [ "java.util.ArrayList", ["uid","cn","mail","employeenumber", "businesscategory"] ]
+	}
+}

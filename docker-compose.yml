@@ -4,40 +4,41 @@ services:
             context: ./docker/8.2
             dockerfile: Dockerfile
             args:
-                WWWGROUP: '${WWWGROUP}'
+                WWWGROUP: "${WWWGROUP}"
         image: sail-8.2/app
         extra_hosts:
-            - 'host.docker.internal:host-gateway'
+            - "host.docker.internal:host-gateway"
         ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - "${APP_PORT:-80}:80"
+            - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
         environment:
-            WWWUSER: '${WWWUSER}'
+            WWWUSER: "${WWWUSER}"
             LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
+            XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}"
+            IGNITION_LOCAL_SITES_PATH: "${PWD}"
         volumes:
-            - '.:/var/www/html'
+            - ".:/var/www/html"
         networks:
             - sail
         depends_on:
             - mariadb
             - mailpit
+
     mariadb:
-        image: 'mariadb:10'
+        image: "mariadb:10"
         ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
+            - "${FORWARD_DB_PORT:-3306}:3306"
         environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: '%'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+            MYSQL_ROOT_HOST: "%"
+            MYSQL_DATABASE: "${DB_DATABASE}"
+            MYSQL_USER: "${DB_USERNAME}"
+            MYSQL_PASSWORD: "${DB_PASSWORD}"
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
         volumes:
-            - 'sail-mariadb:/var/lib/mysql'
-            - './docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+            - "sail-mariadb:/var/lib/mysql"
+            - "./docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh"
         networks:
             - sail
         healthcheck:
@@ -45,16 +46,74 @@ services:
                 - CMD
                 - mysqladmin
                 - ping
-                - '-p${DB_PASSWORD}'
+                - "-p${DB_PASSWORD}"
             retries: 3
             timeout: 5s
+
     mailpit:
-        image: 'axllent/mailpit:latest'
+        image: "axllent/mailpit:latest"
         ports:
-            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+            - "${FORWARD_MAILPIT_PORT:-1025}:1025"
+            - "${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025"
         networks:
             - sail
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links:
+            - mariadb:mariadb
+        ports:
+            - 8888:80
+        environment:
+            MYSQL_USERNAME: "${DB_USERNAME}"
+            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+            PMA_HOST: mariadb
+        networks:
+            - sail
+        depends_on:
+            - mariadb
+
+    cas:
+        build:
+            context: ./docker/cas_image
+        image: apereo/cas-sail:6.6.2
+        ports:
+            - 8443:8443
+        networks:
+            - sail
+
+    cypress:
+        build:
+            context: ./docker/cypress
+            args:
+                WWWUSER: "${WWWUSER}"
+                WWWGROUP: "${WWWGROUP}"
+        depends_on:
+            - laravel.test
+            - novnc
+        environment:
+            - CYPRESS_baseUrl=http://laravel.test:${APP_PORT:-80}
+            - DISPLAY=novnc:0.0
+            # - DEBUG=cypress:*
+        working_dir: /e2e
+        entrypoint: cypress open --project /e2e
+        volumes:
+            - ./:/e2e
+        networks:
+            - sail
+
+    novnc:
+        build:
+            context: ./docker/novnc
+            dockerfile: Dockerfile
+            args:
+                WWWUSER: "${WWWUSER}"
+                WWWGROUP: "${WWWGROUP}"
+        ports:
+            - "8080:8080"
+        networks:
+            - sail
+
 networks:
     sail:
         driver: bridge
