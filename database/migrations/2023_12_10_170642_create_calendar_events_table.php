@@ -19,6 +19,10 @@ return new class extends Migration
             $table->dateTime('end_date');
             $table->string('location', 512);
             $table->text('url', 1024);
+            $table->unsignedBigInteger('calendar_id');
+            $table->foreign('calendar_id')
+                ->references('id')
+                ->on('calendars');
             $table->timestamps();
         });
     }

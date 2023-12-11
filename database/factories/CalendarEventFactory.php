@@ -16,11 +16,14 @@ class CalendarEventFactory extends Factory
      */
     public function definition(): array
     {
+        $new_date = $this->faker->dateTimeThisYear();
         return [
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
-            'start_date' => $this->faker->dateTime,
-            'end_date' => $this->faker->dateTime,
+            'start_date' => $new_date,
+            'end_date' => $new_date->add(\DateInterval::createFromDateString(
+                $this->faker->randomElement(["1 hour", "1 day", "1 week", "1 month", "1 year"])
+            )),
             'location' => $this->faker->address,
             'url' => $this->faker->url,
         ];

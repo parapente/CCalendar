@@ -17,8 +17,7 @@ class CalendarFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->sentence,
-            'calendar_type_id' => $this->faker->numberBetween(1, 10),
+            'name' => $this->faker->unique()->sentence,
             'active' => $this->faker->boolean,
         ];
     }

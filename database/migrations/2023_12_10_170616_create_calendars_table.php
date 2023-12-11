@@ -13,11 +13,7 @@ return new class extends Migration
     {
         Schema::create('calendars', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('calendar_type_id');
-            $table->foreign('calendar_type_id')
-                ->references('id')
-                ->on('calendar_types');
+            $table->string('name')->unique();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
