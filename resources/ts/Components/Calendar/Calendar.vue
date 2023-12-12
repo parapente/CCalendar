@@ -14,6 +14,7 @@ import CalendarEventForm from "./CalendarEventForm.vue";
 import { greekHolidays } from "greek-holidays";
 import CalendarEventList from "./CalendarEventList.vue";
 import axios from "axios";
+import type { AxiosError } from "axios";
 
 const date = new Date();
 
@@ -166,21 +167,16 @@ async function getCalendarEventData(year: number, month: number) {
                 response.data.forEach((event: App.Models.CalendarEvent) => {
                     new_events.push(event);
                 });
-            } else {
-                console.log(`Error: ${response.status}`);
             }
+        })
+        .catch((error: AxiosError) => {
+            console.error(error.toJSON());
         });
 
     events.value = [...new_events];
 }
 
 const events: Ref<App.Models.CalendarEvent[]> = ref([]);
-watch(
-    () => events.value,
-    (newValue: App.Models.CalendarEvent[]) => {
-        console.log(newValue.length);
-    }
-);
 
 watch([view.year, view.month], ([newYear, newMonth]) => {
     getCalendarEventData(newYear, newMonth);
