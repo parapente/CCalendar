@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use DateTimeImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,7 +17,7 @@ class CalendarEventFactory extends Factory
      */
     public function definition(): array
     {
-        $new_date = $this->faker->dateTimeThisYear();
+        $new_date = DateTimeImmutable::createFromMutable($this->faker->dateTimeThisYear());
         return [
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
