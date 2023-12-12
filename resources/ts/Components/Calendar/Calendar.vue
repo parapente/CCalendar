@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch, type Ref } from "vue";
-import type { CalendarDay, CalendarView, CalendarEvent } from "./types";
+import { computed, ref, watch, type Ref, onMounted } from "vue";
+import type { CalendarDay, CalendarView } from "./types";
 import { DateTime, Info } from "luxon";
 import DayName from "./DayName.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -13,10 +13,7 @@ import Day from "./Day.vue";
 import CalendarEventForm from "./CalendarEventForm.vue";
 import { greekHolidays } from "greek-holidays";
 import CalendarEventList from "./CalendarEventList.vue";
-
-const props = defineProps<{
-    modelValue?: boolean;
-}>();
+import axios from "axios";
 
 const date = new Date();
 
@@ -148,14 +145,36 @@ const addCalendarEvent = (day: number) => {
     calendarEventVisible.value = true;
 };
 
-const saveCalendarEvent = (event: CalendarEvent) => {
+const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
     events.value.push(event);
 };
 
 const calendarEventVisible = ref(false);
 const newEventDate = ref(DateTime.local().toISODate());
-const events: Ref<CalendarEvent[]> = ref([]);
 const holidays = ref(greekHolidays(`${view.year.value}`));
+
+const getCalendarEvents = computed(() => {
+    const new_events: App.Models.CalendarEvent[] = [];
+    axios
+        .get(`/events/${view.year.value}/${view.month.value}`)
+        .then((response) => {
+            if (
+                response.status === 200 &&
+                Array.isArray(response.data) &&
+                response.data.length
+            ) {
+                response.data.forEach((event: App.Models.CalendarEvent) => {
+                    new_events.push(event);
+                });
+            } else {
+                console.log(`Error: ${response.status}`);
+            }
+        });
+
+    return new_events;
+});
+
+const events: Ref<App.Models.CalendarEvent[]> = getCalendarEvents;
 </script>
 
 <template>
@@ -211,5 +230,5 @@ const holidays = ref(greekHolidays(`${view.year.value}`));
         v-model:visible="calendarEventVisible"
         @save="saveCalendarEvent"
     />
-    <CalendarEventList :events="events" />
+    <CalendarEventList :calendarEvents="events" />
 </template>

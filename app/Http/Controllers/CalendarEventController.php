@@ -11,9 +11,23 @@ class CalendarEventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(int $year, int $month)
     {
-        //
+        $calendarEvents = CalendarEvent::whereHas("calendar", function ($query) {
+            $query->where('active', true);
+            // $query->where('user_id', auth()->user()->id);
+        })
+        ->where(function ($query) use ($year, $month) {
+            $query->whereYear('start_date', $year)
+                ->whereMonth('start_date', $month);
+        })
+        ->orWhere(function ($query) use ($year, $month) {
+            $query->whereYear('end_date', $year)
+                ->whereMonth('end_date', $month);
+        })
+        ->get();
+
+        return $calendarEvents->toJson();
     }
 
     /**

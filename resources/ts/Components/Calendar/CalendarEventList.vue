@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import type { CalendarEvent } from "./types";
-
 const props = defineProps<{
-    events: CalendarEvent[];
+    calendarEvents: App.Models.CalendarEvent[];
 }>();
 </script>
 
 <template>
-    <div v-if="events.length">
+    <div v-if="props.calendarEvents.length > 0">
         <h1>Εκδηλώσεις μήνα:</h1>
         <ul>
-            <li v-for="event in events" :key="event.id">
+            <li v-for="event in calendarEvents" :key="event.id">
                 {{ event.title }}
             </li>
         </ul>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCalendarRequest;
 use App\Http\Requests\UpdateCalendarRequest;
 use App\Models\Calendar;
+use App\Models\CalendarEvent;
+use Inertia\Inertia;
 
 class CalendarController extends Controller
 {
@@ -13,7 +15,14 @@ class CalendarController extends Controller
      */
     public function index()
     {
-        //
+        $calendarEvents = CalendarEvent::whereHas('calendar', function ($query) {
+            $query->where('active', true);
+            // $query->where('user_id', auth()->user()->id);
+        })->get();
+
+        $calendars = Calendar::where('active', true)->get();
+
+        return Inertia::render('Calendar', compact('calendarEvents', 'calendars'));
     }
 
     /**

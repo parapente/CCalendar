@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\CalendarEventController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,7 +34,6 @@ Route::middleware([
 Route::middleware([
     'cas.auth'
 ])->group(function () {
-    Route::get('/calendar', function() {
-        return Inertia::render('Calendar');
-    })->name('calendar');
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
 });

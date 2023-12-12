@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Calendar extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'active'
+    ];
+
+    public function calendarEvents() {
+        return $this->hasMany(CalendarEvent::class);
+    }
 }

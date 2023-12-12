@@ -13,14 +13,3 @@ export type CalendarDay = {
     holiday?: string;
     isDisabled: boolean;
 };
-
-export type CalendarEvent = {
-    id: number;
-    title: string;
-    description: string;
-    event_type: number;
-    start_date: string;
-    end_date: string;
-    location: string;
-    url: string;
-};
