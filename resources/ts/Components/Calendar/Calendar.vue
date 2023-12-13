@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, type Ref, onMounted } from "vue";
+import { computed, ref, watch, onMounted, type Ref } from "vue";
 import type { CalendarDay, CalendarView } from "./types";
 import { DateTime, Info } from "luxon";
 import DayName from "./DayName.vue";
@@ -131,7 +131,7 @@ const nextMonth = () => {
 };
 
 const addCalendarEvent = (day: number) => {
-    newEventDate.value =
+    newEvent.value.start_date =
         DateTime.local(view.year.value, view.month.value, day).toISODate() ??
         DateTime.local().toISODate();
     calendarEventVisible.value = true;
@@ -142,7 +142,18 @@ const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
 };
 
 const calendarEventVisible = ref(false);
-const newEventDate = ref(DateTime.local().toISODate());
+const newEvent: Ref<App.Models.CalendarEvent> = ref({
+    id: 0,
+    title: "",
+    description: "",
+    start_date: DateTime.local().toISODate(),
+    end_date: DateTime.local().plus({ hours: 1 }).toISODate(),
+    location: "",
+    url: "",
+    calendar_id: 0,
+    created_at: null,
+    updated_at: null,
+});
 const holidays = ref(greekHolidays(`${view.year.value}`));
 
 const getCalendarEventData = async (year: number, month: number) => {
@@ -234,7 +245,7 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
         <div class="flex justify-between"></div>
     </div>
     <CalendarEventForm
-        :eventDate="newEventDate"
+        :event="newEvent"
         v-model:visible="calendarEventVisible"
         @save="saveCalendarEvent"
     />

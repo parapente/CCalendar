@@ -2,15 +2,13 @@
 import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import { watch } from "vue";
-import type { CalendarEvent } from "./types";
 
 const props = withDefaults(
     defineProps<{
-        eventDate?: string;
+        event: App.Models.CalendarEvent;
         visible?: boolean;
     }>(),
     {
-        eventDate: DateTime.local().toISODate(),
         visible: false,
     }
 );
@@ -27,14 +25,14 @@ const form = useForm<{
     title: "",
     description: "",
     event_type: 1,
-    start_date: props.eventDate + "T00:00",
-    end_date: props.eventDate + "T23:59",
+    start_date: props.event.start_date,
+    end_date: props.event.end_date,
     location: "",
     url: "",
 });
 
 const emit = defineEmits<{
-    save: [value: CalendarEvent];
+    save: [value: App.Models.CalendarEvent];
     "update:visible": [value: boolean];
 }>();
 
@@ -43,11 +41,13 @@ const onSubmit = () => {
         id: 0,
         title: form.title,
         description: form.description,
-        event_type: form.event_type,
         start_date: form.start_date,
         end_date: form.end_date,
         location: form.location,
         url: form.url,
+        calendar_id: form.event_type,
+        created_at: null,
+        updated_at: null,
     });
 
     form.reset();
@@ -55,11 +55,14 @@ const onSubmit = () => {
 };
 
 watch(
-    () => props.eventDate,
+    () => props.event,
     (value) => {
-        form.start_date = value + "T" + DateTime.now().toFormat("HH:mm");
+        form.start_date =
+            value.start_date + "T" + DateTime.now().toFormat("HH:mm");
         form.end_date =
-            value + "T" + DateTime.now().plus({ hour: 1 }).toFormat("HH:mm");
+            value.end_date +
+            "T" +
+            DateTime.now().plus({ hour: 1 }).toFormat("HH:mm");
     }
 );
 </script>
@@ -67,10 +70,10 @@ watch(
 <template>
     <div
         v-if="props.visible"
-        class="fixed top-5 left-5 w-11/12 max-w-3xl bg-white border border-black rounded-lg p-2"
+        class="fixed top-5 left-5 w-11/12 max-w-3xl bg-white border border-black rounded-lg shadow-black shadow-2xl"
     >
-        Νέα εκδήλωση
-        <form @submit.prevent="onSubmit" class="flex flex-col">
+        <div class="bg-slate-300 p-2 rounded-t-md">Νέα εκδήλωση</div>
+        <form @submit.prevent="onSubmit" class="flex flex-col p-2">
             <label for="title">Τίτλος εκδήλωσης:</label>
             <input
                 type="text"
