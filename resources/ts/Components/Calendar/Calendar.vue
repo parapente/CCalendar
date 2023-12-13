@@ -186,7 +186,7 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
 </script>
 
 <template>
-    <div class="m-1 border border-black rounded-t-lg">
+    <div class="m-1 border border-black rounded-t-lg max-w-screen-xl w-full">
         <div class="px-1 flex text-center">
             <div class="w-full text-2xl font-bold">{{ view.year }}</div>
         </div>
@@ -204,26 +204,21 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
                 <FontAwesomeIcon :icon="faArrowRight" size="xl" />
             </button>
         </div>
-        <div class="flex border-black border-b">
+        <div class="grid grid-cols-7">
             <DayName
-                class="w-[14.3%] text-center"
+                class="text-center overflow-hidden border-black border-b"
                 :day-of-week="index"
                 v-for="(day, index) in daysOfWeek"
                 :key="day"
                 >{{ day }}</DayName
             >
-        </div>
-        <div
-            v-for="(row, rowIndex) in daysToRows()"
-            class="w-full flex border-b border-black"
-        >
             <Day
-                v-for="(day, index) in row"
+                v-for="(day, index) in daysOfMonth()"
                 :day="day"
-                class="w-[14.3%] h-16 text-center max-w-[14.3%] overflow-hidden"
+                class="h-16 text-center overflow-hidden border-black border-b"
                 :class="
-                    index > 4
-                        ? index === 6
+                    index % 7 > 4
+                        ? index % 7 === 6
                             ? 'bg-blue-300'
                             : 'bg-blue-300 border-r border-black'
                         : 'border-r border-black'
@@ -238,5 +233,8 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
         v-model:visible="calendarEventVisible"
         @save="saveCalendarEvent"
     />
-    <CalendarEventList :calendarEvents="events" />
+    <CalendarEventList
+        class="max-w-screen-xl w-full mt-4"
+        :calendarEvents="events"
+    />
 </template>
