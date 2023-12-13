@@ -25,6 +25,7 @@ class CalendarEventController extends Controller
             $query->whereYear('end_date', $year)
                 ->whereMonth('end_date', $month);
         })
+        ->orderBy('start_date')
         ->get();
 
         return $calendarEvents->toJson();
