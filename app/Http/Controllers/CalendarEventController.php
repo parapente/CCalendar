@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCalendarEventRequest;
 use App\Http\Requests\UpdateCalendarEventRequest;
 use App\Models\CalendarEvent;
+use Illuminate\Support\Facades\DB;
 
 class CalendarEventController extends Controller
 {
@@ -18,14 +19,21 @@ class CalendarEventController extends Controller
             // $query->where('user_id', auth()->user()->id);
         })
         ->where(function ($query) use ($year, $month) {
-            $query->whereYear('start_date', $year)
-                ->whereMonth('start_date', $month);
+            $query->where(function ($query) use ($year, $month) {
+                $query->whereYear('start_date', $year)
+                    ->whereMonth('start_date', $month);
+            })
+            ->orWhere(function ($query) use ($year, $month) {
+                $query->whereYear('end_date', $year)
+                    ->whereMonth('end_date', $month);
+            })
+            ->orWhere(function ($query) use ($year, $month) {
+                $nextMonth = $month < 12 ? $month + 1 : 1 ;
+                $nextYear = $nextMonth === 1 ? $year + 1 : $year;
+                $query->whereDate('start_date', '<', "$year-$month-1")
+                    ->whereDate('end_date', '>=', "$nextYear-$nextMonth-1");
+            });
         })
-        ->orWhere(function ($query) use ($year, $month) {
-            $query->whereYear('end_date', $year)
-                ->whereMonth('end_date', $month);
-        })
-        ->orderBy('start_date')
         ->get();
 
         return $calendarEvents->toJson();
