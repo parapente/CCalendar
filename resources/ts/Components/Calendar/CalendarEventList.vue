@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useCalendarStore } from "@/Stores/calendarStore";
 import {
     faCalendarDay,
     faGlobe,
@@ -9,17 +10,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { DateTime, Info } from "luxon";
 
-const props = defineProps<{
-    calendarEvents: App.Models.CalendarEvent[];
-}>();
+const calendarStore = useCalendarStore();
 </script>
 
 <template>
-    <div v-if="props.calendarEvents.length > 0">
+    <div v-if="calendarStore.calendarEvents.length > 0">
         <div class="text-xl text-bold mb-2">Εκδηλώσεις μήνα:</div>
         <ul>
             <li
-                v-for="event in calendarEvents"
+                v-for="event in calendarStore.calendarEvents"
                 :key="event.id"
                 class="border-black border mb-2 p-2"
             >

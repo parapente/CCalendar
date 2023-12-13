@@ -2,12 +2,14 @@
 import { DateTime } from "luxon";
 import type { CalendarDay } from "./types";
 import { computed } from "vue";
+import { useCalendarStore } from "@/Stores/calendarStore";
 
 const props = defineProps<{
     day: CalendarDay;
-    calendars: Array<App.Models.Calendar>;
     calendarEvents: Array<App.Models.CalendarEvent>;
 }>();
+
+const calendarStore = useCalendarStore();
 
 const dayNumber = computed(() => {
     return parseInt(
@@ -16,7 +18,7 @@ const dayNumber = computed(() => {
 });
 
 const bgColor = (event: App.Models.CalendarEvent) => {
-    return props.calendars.find(
+    return calendarStore.calendars.find(
         (calendar) => calendar.id === event.calendar_id
     )!.color;
 };
