@@ -15,14 +15,9 @@ class CalendarController extends Controller
      */
     public function index()
     {
-        $calendarEvents = CalendarEvent::whereHas('calendar', function ($query) {
-            $query->where('active', true);
-            // $query->where('user_id', auth()->user()->id);
-        })->get();
-
         $calendars = Calendar::where('active', true)->get();
 
-        return Inertia::render('Calendar', compact('calendarEvents', 'calendars'));
+        return Inertia::render('Calendar', compact('calendars'));
     }
 
     /**
