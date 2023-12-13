@@ -154,7 +154,7 @@ const calendarEventVisible = ref(false);
 const newEventDate = ref(DateTime.local().toISODate());
 const holidays = ref(greekHolidays(`${view.year.value}`));
 
-async function getCalendarEventData(year: number, month: number) {
+const getCalendarEventData = async (year: number, month: number) => {
     let new_events: App.Models.CalendarEvent[] = [];
     await axios
         .get(`/events/${view.year.value}/${view.month.value}`)
@@ -174,7 +174,7 @@ async function getCalendarEventData(year: number, month: number) {
         });
 
     events.value = [...new_events];
-}
+};
 
 const events: Ref<App.Models.CalendarEvent[]> = ref([]);
 
