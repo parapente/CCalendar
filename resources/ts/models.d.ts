@@ -7,6 +7,7 @@ declare namespace App.Models {
     export interface Calendar {
         id: number;
         name: string;
+        color: string;
         active: boolean;
         created_at: string | null;
         updated_at: string | null;

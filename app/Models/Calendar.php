@@ -11,6 +11,7 @@ class Calendar extends Model
 
     protected $fillable = [
         'name',
+        'color',
         'active'
     ];
 

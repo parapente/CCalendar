@@ -16,6 +16,10 @@ import CalendarEventList from "./CalendarEventList.vue";
 import axios from "axios";
 import type { AxiosError } from "axios";
 
+const props = defineProps<{
+    calendars: Array<App.Models.Calendar>;
+}>();
+
 const date = new Date();
 
 const view: CalendarView = {
@@ -107,18 +111,6 @@ const daysOfMonth = () => {
     return days;
 };
 
-const daysToRows = () => {
-    const rows = [];
-    const days = daysOfMonth();
-
-    for (let i = 0; i < days.length; i += 7) {
-        rows.push(days.slice(i, i + 7));
-    }
-
-    return rows;
-};
-
-const months = Info.months();
 const daysOfWeek = Info.weekdays("short");
 
 const prevMonth = () => {
@@ -178,6 +170,21 @@ const getCalendarEventData = async (year: number, month: number) => {
 
 const events: Ref<App.Models.CalendarEvent[]> = ref([]);
 
+const dayEvents = (day: CalendarDay) => {
+    return events.value.filter((event) => {
+        const start_date = DateTime.fromSQL(event.start_date).toISODate();
+        const end_date = DateTime.fromSQL(event.end_date).toISODate();
+        const day_date = DateTime.fromSQL(day.date).toISODate();
+
+        if (start_date === null || end_date === null || day_date === null) {
+            console.log("Invalid SQL date for event: " + event);
+            return false;
+        } else {
+            return start_date <= day_date && end_date >= day_date;
+        }
+    });
+};
+
 watch([view.year, view.month], ([newYear, newMonth]) => {
     getCalendarEventData(newYear, newMonth);
 });
@@ -215,7 +222,7 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
             <Day
                 v-for="(day, index) in daysOfMonth()"
                 :day="day"
-                class="h-16 text-center overflow-hidden border-black border-b"
+                class="h-36 max-h-36 text-center overflow-hidden border-black border-b"
                 :class="
                     index % 7 > 4
                         ? index % 7 === 6
@@ -223,6 +230,8 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
                             : 'bg-blue-300 border-r border-black'
                         : 'border-r border-black'
                 "
+                :calendarEvents="dayEvents(day)"
+                :calendars="calendars"
                 @triggered="addCalendarEvent"
             ></Day>
         </div>
