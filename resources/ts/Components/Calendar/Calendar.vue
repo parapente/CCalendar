@@ -85,24 +85,20 @@ const addCalendarEvent = (day: number) => {
             suppressSeconds: true,
         });
 
-    console.log("Date: ", date);
+    newEvent.value.id = 0;
+    newEvent.value.title = "";
+    newEvent.value.description = "";
     newEvent.value.start_date = start_date;
     newEvent.value.end_date = end_date;
-
-    if (!calendarEventVisible.value) {
-        newEvent.value.id = 0;
-        newEvent.value.title = "";
-        newEvent.value.description = "";
-        newEvent.value.location = "";
-        newEvent.value.url = "";
-    }
+    newEvent.value.location = "";
+    newEvent.value.url = "";
 
     calendarEventVisible.value = true;
 };
 
 const editCalendarEvent = (id: number) => {
     const event = calendarStore.calendarEvents.find((event) => event.id === id);
-    console.log("Event: ", event);
+
     if (event) {
         newEvent.value.id = event.id;
         newEvent.value.title = event.title;
