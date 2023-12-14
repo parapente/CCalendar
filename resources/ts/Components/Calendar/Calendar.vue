@@ -16,6 +16,7 @@ import CalendarEventList from "./CalendarEventList.vue";
 import axios from "axios";
 import type { AxiosError } from "axios";
 import { useCalendarStore } from "@/Stores/calendarStore";
+import { daysOfMonth, daysOfWeek } from "./utilities";
 
 const calendarStore = useCalendarStore();
 
@@ -28,89 +29,6 @@ const view: CalendarView = {
 };
 
 const monthName = computed(() => Info.months("long")[view.month.value - 1]);
-const daysOfMonth = () => {
-    const days: CalendarDay[] = [];
-    const firstDay = DateTime.local(
-        view.year.value,
-        view.month.value,
-        1
-    ).startOf("week").day;
-    const endOfPreviousMonth = DateTime.local(
-        view.year.value,
-        view.month.value - 1,
-        1
-    ).endOf("month").day;
-    const endOfCurrentMonth = DateTime.local(
-        view.year.value,
-        view.month.value,
-        1
-    ).endOf("month").day;
-
-    // Ο προηγούμενος μήνας εμφανίζεται πριν την πρώτη
-    // ημέρα αν το firstDay δεν είναι η 1η του τρέχοντος μήνα
-    let previousMonthDisplayed = firstDay === 1;
-    if (!previousMonthDisplayed) {
-        for (let i = firstDay; i <= endOfPreviousMonth; i++) {
-            days.push({
-                date: DateTime.local(
-                    view.year.value,
-                    view.month.value - 1,
-                    i
-                ).toFormat("yyyy-MM-dd"),
-                isDisabled: true,
-                isHoliday: false,
-                isToday:
-                    DateTime.local(
-                        view.year.value,
-                        view.month.value - 1,
-                        i
-                    ).toFormat("yyyy-MM-dd") ===
-                    DateTime.local().toFormat("yyyy-MM-dd"),
-            });
-        }
-        previousMonthDisplayed = true;
-    }
-    for (let i = 1; i <= endOfCurrentMonth; i++) {
-        const dateString = DateTime.local(
-            view.year.value,
-            view.month.value,
-            i
-        ).toFormat("yyyy-MM-dd");
-        const holidayIndex = holidays.value
-            .map((holiday) => holiday.date)
-            .indexOf(dateString);
-        days.push({
-            date: dateString,
-            isDisabled: false,
-            isHoliday: holidayIndex !== -1,
-            holiday:
-                holidayIndex !== -1 ? holidays.value[holidayIndex].name : "",
-            isToday: dateString === DateTime.local().toFormat("yyyy-MM-dd"),
-        });
-    }
-
-    if (days.length % 7) {
-        const missingDays = 7 - (days.length % 7);
-
-        for (let i = 1; i <= missingDays; i++) {
-            const dateString = DateTime.local(
-                view.month.value === 12 ? view.year.value + 1 : view.year.value,
-                view.month.value === 12 ? 1 : view.month.value + 1,
-                i
-            ).toFormat("yyyy-MM-dd");
-            days.push({
-                date: dateString,
-                isDisabled: true,
-                isHoliday: false,
-                isToday: dateString === DateTime.local().toFormat("yyyy-MM-dd"),
-            });
-        }
-    }
-
-    return days;
-};
-
-const daysOfWeek = Info.weekdays("short");
 
 const prevMonth = () => {
     view.month.value--;
@@ -287,7 +205,11 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
                 >{{ day }}</DayName
             >
             <Day
-                v-for="(day, index) in daysOfMonth()"
+                v-for="(day, index) in daysOfMonth(
+                    view.year.value,
+                    view.month.value,
+                    holidays
+                )"
                 :day="day"
                 class="h-36 max-h-36 text-center overflow-hidden border-black border-b"
                 :class="
