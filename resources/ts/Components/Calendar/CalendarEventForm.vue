@@ -55,26 +55,11 @@ const onSubmit = () => {
 watch(
     () => props.event,
     (value) => {
-        const currentTime = DateTime.local();
-        const newStartDate =
-            DateTime.fromISO(value.start_date)
-                .startOf("minute")
-                .plus({
-                    hours: currentTime.hour,
-                    minutes: currentTime.minute,
-                })
-                .toISO({
-                    includeOffset: false,
-                    suppressMilliseconds: true,
-                    suppressSeconds: true,
-                }) ?? "";
-
-        console.log(`New date: ${newStartDate}`);
-
         form.id = value.id;
         form.title = value.title;
         form.description = value.description;
-        form.start_date = form.end_date = newStartDate;
+        form.start_date = value.start_date;
+        form.end_date = value.end_date;
         form.calendar_id = value.calendar_id;
         form.location = value.location;
         form.url = value.url;
@@ -90,7 +75,9 @@ watch(
         v-if="props.visible"
         class="fixed top-5 left-5 w-11/12 max-w-3xl bg-white border border-black rounded-lg shadow-black shadow-2xl"
     >
-        <div class="bg-slate-300 p-2 rounded-t-md">Νέα εκδήλωση</div>
+        <div class="bg-slate-300 p-2 rounded-t-md">
+            {{ form.id ? "Επεξεργασία εκδήλωσης" : "Νέα εκδήλωση" }}
+        </div>
         <form @submit.prevent="onSubmit" class="flex flex-col p-2">
             <label for="title">Τίτλος εκδήλωσης:</label>
             <input

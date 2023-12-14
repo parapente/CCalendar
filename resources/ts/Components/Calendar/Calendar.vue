@@ -50,20 +50,44 @@ const nextMonth = () => {
 };
 
 const addCalendarEvent = (day: number) => {
-    const date =
-        DateTime.local(view.year.value, view.month.value, day).toISO({
+    if (calendarEventVisible.value) {
+        return;
+    }
+
+    const currentTime = DateTime.local();
+    const start_date =
+        DateTime.local(view.year.value, view.month.value, day)
+            .startOf("minute")
+            .plus({ hours: currentTime.hour, minutes: currentTime.minute })
+            .toISO({
+                includeOffset: false,
+                suppressMilliseconds: true,
+                suppressSeconds: true,
+            }) ??
+        DateTime.local().startOf("minute").toISO({
             includeOffset: false,
             suppressMilliseconds: true,
             suppressSeconds: true,
-        }) ??
-        DateTime.local().toISO({
+        });
+
+    const end_date =
+        DateTime.local(view.year.value, view.month.value, day)
+            .startOf("minute")
+            .plus({ hours: currentTime.hour + 1, minutes: currentTime.minute })
+            .toISO({
+                includeOffset: false,
+                suppressMilliseconds: true,
+                suppressSeconds: true,
+            }) ??
+        DateTime.local().startOf("minute").toISO({
             includeOffset: false,
             suppressMilliseconds: true,
             suppressSeconds: true,
         });
 
     console.log("Date: ", date);
-    newEvent.value.start_date = date;
+    newEvent.value.start_date = start_date;
+    newEvent.value.end_date = end_date;
 
     if (!calendarEventVisible.value) {
         newEvent.value.id = 0;
@@ -84,13 +108,13 @@ const editCalendarEvent = (id: number) => {
         newEvent.value.title = event.title;
         newEvent.value.description = event.description;
         newEvent.value.start_date =
-            DateTime.fromSQL(event.start_date).toISO({
+            DateTime.fromSQL(event.start_date).startOf("minute").toISO({
                 includeOffset: false,
                 suppressMilliseconds: true,
                 suppressSeconds: true,
             }) ?? "";
         newEvent.value.end_date =
-            DateTime.fromSQL(event.end_date).toISO({
+            DateTime.fromSQL(event.end_date).startOf("minute").toISO({
                 includeOffset: false,
                 suppressMilliseconds: true,
                 suppressSeconds: true,
@@ -126,19 +150,30 @@ const deleteCalendarEvent = (id: number) => {
                 }
             )
             .catch((error: AxiosError) => {
-                console.log(error);
+                if (error.request?.status === 419) {
+                    // CSRF token has expired
+                    window.location.reload();
+                } else {
+                    console.log(error);
+                }
             });
     }
 };
 
 const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
+    console.log("Saving calendar event: ", event);
     axios
         .post(`/calendar/${event.calendar_id}/event`, event)
         .then((res) => {
             console.log(res.data);
         })
-        .catch((err: AxiosError) => {
-            console.log(err);
+        .catch((error: AxiosError) => {
+            if (error.request?.status === 419) {
+                // CSRF token has expired
+                window.location.reload();
+            } else {
+                console.log(error);
+            }
         });
 
     getCalendarEventData(view.year.value, view.month.value);
@@ -150,12 +185,12 @@ const newEvent: Ref<App.Models.CalendarEvent> = ref({
     id: 0,
     title: "",
     description: "",
-    start_date: DateTime.local().toISO({
+    start_date: DateTime.local().startOf("minute").toISO({
         includeOffset: false,
         suppressMilliseconds: true,
         suppressSeconds: true,
     }),
-    end_date: DateTime.local().plus({ hours: 1 }).toISO({
+    end_date: DateTime.local().startOf("minute").plus({ hours: 1 }).toISO({
         includeOffset: false,
         suppressMilliseconds: true,
         suppressSeconds: true,
