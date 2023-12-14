@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { DateTime, Info } from "luxon";
+import { bgColor, fgColor } from "./utilities";
 
 const calendarStore = useCalendarStore();
 const emit = defineEmits<{
@@ -26,7 +27,13 @@ const emit = defineEmits<{
                 :key="event.id"
                 class="border-black border mb-2 p-2"
             >
-                <div class="flex flex-row items-center px-2 bg-slate-300">
+                <div
+                    class="flex flex-row items-center px-2"
+                    :style="{
+                        'background-color': `${bgColor(event)}`,
+                        color: `${fgColor(event)}`,
+                    }"
+                >
                     <FontAwesomeIcon :icon="faCalendarDay" />
                     <div class="pl-2 text-lg">
                         {{
