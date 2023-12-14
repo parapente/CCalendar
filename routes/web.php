@@ -35,5 +35,6 @@ Route::middleware([
     'cas.auth'
 ])->group(function () {
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::post('/calendar/{calendar}/event', [CalendarController::class, 'addEvent'])->name('calendar.addEvent');
     Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
 });

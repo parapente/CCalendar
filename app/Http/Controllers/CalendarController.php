@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCalendarEventRequest;
 use App\Http\Requests\StoreCalendarRequest;
 use App\Http\Requests\UpdateCalendarRequest;
 use App\Models\Calendar;
-use App\Models\CalendarEvent;
 use Inertia\Inertia;
+
+use function Pest\Laravel\json;
 
 class CalendarController extends Controller
 {
@@ -66,5 +68,34 @@ class CalendarController extends Controller
     public function destroy(Calendar $calendar)
     {
         //
+    }
+
+    public function addEvent(Calendar $calendar, StoreCalendarEventRequest $request)
+    {
+        if (!$request->id) {
+            $calendar->calendarEvents()->create([
+                'title' => $request->title,
+                'description' => $request->description ?? "",
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'calendar_id' => $calendar->id,
+                'location' => $request->location ?? "",
+                'url' => $request->url ?? "",
+            ]);
+        } else {
+            // Ενημέρωσε παλιά εκδήλωση
+            $calendar->calendarEvents()->where('id', $request->id)->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'calendar_id' => $calendar->id,
+                'location' => $request->location,
+                'url' => $request->url,
+            ]);
+        }
+
+
+        return json_encode(["success" => true, "message" => "Event added successfully"]);
     }
 }

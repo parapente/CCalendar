@@ -11,7 +11,7 @@ class StoreCalendarEventRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,13 @@ class StoreCalendarEventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id' => ['nullable', 'integer'],
+            'title' => ['required','string'],
+            'description' => ['nullable','string'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date'],
+            'location' => ['nullable','string'],
+            'url' => ['nullable','url'],
         ];
     }
 }

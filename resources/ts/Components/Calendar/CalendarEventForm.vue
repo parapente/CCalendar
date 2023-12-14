@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useCalendarStore } from "@/Stores/calendarStore";
 import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import { watch } from "vue";
@@ -13,6 +14,8 @@ const props = withDefaults(
     }
 );
 
+const calendarStore = useCalendarStore();
+
 const form = useForm<{
     title: string;
     description: string;
@@ -24,7 +27,7 @@ const form = useForm<{
 }>({
     title: "",
     description: "",
-    event_type: 1,
+    event_type: calendarStore.calendars.map((calendar) => calendar.id)[0],
     start_date: props.event.start_date,
     end_date: props.event.end_date,
     location: "",
@@ -57,12 +60,29 @@ const onSubmit = () => {
 watch(
     () => props.event,
     (value) => {
-        form.start_date =
-            value.start_date + "T" + DateTime.now().toFormat("HH:mm");
-        form.end_date =
-            value.end_date +
-            "T" +
-            DateTime.now().plus({ hour: 1 }).toFormat("HH:mm");
+        const currentTime = DateTime.local();
+        const newStartDate =
+            DateTime.fromISO(value.start_date)
+                .plus({
+                    hours: currentTime.hour,
+                    minutes: currentTime.minute,
+                })
+                .toISO({
+                    includeOffset: false,
+                    suppressMilliseconds: true,
+                    suppressSeconds: true,
+                }) ?? "";
+
+        console.log(`New date: ${newStartDate}`);
+
+        form.title = value.title;
+        form.description = value.description;
+        form.start_date = form.end_date = newStartDate;
+        form.location = value.location;
+        form.url = value.url;
+    },
+    {
+        deep: true,
     }
 );
 </script>
@@ -89,8 +109,16 @@ watch(
             />
             <label for="event_type">Τύπος εκδήλωσης:</label>
             <select name="event_type" v-model="form.event_type">
-                <option value="1">Ημερίδα/Σεμινάριο</option>
-                <option value="2">Επίσκεψη σε σχολική μονάδα</option>
+                <option
+                    v-for="event_type in calendarStore.calendars.map(
+                        (calendar) => {
+                            return { id: calendar.id, name: calendar.name };
+                        }
+                    )"
+                    :value="event_type.id"
+                >
+                    {{ event_type.name }}
+                </option>
             </select>
             <label for="start_date">Ημερομηνία Εκδήλωσης:</label>
             <input

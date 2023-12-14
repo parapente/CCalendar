@@ -131,14 +131,41 @@ const nextMonth = () => {
 };
 
 const addCalendarEvent = (day: number) => {
-    newEvent.value.start_date =
-        DateTime.local(view.year.value, view.month.value, day).toISODate() ??
-        DateTime.local().toISODate();
+    const date =
+        DateTime.local(view.year.value, view.month.value, day).toISO({
+            includeOffset: false,
+            suppressMilliseconds: true,
+            suppressSeconds: true,
+        }) ??
+        DateTime.local().toISO({
+            includeOffset: false,
+            suppressMilliseconds: true,
+            suppressSeconds: true,
+        });
+
+    console.log("Date: ", date);
+    newEvent.value.start_date = date;
+
+    if (!calendarEventVisible.value) {
+        newEvent.value.title = "";
+        newEvent.value.description = "";
+    }
+
     calendarEventVisible.value = true;
 };
 
 const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
-    calendarStore.calendarEvents.push(event);
+    axios
+        .post(`/calendar/${event.calendar_id}/event`, event)
+        .then((res) => {
+            console.log(res.data);
+        })
+        .catch((err: AxiosError) => {
+            console.log(err);
+        });
+
+    getCalendarEventData(view.year.value, view.month.value);
+    clearNewEvent();
 };
 
 const calendarEventVisible = ref(false);
@@ -146,15 +173,47 @@ const newEvent: Ref<App.Models.CalendarEvent> = ref({
     id: 0,
     title: "",
     description: "",
-    start_date: DateTime.local().toISODate(),
-    end_date: DateTime.local().plus({ hours: 1 }).toISODate(),
+    start_date: DateTime.local().toISO({
+        includeOffset: false,
+        suppressMilliseconds: true,
+        suppressSeconds: true,
+    }),
+    end_date: DateTime.local().plus({ hours: 1 }).toISO({
+        includeOffset: false,
+        suppressMilliseconds: true,
+        suppressSeconds: true,
+    }),
     location: "",
     url: "",
     calendar_id: 0,
     created_at: null,
     updated_at: null,
 });
+
 const holidays = ref(greekHolidays(`${view.year.value}`));
+
+const clearNewEvent = () => {
+    newEvent.value = {
+        id: 0,
+        title: "",
+        description: "",
+        start_date: DateTime.local().toISO({
+            includeOffset: false,
+            suppressMilliseconds: true,
+            suppressSeconds: true,
+        }),
+        end_date: DateTime.local().plus({ hours: 1 }).toISO({
+            includeOffset: false,
+            suppressMilliseconds: true,
+            suppressSeconds: true,
+        }),
+        location: "",
+        url: "",
+        calendar_id: 0,
+        created_at: null,
+        updated_at: null,
+    };
+};
 
 const getCalendarEventData = async (year: number, month: number) => {
     let new_events: App.Models.CalendarEvent[] = [];
