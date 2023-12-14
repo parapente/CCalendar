@@ -34,6 +34,7 @@ class CalendarEventController extends Controller
                     ->whereDate('end_date', '>=', "$nextYear-$nextMonth-1");
             });
         })
+        ->orderBy('start_date')
         ->get();
 
         return $calendarEvents->toJson();
