@@ -50,13 +50,13 @@ const emit = defineEmits<{
                     </div>
                     <div class="flex grow justify-end">
                         <button
-                            class="my-1 px-3 py-2 rounded-lg bg-blue-500"
+                            class="my-1 px-3 py-2 rounded-lg bg-blue-500 shadow-md shadow-black hover:bg-blue-400"
                             @click="emit('editEvent', event.id)"
                         >
                             <FontAwesomeIcon :icon="faPencil" />
                         </button>
                         <button
-                            class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500"
+                            class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500 shadow-md shadow-black hover:bg-red-400"
                             @click="emit('deleteEvent', event.id)"
                         >
                             <FontAwesomeIcon :icon="faTrashCan" />
