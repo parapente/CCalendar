@@ -17,8 +17,8 @@ return new class extends Migration
             $table->text('description');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->string('location', 512);
-            $table->text('url', 1024);
+            $table->string('location', 512)->default("");
+            $table->text('url', 1024)->default("");
             $table->unsignedBigInteger('calendar_id');
             $table->foreign('calendar_id')
                 ->references('id')
