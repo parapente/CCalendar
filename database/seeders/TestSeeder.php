@@ -14,7 +14,7 @@ class TestSeeder extends Seeder
     {
         $calendars = \App\Models\Calendar::factory(5)->create();
         foreach ($calendars as $calendar) {
-            \App\Models\CalendarEvent::factory(15)->create([
+            \App\Models\CalendarEvent::factory(10)->create([
                 'calendar_id' => $calendar->id,
             ]);
         }
