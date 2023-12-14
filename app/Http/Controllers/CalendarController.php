@@ -85,7 +85,9 @@ class CalendarController extends Controller
             ]);
         } else {
             // Ενημέρωσε παλιά εκδήλωση
-            $calendar->calendarEvents()->where('id', $request->id)->update([
+            $calendarEvent = CalendarEvent::findOrFail($request->id);
+
+            $calendarEvent->update([
                 'title' => $request->title,
                 'description' => $request->description,
                 'start_date' => $request->start_date,
