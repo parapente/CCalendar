@@ -11,6 +11,10 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { DateTime, Info } from "luxon";
 
 const calendarStore = useCalendarStore();
+const emit = defineEmits<{
+    deleteEvent: [value: number];
+    editEvent: [value: number];
+}>();
 </script>
 
 <template>
@@ -38,11 +42,15 @@ const calendarStore = useCalendarStore();
                         }}
                     </div>
                     <div class="flex grow justify-end">
-                        <button class="my-1 px-3 py-2 rounded-lg bg-blue-500">
+                        <button
+                            class="my-1 px-3 py-2 rounded-lg bg-blue-500"
+                            @click="emit('editEvent', event.id)"
+                        >
                             <FontAwesomeIcon :icon="faPencil" />
                         </button>
                         <button
                             class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500"
+                            @click="emit('deleteEvent', event.id)"
                         >
                             <FontAwesomeIcon :icon="faTrashCan" />
                         </button>

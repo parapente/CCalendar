@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCalendarEventRequest;
 use App\Http\Requests\StoreCalendarRequest;
 use App\Http\Requests\UpdateCalendarRequest;
 use App\Models\Calendar;
+use App\Models\CalendarEvent;
 use Inertia\Inertia;
 
 use function Pest\Laravel\json;
@@ -95,7 +96,17 @@ class CalendarController extends Controller
             ]);
         }
 
-
         return json_encode(["success" => true, "message" => "Event added successfully"]);
+    }
+
+    public function deleteEvent(Calendar $calendar, CalendarEvent $event)
+    {
+        $deleted = $event->delete();
+
+        if ($deleted) {
+            return json_encode(["success" => true, "message" => "Event deleted successfully"]);
+        } else {
+            return json_encode(["success" => false, "message" => "Event not deleted"]);
+        }
     }
 }

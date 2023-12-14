@@ -17,6 +17,7 @@ import axios from "axios";
 import type { AxiosError } from "axios";
 import { useCalendarStore } from "@/Stores/calendarStore";
 import { daysOfMonth, daysOfWeek } from "./utilities";
+import type { AxiosResponse } from "axios";
 
 const calendarStore = useCalendarStore();
 
@@ -65,11 +66,69 @@ const addCalendarEvent = (day: number) => {
     newEvent.value.start_date = date;
 
     if (!calendarEventVisible.value) {
+        newEvent.value.id = 0;
         newEvent.value.title = "";
         newEvent.value.description = "";
+        newEvent.value.location = "";
+        newEvent.value.url = "";
     }
 
     calendarEventVisible.value = true;
+};
+
+const editCalendarEvent = (id: number) => {
+    const event = calendarStore.calendarEvents.find((event) => event.id === id);
+    console.log("Event: ", event);
+    if (event) {
+        newEvent.value.id = event.id;
+        newEvent.value.title = event.title;
+        newEvent.value.description = event.description;
+        newEvent.value.start_date =
+            DateTime.fromSQL(event.start_date).toISO({
+                includeOffset: false,
+                suppressMilliseconds: true,
+                suppressSeconds: true,
+            }) ?? "";
+        newEvent.value.end_date =
+            DateTime.fromSQL(event.end_date).toISO({
+                includeOffset: false,
+                suppressMilliseconds: true,
+                suppressSeconds: true,
+            }) ?? "";
+        newEvent.value.calendar_id = event.calendar_id;
+        newEvent.value.location = event.location;
+        newEvent.value.url = event.url;
+        calendarEventVisible.value = true;
+    }
+};
+
+const deleteCalendarEvent = (id: number) => {
+    const event = calendarStore.calendarEvents.find((event) => event.id === id);
+    console.log("Event: ", event);
+    if (event) {
+        axios
+            .delete(`/calendar/${event.calendar_id}/event/${event.id}`)
+            .then(
+                (
+                    response: AxiosResponse<{
+                        success: boolean;
+                        message: string;
+                    }>
+                ) => {
+                    if (response.data.success) {
+                        calendarStore.calendarEvents =
+                            calendarStore.calendarEvents.filter(
+                                (event) => event.id !== id
+                            );
+                    } else {
+                        alert(response.data.message);
+                    }
+                }
+            )
+            .catch((error: AxiosError) => {
+                console.log(error);
+            });
+    }
 };
 
 const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
@@ -230,5 +289,9 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
         v-model:visible="calendarEventVisible"
         @save="saveCalendarEvent"
     />
-    <CalendarEventList class="max-w-screen-xl w-full mt-4" />
+    <CalendarEventList
+        class="max-w-screen-xl w-full mt-4"
+        @editEvent="editCalendarEvent"
+        @deleteEvent="deleteCalendarEvent"
+    />
 </template>

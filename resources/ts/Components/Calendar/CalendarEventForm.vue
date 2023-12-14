@@ -16,18 +16,13 @@ const props = withDefaults(
 
 const calendarStore = useCalendarStore();
 
-const form = useForm<{
-    title: string;
-    description: string;
-    event_type: number;
-    start_date: string;
-    end_date: string;
-    location: string;
-    url: string;
-}>({
+const form = useForm<
+    Omit<App.Models.CalendarEvent, "updated_at" | "created_at">
+>({
+    id: 0,
     title: "",
     description: "",
-    event_type: calendarStore.calendars.map((calendar) => calendar.id)[0],
+    calendar_id: calendarStore.calendars.map((calendar) => calendar.id)[0],
     start_date: props.event.start_date,
     end_date: props.event.end_date,
     location: "",
@@ -41,14 +36,14 @@ const emit = defineEmits<{
 
 const onSubmit = () => {
     emit("save", {
-        id: 0,
+        id: form.id,
         title: form.title,
         description: form.description,
         start_date: form.start_date,
         end_date: form.end_date,
         location: form.location,
         url: form.url,
-        calendar_id: form.event_type,
+        calendar_id: form.calendar_id,
         created_at: null,
         updated_at: null,
     });
@@ -63,6 +58,7 @@ watch(
         const currentTime = DateTime.local();
         const newStartDate =
             DateTime.fromISO(value.start_date)
+                .startOf("minute")
                 .plus({
                     hours: currentTime.hour,
                     minutes: currentTime.minute,
@@ -75,9 +71,11 @@ watch(
 
         console.log(`New date: ${newStartDate}`);
 
+        form.id = value.id;
         form.title = value.title;
         form.description = value.description;
         form.start_date = form.end_date = newStartDate;
+        form.calendar_id = value.calendar_id;
         form.location = value.location;
         form.url = value.url;
     },
@@ -107,8 +105,8 @@ watch(
                 v-model="form.description"
                 placeholder="Λεπτομέρειες εκδήλωσης"
             />
-            <label for="event_type">Τύπος εκδήλωσης:</label>
-            <select name="event_type" v-model="form.event_type">
+            <label for="calendar_id">Τύπος εκδήλωσης:</label>
+            <select name="calendar_id" v-model="form.calendar_id">
                 <option
                     v-for="event_type in calendarStore.calendars.map(
                         (calendar) => {
