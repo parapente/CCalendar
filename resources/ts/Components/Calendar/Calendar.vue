@@ -18,6 +18,7 @@ import type { AxiosError } from "axios";
 import { useCalendarStore } from "@/Stores/calendarStore";
 import { daysOfMonth, daysOfWeek } from "./utilities";
 import type { AxiosResponse } from "axios";
+import CalendarLegend from "./CalendarLegend.vue";
 
 const calendarStore = useCalendarStore();
 
@@ -314,6 +315,10 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
             ></Day>
         </div>
         <div class="flex justify-between"></div>
+    </div>
+    <div class="flex flex-row max-w-screen-xl w-full pt-4">
+        <CalendarLegend />
+        <div class="grow"></div>
     </div>
     <CalendarEventForm
         :event="newEvent"
