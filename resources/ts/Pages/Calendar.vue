@@ -11,7 +11,7 @@ store.calendars = [...props.calendars];
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-center">
+    <div class="flex flex-col items-center justify-center mx-2">
         <Calendar></Calendar>
     </div>
 </template>
