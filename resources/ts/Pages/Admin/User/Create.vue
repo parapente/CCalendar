@@ -6,21 +6,32 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import DangerButton from "@/Components/DangerButton.vue";
-import route from "ziggy-js";
+import route from "ziggy";
 import DropdownList from "@/Components/DropdownList.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 
-const form = useForm({
+const props = defineProps<{
+    roles: Array<App.Models.Role>;
+}>();
+
+const form = useForm<{
+    name: string;
+    username: string;
+    password: string;
+    password_confirmation: string;
+    type: "admin" | "cas";
+    role_id: number;
+}>({
     name: "",
     username: "",
-    email: "",
     password: "",
     password_confirmation: "",
-    role: "100",
+    type: "admin",
+    role_id: props.roles[0].id,
 });
 
 const submit = () => {
-    form.post(route("user.store"), {
+    form.post(route("administrator.user.store"), {
         onFinish: () => form.reset("password", "password_confirmation"),
     });
 };
@@ -37,11 +48,27 @@ const submit = () => {
         <div class="py-4">
             <AuthenticationCard>
                 <div
-                    class="text-3xl text-bold mt-2 mb-4 p-5 bg-slate-300 rounded-lg shadow-md"
+                    class="text-3xl text-bold mt-2 mb-4 p-5 bg-slate-300 rounded-lg shadow-md text-center"
                 >
                     Δημιουργία νέου χρήστη
                 </div>
                 <form @submit.prevent="submit">
+                    <div class="mt-4">
+                        <InputLabel for="type" value="Είδος Λογαριασμού" />
+                        <DropdownList
+                            id="type"
+                            class="w-full"
+                            v-model="form.type"
+                        >
+                            <option
+                                v-for="type in ['admin', 'cas']"
+                                :value="type"
+                            >
+                                {{ type }}
+                            </option>
+                        </DropdownList>
+                    </div>
+
                     <div>
                         <InputLabel for="name" value="Όνομα" />
                         <TextInput
@@ -72,20 +99,7 @@ const submit = () => {
                         />
                     </div>
 
-                    <div class="mt-4">
-                        <InputLabel for="email" value="Email" />
-                        <TextInput
-                            id="email"
-                            v-model="form.email"
-                            type="email"
-                            class="mt-1 block w-full"
-                            required
-                            autocomplete="username"
-                        />
-                        <InputError class="mt-2" :message="form.errors.email" />
-                    </div>
-
-                    <div class="mt-4">
+                    <div class="mt-4" v-if="form.type === 'admin'">
                         <InputLabel for="password" value="Κωδικός" />
                         <TextInput
                             id="password"
@@ -101,7 +115,7 @@ const submit = () => {
                         />
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4" v-if="form.type === 'admin'">
                         <InputLabel
                             for="password_confirmation"
                             value="Επιβεβαίωση κωδικού"
@@ -120,15 +134,19 @@ const submit = () => {
                         />
                     </div>
 
-                    <div class="mt-4">
-                        <InputLabel for="role" value="Είδος" />
+                    <div class="mt-4" v-if="form.type === 'cas'">
+                        <InputLabel
+                            for="role"
+                            value="Κατηγορία λογαριασμού ΠΣΔ"
+                        />
                         <DropdownList
                             id="role"
                             class="w-full"
-                            v-model="form.role"
+                            v-model="form.role_id"
                         >
-                            <option value="100">Συγγραφέας</option>
-                            <option value="255">Διαχειριστής</option>
+                            <option v-for="role in roles" :value="role.id">
+                                {{ role.name }}
+                            </option>
                         </DropdownList>
                     </div>
 
@@ -136,7 +154,9 @@ const submit = () => {
                         <DangerButton
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"
-                            @click="router.get(route('user.index'))"
+                            @click="
+                                router.get(route('administrator.user.index'))
+                            "
                         >
                             ΑΚΥΡΩΣΗ
                         </DangerButton>

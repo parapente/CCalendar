@@ -37,7 +37,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::all();
+
+        return Inertia::render('Admin/User/Create', compact('roles'));
     }
 
     /**
@@ -45,7 +47,34 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required','string','max:255'],
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::when(
+                    $request->type === 'admin',
+                    Rule::unique('users'),
+                    Rule::unique('cas_users'))
+            ],
+            'type' => ['required','string'],
+            'role_id' => ['required_if:type,cas', 'integer'],
+            'password' => ['nullable', 'string', 'min:8', 'max:255'],
+            'password_confirmation' => ['nullable', 'string', 'max:255', Rule::requiredIf(!is_null($request->password)), 'same:password'],
+        ]);
+
+        if ($request->type === 'admin') {
+            User::create($validated);
+        } elseif ($request->type === 'cas') {
+            CasUser::create($validated);
+        } else {
+            abort(404);
+        }
+
+        return to_route('administrator.user.index')
+            ->with('flash.bannerStyle', 'success')
+            ->with('flash.banner', 'Ο χρήστης δημιουργήθηκε επιτυχώς');
     }
 
     /**
@@ -92,7 +121,7 @@ class UserController extends Controller
                     Rule::unique('users')->ignore($id),
                     Rule::unique('cas_users')->ignore($id))
             ],
-            'role' => [Rule::requiredIf($type === "cas"), 'integer'],
+            'role_id' => [Rule::requiredIf($type === "cas"), 'integer'],
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
             'password_confirmation' => ['nullable', 'string', 'max:255', Rule::requiredIf(!is_null($request->password)), 'same:password'],
         ]);
@@ -117,7 +146,7 @@ class UserController extends Controller
 
         return to_route('administrator.user.index')
             ->with('flash.bannerStyle', 'success')
-            ->with('flash.banner', 'User updated successfully');
+            ->with('flash.banner', 'Ο χρήστης ενημερώθηκε επιτυχώς');
     }
 
     /**

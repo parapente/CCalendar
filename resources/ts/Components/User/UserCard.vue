@@ -40,6 +40,7 @@ const page = usePage<PageWithSharedProps>();
             <FontAwesomeIcon
                 v-if="user.role === 'User'"
                 :icon="faUser"
+                size="lg"
                 class="mx-1"
             />
             {{ user.name }}

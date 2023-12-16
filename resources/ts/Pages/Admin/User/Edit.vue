@@ -25,7 +25,7 @@ const form = useForm({
     username: props.user.username,
     password: "",
     password_confirmation: "",
-    role:
+    role_id:
         props.type === "cas"
             ? props.roles.find((item) => item.name === props.user.role)!.id
             : 0,
@@ -123,7 +123,7 @@ const submit = () => {
                         <DropdownList
                             id="role"
                             class="w-full"
-                            v-model="form.role"
+                            v-model="form.role_id"
                         >
                             <option v-for="role in roles" :value="role.id">
                                 {{ role.name }}

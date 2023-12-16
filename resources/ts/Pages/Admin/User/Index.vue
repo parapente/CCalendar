@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import Message from "@/Components/Message.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import UserCard from "@/Components/User/UserCard.vue";
-import type { PageWithSharedProps } from "@/pageprops";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Link, usePage } from "@inertiajs/vue3";
-import { TransitionGroup, useAttrs } from "vue";
+import { Link } from "@inertiajs/vue3";
+import { TransitionGroup } from "vue";
 import route from "ziggy";
 
 const props = defineProps<{
