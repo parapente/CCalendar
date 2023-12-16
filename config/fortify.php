@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'username' => 'email',
+    'username' => 'username',
 
     'email' => 'email',
 
@@ -87,7 +87,7 @@ return [
     |
     */
 
-    'prefix' => '',
+    'prefix' => 'administrator',
 
     'domain' => null,
 
@@ -145,8 +145,8 @@ return [
     */
 
     'features' => [
-        Features::registration(),
-        Features::resetPasswords(),
+        // Features::registration(),
+        // Features::resetPasswords(),
         // Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),

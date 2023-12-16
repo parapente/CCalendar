@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CalendarEventController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,14 +22,19 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 });
 
-Route::middleware([
+Route::prefix('administrator')
+    ->name('administrator.')
+    ->middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/', function () {
+        return Inertia::render('Admin/Dashboard');
+    })->name('index');
+    Route::get('/user/{user}/type/{type}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user/{user}/type/{type}', [UserController::class, 'update'])->name('user.update');
+    Route::resource('user', UserController::class)->only(['index', 'create', 'store']);
 });
 
 Route::middleware([
