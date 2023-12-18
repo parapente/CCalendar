@@ -184,7 +184,7 @@ const newEvent: Ref<App.Models.CalendarEvent> = ref({
     }),
     location: "",
     url: "",
-    calendar_id: 0,
+    calendar_id: calendarStore.calendars.map((calendar) => calendar.id)[0],
     created_at: null,
     updated_at: null,
 });
@@ -208,7 +208,7 @@ const clearNewEvent = () => {
         }),
         location: "",
         url: "",
-        calendar_id: 0,
+        calendar_id: calendarStore.calendars.map((calendar) => calendar.id)[0],
         created_at: null,
         updated_at: null,
     };

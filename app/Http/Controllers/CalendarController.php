@@ -9,8 +9,6 @@ use App\Models\Calendar;
 use App\Models\CalendarEvent;
 use Inertia\Inertia;
 
-use function Pest\Laravel\json;
-
 class CalendarController extends Controller
 {
     /**
@@ -82,6 +80,7 @@ class CalendarController extends Controller
                 'calendar_id' => $calendar->id,
                 'location' => $request->location ?? "",
                 'url' => $request->url ?? "",
+                'cas_user_id' => $request->cas_user->id,
             ]);
         } else {
             // Ενημέρωσε παλιά εκδήλωση
