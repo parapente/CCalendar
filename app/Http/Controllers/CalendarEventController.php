@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCalendarEventRequest;
 use App\Http\Requests\UpdateCalendarEventRequest;
 use App\Models\CalendarEvent;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 
 class CalendarEventController extends Controller
@@ -14,11 +15,28 @@ class CalendarEventController extends Controller
      */
     public function index(int $year, int $month)
     {
+        $cas_user = request('cas_user');
+        $getAll = false;
+        if ($cas_user) {
+            $role = Role::where('id', $cas_user->role_id)->firstOrFail()->name;
+            if ($role === 'Supervisor') {
+                $getAll = true;
+            } else {
+                $getAll = false;
+            }
+        } else { // Administrator
+            $getAll = true;
+        }
+
         $calendarEvents = CalendarEvent::whereHas("calendar", function ($query) {
             $query->where('active', true);
-        })
-        ->where('cas_user_id', request('cas_user')->id)
-        ->where(function ($query) use ($year, $month) {
+        });
+
+        if (!$getAll) {
+            $calendarEvents = $calendarEvents->where('cas_user_id', request('cas_user')->id);
+        }
+
+        $calendarEvents = $calendarEvents->where(function ($query) use ($year, $month) {
             $query->where(function ($query) use ($year, $month) {
                 $query->whereYear('start_date', $year)
                     ->whereMonth('start_date', $month);

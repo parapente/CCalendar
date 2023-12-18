@@ -18,7 +18,7 @@ class CalendarController extends Controller
     {
         $calendars = Calendar::where('active', true)->get();
 
-        return Inertia::render('Calendar', compact('calendars'));
+        return Inertia::render('Admin/Calendar/Index', compact('calendars'));
     }
 
     /**
@@ -26,7 +26,7 @@ class CalendarController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Calendar/Create');
     }
 
     /**
@@ -109,5 +109,12 @@ class CalendarController extends Controller
         } else {
             return json_encode(["success" => false, "message" => "Event not deleted"]);
         }
+    }
+
+    public function showAll()
+    {
+        $calendars = Calendar::where('active', true)->get();
+
+        return Inertia::render('Calendar', compact('calendars'));
     }
 }

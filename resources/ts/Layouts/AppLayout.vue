@@ -59,6 +59,20 @@ const page = usePage<PageWithSharedProps>();
                                     Χρήστες
                                 </NavLink>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:flex">
+                                <NavLink
+                                    :href="
+                                        route('administrator.calendar.index')
+                                    "
+                                    :active="
+                                        route().current(
+                                            'administrator.calendar.index'
+                                        )
+                                    "
+                                >
+                                    Ημερολόγια
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
