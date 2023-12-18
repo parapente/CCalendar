@@ -19,13 +19,13 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <div v-if="calendarStore.calendarEvents.length > 0">
+    <div v-if="calendarStore.calendarEvents.length > 0" class="dark:text-white">
         <div class="text-xl text-bold mb-2">Εκδηλώσεις μήνα:</div>
         <ul>
             <li
                 v-for="event in calendarStore.calendarEvents"
                 :key="event.id"
-                class="border-black border mb-2 p-2"
+                class="border-black border mb-2 p-2 dark:border-white dark:bg-gray-700"
             >
                 <div
                     class="flex flex-row items-center px-2"

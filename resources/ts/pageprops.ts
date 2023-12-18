@@ -23,6 +23,8 @@ export interface PageWithSharedProps extends PageProps {
         two_factor_enabled: boolean;
     };
 
+    cas_user: App.Models.CasUser | null;
+
     auth: {
         user: {
             id: number;

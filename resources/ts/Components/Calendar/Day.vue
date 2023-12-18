@@ -23,9 +23,10 @@ const dayNumber = computed(() => {
     <div
         class="cursor-default"
         :class="{
-            'text-gray-500 bg-gray-300': props.day.isDisabled,
-            'bg-purple-500': props.day.isHoliday,
-            'bg-green-300': props.day.isToday,
+            'text-gray-500 bg-gray-300 dark:text-gray-300 dark:bg-gray-500':
+                props.day.isDisabled,
+            'bg-purple-500 dark:bg-purple-800': props.day.isHoliday,
+            'bg-green-300 dark:bg-green-700': props.day.isToday,
         }"
         @click="!props.day.isDisabled ? $emit('triggered', dayNumber) : null"
     >

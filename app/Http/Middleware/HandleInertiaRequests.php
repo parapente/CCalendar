@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\CasUser;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -36,8 +37,13 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $cas_user = null;
+        if (cas()->isAuthenticated()) {
+            $cas_user = CasUser::where('employee_number', cas()->getAttribute('employeenumber'))->first();
+        }
+
         return array_merge(parent::share($request), [
-            //
+            'cas_user' => $cas_user,
         ]);
     }
 }

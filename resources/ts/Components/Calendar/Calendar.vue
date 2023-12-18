@@ -269,12 +269,14 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
 </script>
 
 <template>
-    <div class="m-1 border border-black rounded-t-lg max-w-screen-xl w-full">
+    <div
+        class="m-2 border border-black text-black bg-white dark:border-gray-400 dark:text-gray-300 dark:bg-gray-600 rounded-t-lg max-w-screen-xl w-full"
+    >
         <div class="px-1 flex text-center">
             <div class="w-full text-2xl font-bold">{{ view.year }}</div>
         </div>
         <div
-            class="px-1 w-full flex justify-between text-center border-black border-y"
+            class="px-1 w-full flex justify-between text-center border-black dark:border-gray-400 border-y"
         >
             <button @click="prevMonth" type="button">
                 <FontAwesomeIcon :icon="faArrowLeft" size="xl" />
@@ -287,9 +289,9 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
                 <FontAwesomeIcon :icon="faArrowRight" size="xl" />
             </button>
         </div>
-        <div class="grid grid-cols-7">
+        <div class="grid grid-cols-7 dark:bg-gray-800">
             <DayName
-                class="text-center overflow-hidden border-black border-b"
+                class="text-center overflow-hidden border-black dark:border-gray-400 dark:bg-gray-600 border-b"
                 :day-of-week="index"
                 v-for="(day, index) in daysOfWeek"
                 :key="day"
@@ -302,13 +304,13 @@ onMounted(() => getCalendarEventData(view.year.value, view.month.value));
                     holidays
                 )"
                 :day="day"
-                class="h-36 max-h-36 text-center overflow-hidden border-black border-b"
+                class="h-36 max-h-36 text-center overflow-hidden border-black dark:border-gray-400 border-b"
                 :class="
                     index % 7 > 4
                         ? index % 7 === 6
-                            ? 'bg-blue-300'
-                            : 'bg-blue-300 border-r border-black'
-                        : 'border-r border-black'
+                            ? 'bg-blue-300 dark:bg-blue-800'
+                            : 'bg-blue-300 dark:bg-blue-800 border-r border-black dark:border-gray-400'
+                        : 'border-r border-black dark:border-gray-400'
                 "
                 :calendarEvents="dayEvents(day)"
                 @triggered="addCalendarEvent"

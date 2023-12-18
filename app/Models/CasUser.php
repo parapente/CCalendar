@@ -14,6 +14,7 @@ class CasUser extends Model
         'name',
         'username',
         'role_id',
+        'employee_number'
     ];
 
     public function role(): BelongsTo

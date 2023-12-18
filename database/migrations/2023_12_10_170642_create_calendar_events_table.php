@@ -15,14 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('title', 512);
             $table->text('description');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->dateTime('start_date')->index();
+            $table->dateTime('end_date')->index();
             $table->string('location', 512);
             $table->text('url', 1024);
             $table->unsignedBigInteger('calendar_id');
             $table->foreign('calendar_id')
                 ->references('id')
                 ->on('calendars');
+            $table->unsignedBigInteger('cas_user_id');
+            $table->foreign('cas_user_id')
+                ->references('id')
+                ->on('cas_users');
             $table->timestamps();
         });
     }

@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('cas_users', function (Blueprint $table) {
             $table->id();
-            $table->string('username')->unique()->nullable(false);
+            $table->string('username')->unique()->nullable(true);
             $table->string('name');
             $table->unsignedBigInteger('role_id');
             $table->foreign('role_id')
                 ->references('id')
                 ->on('roles');
+            $table->string('employee_number')->unique();
             $table->tinyInteger('active')->default(1);
             $table->timestamps();
         });

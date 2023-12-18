@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Calendar from "@/Components/Calendar/Calendar.vue";
+import CasUserLayout from "@/Layouts/CasUserLayout.vue";
 import { useCalendarStore } from "@/Stores/calendarStore";
 
 const props = defineProps<{
@@ -11,7 +12,9 @@ store.calendars = [...props.calendars];
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-center mx-2">
-        <Calendar></Calendar>
-    </div>
+    <CasUserLayout>
+        <div class="flex flex-col items-center mx-2">
+            <Calendar></Calendar>
+        </div>
+    </CasUserLayout>
 </template>

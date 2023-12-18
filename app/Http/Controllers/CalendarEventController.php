@@ -16,8 +16,8 @@ class CalendarEventController extends Controller
     {
         $calendarEvents = CalendarEvent::whereHas("calendar", function ($query) {
             $query->where('active', true);
-            // $query->where('user_id', auth()->user()->id);
         })
+        ->where('cas_user_id', request('cas_user')->id)
         ->where(function ($query) use ($year, $month) {
             $query->where(function ($query) use ($year, $month) {
                 $query->whereYear('start_date', $year)

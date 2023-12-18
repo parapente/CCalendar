@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CalendarEventController;
+use App\Http\Controllers\CasUserController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -38,10 +39,16 @@ Route::prefix('administrator')
 });
 
 Route::middleware([
-    'cas.auth'
+    'cas.auth',
+    'cas.registered'
 ])->group(function () {
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::post('/calendar/{calendar}/event', [CalendarController::class, 'addEvent'])->name('calendar.addEvent');
     Route::delete('/calendar/{calendar}/event/{event}', [CalendarController::class, 'deleteEvent'])->name('calendar.deleteEvent');
     Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
 });
+
+Route::get('/invalid/cas_user', [CasUserController::class, 'invalidCasUser'])->name('invalid.cas_user');
+Route::get('/logout', function() {
+    cas()->logoutWithUrl(route('calendar.index'));
+})->name('cas.logout')->middleware('cas.auth');
