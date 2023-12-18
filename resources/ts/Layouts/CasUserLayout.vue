@@ -4,7 +4,6 @@ import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import Banner from "@/Components/Banner.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import route from "ziggy";
 import type { PageWithSharedProps } from "@/pageprops";

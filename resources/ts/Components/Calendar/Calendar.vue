@@ -147,12 +147,7 @@ const deleteCalendarEvent = (id: number) => {
                 }
             )
             .catch((error: AxiosError) => {
-                if (error.request?.status === 419) {
-                    // CSRF token has expired
-                    window.location.reload();
-                } else {
-                    console.log(error);
-                }
+                console.log(error);
             });
     }
 };
@@ -165,12 +160,7 @@ const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
             console.log(res.data);
         })
         .catch((error: AxiosError) => {
-            if (error.request?.status === 419) {
-                // CSRF token has expired
-                window.location.reload();
-            } else {
-                console.log(error);
-            }
+            console.log(error);
         });
 
     getCalendarEventData(view.year.value, view.month.value);

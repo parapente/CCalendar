@@ -7,6 +7,8 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import { createPinia } from "pinia";
 
+import "@/Plugins/http";
+
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 const pinia = createPinia();
