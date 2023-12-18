@@ -10,16 +10,54 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { DateTime, Info } from "luxon";
 import { bgColor, fgColor } from "./utilities";
+import DialogModal from "@/Components/DialogModal.vue";
+import { ref } from "vue";
 
 const calendarStore = useCalendarStore();
 const emit = defineEmits<{
     deleteEvent: [value: number];
     editEvent: [value: number];
 }>();
+
+const showDeleteDialog = ref(false);
+const eventForDeletion = ref(0);
+
+const confirmDeletion = (id: number) => {
+    showDeleteDialog.value = true;
+    eventForDeletion.value = id;
+};
+
+const proceedWithDeletion = () => {
+    showDeleteDialog.value = false;
+    emit("deleteEvent", eventForDeletion.value);
+};
 </script>
 
 <template>
     <div v-if="calendarStore.calendarEvents.length > 0" class="dark:text-white">
+        <DialogModal :show="showDeleteDialog" @close="showDeleteDialog = false">
+            <template #title> Επιβεβαίωση διαγραφής εκδήλωσης </template>
+            <template #content>
+                <p>Είστε σίγουροι ότι θέλετε να διαγράψετε την εκδήλωση;</p>
+            </template>
+            <template #footer>
+                <div class="flex w-full">
+                    <button
+                        @click="showDeleteDialog = false"
+                        class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-auto"
+                    >
+                        Όχι
+                    </button>
+                    <button
+                        @click="proceedWithDeletion"
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                        Ναι
+                    </button>
+                </div>
+            </template>
+        </DialogModal>
+
         <div class="text-xl text-bold mb-2">Εκδηλώσεις μήνα:</div>
         <ul>
             <li
@@ -57,7 +95,7 @@ const emit = defineEmits<{
                         </button>
                         <button
                             class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500 shadow-md shadow-black hover:bg-red-400 text-black"
-                            @click="emit('deleteEvent', event.id)"
+                            @click="confirmDeletion(event.id)"
                         >
                             <FontAwesomeIcon :icon="faTrashCan" />
                         </button>
