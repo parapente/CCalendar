@@ -23,4 +23,8 @@ class CalendarEvent extends Model
     public function calendar() {
         return $this->belongsTo(Calendar::class);
     }
+
+    public function casUser() {
+        return $this->belongsTo(CasUser::class);
+    }
 }

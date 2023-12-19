@@ -24,6 +24,7 @@ export interface PageWithSharedProps extends PageProps {
     };
 
     cas_user: App.Models.CasUser | null;
+    cas_user_role: string;
 
     auth: {
         user: {

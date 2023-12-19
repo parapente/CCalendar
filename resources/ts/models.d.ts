@@ -42,6 +42,7 @@ declare namespace App.Models {
         location: string;
         url: string;
         calendar_id: number;
+        cas_user_id: number;
         created_at: string | null;
         updated_at: string | null;
     }

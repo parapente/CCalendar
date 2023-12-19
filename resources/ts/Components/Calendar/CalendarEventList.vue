@@ -8,10 +8,12 @@ import {
     faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { DateTime, Info } from "luxon";
+import { DateTime } from "luxon";
 import { bgColor, fgColor } from "./utilities";
 import DialogModal from "@/Components/DialogModal.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { usePage } from "@inertiajs/vue3";
+import type { PageWithSharedProps } from "@/pageprops";
 
 const calendarStore = useCalendarStore();
 const emit = defineEmits<{
@@ -31,10 +33,23 @@ const proceedWithDeletion = () => {
     showDeleteDialog.value = false;
     emit("deleteEvent", eventForDeletion.value);
 };
+
+const page = usePage<PageWithSharedProps>();
+
+const showUser = computed(() => {
+    if (page.props.cas_user_role === "Supervisor" || page.props.auth.user) {
+        return true;
+    }
+
+    return false;
+});
 </script>
 
 <template>
-    <div v-if="calendarStore.calendarEvents.length > 0" class="dark:text-white">
+    <div
+        v-if="calendarStore.filteredCalendarEvents.length > 0"
+        class="dark:text-white"
+    >
         <DialogModal :show="showDeleteDialog" @close="showDeleteDialog = false">
             <template #title> Επιβεβαίωση διαγραφής εκδήλωσης </template>
             <template #content>
@@ -61,7 +76,7 @@ const proceedWithDeletion = () => {
         <div class="text-xl text-bold mb-2">Εκδηλώσεις μήνα:</div>
         <ul>
             <li
-                v-for="event in calendarStore.calendarEvents"
+                v-for="event in calendarStore.filteredCalendarEvents"
                 :key="event.id"
                 class="border-black border mb-2 p-2 dark:border-white dark:bg-gray-700"
             >
@@ -73,18 +88,28 @@ const proceedWithDeletion = () => {
                     }"
                 >
                     <FontAwesomeIcon :icon="faCalendarDay" />
-                    <div class="pl-2 text-lg">
-                        {{
-                            DateTime.fromSQL(event.start_date).toLocaleString(
-                                DateTime.DATETIME_MED
-                            )
-                        }}
-                        -
-                        {{
-                            DateTime.fromSQL(event.end_date).toLocaleString(
-                                DateTime.DATETIME_MED
-                            )
-                        }}
+                    <div class="flex flex-col">
+                        <div class="pl-2 text-lg">
+                            {{
+                                DateTime.fromSQL(
+                                    event.start_date
+                                ).toLocaleString(DateTime.DATETIME_MED)
+                            }}
+                            -
+                            {{
+                                DateTime.fromSQL(event.end_date).toLocaleString(
+                                    DateTime.DATETIME_MED
+                                )
+                            }}
+                        </div>
+                        <div class="pl-2 text-sm">
+                            ({{
+                                calendarStore.calendars.find(
+                                    (calendar) =>
+                                        calendar.id === event.calendar_id
+                                )?.name
+                            }})
+                        </div>
                     </div>
                     <div class="flex grow justify-end">
                         <button
@@ -101,7 +126,10 @@ const proceedWithDeletion = () => {
                         </button>
                     </div>
                 </div>
-                <div>
+                <div class="flex">
+                    <div class="text-lg font-bold mr-2" v-if="showUser">
+                        {{ event.cas_user?.name }}:
+                    </div>
                     <u class="text-lg font-bold">{{ event.title }}</u>
                 </div>
                 <div class="text">

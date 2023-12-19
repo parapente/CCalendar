@@ -36,8 +36,10 @@ Route::prefix('administrator')
     Route::get('/user/{user}/type/{type}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/{user}/type/{type}', [UserController::class, 'update'])->name('user.update');
     Route::resource('user', UserController::class)->only(['index', 'create', 'store']);
-
+    Route::get('/calendar/overview', [CalendarController::class, 'overview'])->name('calendar.overview');
     Route::resource('calendar', CalendarController::class)->except(['show', 'destroy']);
+    Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
+    Route::get('/cas_user/{user}/name', [CasUserController::class, 'getName'])->name('cas_user.name');
 });
 
 Route::middleware([
@@ -48,6 +50,7 @@ Route::middleware([
     Route::post('/calendar/{calendar}/event', [CalendarController::class, 'addEvent'])->name('calendar.addEvent');
     Route::delete('/calendar/{calendar}/event/{event}', [CalendarController::class, 'deleteEvent'])->name('calendar.deleteEvent');
     Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
+    Route::get('/cas_user/{user}/name', [CasUserController::class, 'getName'])->name('cas_user.name');
 });
 
 Route::get('/invalid/cas_user', [CasUserController::class, 'invalidCasUser'])->name('invalid.cas_user');

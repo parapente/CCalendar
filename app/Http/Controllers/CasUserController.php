@@ -16,4 +16,16 @@ class CasUserController extends Controller
 
         return Inertia::render('Auth/InvalidCasUser', compact('user'));
     }
+
+    public function getName(CasUser $user)
+    {
+        if (auth()->user() || (cas()->isAuthenticated() && request('cas_user_role') === 'Supervisor')) {
+            return json_encode([
+                'id' => $user->id,
+                'name' => $user->name,
+            ]);
+        } else {
+            abort(403);
+        }
+    }
 }

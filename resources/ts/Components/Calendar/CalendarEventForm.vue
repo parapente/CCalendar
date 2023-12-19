@@ -25,6 +25,7 @@ const form = useForm<
     calendar_id: calendarStore.calendars.map((calendar) => calendar.id)[0],
     start_date: props.event.start_date,
     end_date: props.event.end_date,
+    cas_user_id: 0,
     location: "",
     url: "",
 });
@@ -44,6 +45,7 @@ const onSubmit = () => {
         location: form.location,
         url: form.url,
         calendar_id: form.calendar_id,
+        cas_user_id: 0,
         created_at: null,
         updated_at: null,
     });

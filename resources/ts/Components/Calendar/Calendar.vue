@@ -19,6 +19,26 @@ import { useCalendarStore } from "@/Stores/calendarStore";
 import { daysOfMonth, daysOfWeek } from "./utilities";
 import type { AxiosResponse } from "axios";
 import CalendarLegend from "./CalendarLegend.vue";
+import CalendarFilters from "./CalendarFilters.vue";
+import { usePage } from "@inertiajs/vue3";
+import type { PageWithSharedProps } from "@/pageprops";
+
+const props = withDefaults(
+    defineProps<{
+        administrator?: boolean;
+    }>(),
+    {
+        administrator: false,
+    }
+);
+
+const routePrefix = computed(() => {
+    if (props.administrator) {
+        return "/administrator";
+    } else {
+        return "";
+    }
+});
 
 const calendarStore = useCalendarStore();
 
@@ -185,6 +205,7 @@ const newEvent: Ref<App.Models.CalendarEvent> = ref({
     location: "",
     url: "",
     calendar_id: calendarStore.calendars.map((calendar) => calendar.id)[0],
+    cas_user_id: 0,
     created_at: null,
     updated_at: null,
 });
@@ -209,6 +230,7 @@ const clearNewEvent = () => {
         location: "",
         url: "",
         calendar_id: calendarStore.calendars.map((calendar) => calendar.id)[0],
+        cas_user_id: 0,
         created_at: null,
         updated_at: null,
     };
@@ -217,7 +239,9 @@ const clearNewEvent = () => {
 const getCalendarEventData = async (year: number, month: number) => {
     let new_events: App.Models.CalendarEvent[] = [];
     await axios
-        .get(`/events/${view.year.value}/${view.month.value}`)
+        .get(
+            `${routePrefix.value}/events/${view.year.value}/${view.month.value}`
+        )
         .then((response) => {
             if (
                 response.status === 200 &&
@@ -237,7 +261,7 @@ const getCalendarEventData = async (year: number, month: number) => {
 };
 
 const dayEvents = (day: CalendarDay) => {
-    return calendarStore.calendarEvents.filter((event) => {
+    return calendarStore.filteredCalendarEvents.filter((event) => {
         const start_date = DateTime.fromSQL(event.start_date).toISODate();
         const end_date = DateTime.fromSQL(event.end_date).toISODate();
         const day_date = DateTime.fromSQL(day.date).toISODate();
@@ -251,14 +275,70 @@ const dayEvents = (day: CalendarDay) => {
     });
 };
 
+const page = usePage<PageWithSharedProps>();
+
+const calendarFilter = ref(0);
+const userFilter = ref(0);
+
+const applyFilters = () => {
+    let filteredCalendars: Array<App.Models.Calendar> = [];
+    let filteredCalendarEvents: Array<
+        App.Models.CalendarEvent & { cas_user?: App.Models.CasUser }
+    >;
+
+    if (calendarFilter.value === 0) {
+        filteredCalendars = [...calendarStore.calendars];
+        filteredCalendarEvents = [...calendarStore.calendarEvents];
+    } else {
+        filteredCalendars = calendarStore.calendars.filter(
+            (calendar) => calendar.id === calendarFilter.value
+        );
+        filteredCalendarEvents = calendarStore.calendarEvents.filter(
+            (event) => event.calendar_id === calendarFilter.value
+        );
+    }
+
+    if (userFilter.value !== 0) {
+        filteredCalendarEvents = filteredCalendarEvents.filter(
+            (event) => event.cas_user_id === userFilter.value
+        );
+    }
+
+    calendarStore.filteredCalendars = filteredCalendars;
+    calendarStore.filteredCalendarEvents = filteredCalendarEvents;
+};
+
 watch([view.year, view.month], ([newYear, newMonth]) => {
     getCalendarEventData(newYear, newMonth);
+    applyFilters();
 });
 
-onMounted(() => getCalendarEventData(view.year.value, view.month.value));
+watch([calendarFilter, userFilter], ([newFilter, newUser]) => {
+    applyFilters();
+});
+
+watch(
+    calendarStore,
+    (newEvents) => {
+        applyFilters();
+    },
+    {
+        deep: true,
+    }
+);
+
+onMounted(() => {
+    getCalendarEventData(view.year.value, view.month.value);
+    applyFilters();
+});
 </script>
 
 <template>
+    <CalendarFilters
+        v-if="administrator || page.props.cas_user_role === 'Supervisor'"
+        v-model:calendar="calendarFilter"
+        v-model:user="userFilter"
+    />
     <div
         class="m-2 border border-black text-black bg-white dark:border-gray-400 dark:text-gray-300 dark:bg-gray-600 rounded-t-lg max-w-screen-xl w-full"
     >

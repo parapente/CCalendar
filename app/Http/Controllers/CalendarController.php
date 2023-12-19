@@ -133,4 +133,11 @@ class CalendarController extends Controller
 
         return Inertia::render('Calendar', compact('calendars'));
     }
+
+    public function overview()
+    {
+        $calendars = Calendar::all();
+
+        return Inertia::render('Admin/Calendar/Overview', compact('calendars'));
+    }
 }
