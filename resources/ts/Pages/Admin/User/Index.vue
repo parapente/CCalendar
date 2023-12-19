@@ -15,11 +15,11 @@ const props = defineProps<{
 <template>
     <AppLayout title="Χρήστες">
         <template #header>
-            <h2
+            <div
                 class="font-semibold text-xl text-gray-800 dark:text-white leading-tight"
             >
                 Διαχείριση Χρηστών Εφαρμογής
-            </h2>
+            </div>
         </template>
 
         <div class="py-4">

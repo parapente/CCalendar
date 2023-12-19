@@ -37,7 +37,7 @@ Route::prefix('administrator')
     Route::put('/user/{user}/type/{type}', [UserController::class, 'update'])->name('user.update');
     Route::resource('user', UserController::class)->only(['index', 'create', 'store']);
 
-    Route::resource('calendar', CalendarController::class)->except('destroy');
+    Route::resource('calendar', CalendarController::class)->except(['show', 'destroy']);
 });
 
 Route::middleware([

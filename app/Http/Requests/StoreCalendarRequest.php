@@ -11,7 +11,7 @@ class StoreCalendarRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreCalendarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required','string','max:255'],
+            'color' => ['required','hex_color','max:7'],
+            'active' => ['required', 'boolean'],
         ];
     }
 }

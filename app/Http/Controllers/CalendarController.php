@@ -16,7 +16,7 @@ class CalendarController extends Controller
      */
     public function index()
     {
-        $calendars = Calendar::where('active', true)->get();
+        $calendars = Calendar::all();
 
         return Inertia::render('Admin/Calendar/Index', compact('calendars'));
     }
@@ -34,7 +34,15 @@ class CalendarController extends Controller
      */
     public function store(StoreCalendarRequest $request)
     {
-        //
+        Calendar::create([
+            'name' => $request->name,
+            'color' => $request->color,
+            'active' => $request->active,
+        ]);
+
+        return redirect()->route('administrator.calendar.index')
+            ->with('flash.bannerStyle', 'success')
+            ->with('flash.banner', 'Το ημερολόγιο δημιουργήθηκε επιτυχώς');
     }
 
     /**
@@ -50,7 +58,7 @@ class CalendarController extends Controller
      */
     public function edit(Calendar $calendar)
     {
-        //
+        return Inertia::render('Admin/Calendar/Edit', compact('calendar'));
     }
 
     /**
@@ -58,7 +66,15 @@ class CalendarController extends Controller
      */
     public function update(UpdateCalendarRequest $request, Calendar $calendar)
     {
-        //
+        $calendar->update([
+            'name' => $request->name,
+            'color' => $request->color,
+            'active' => $request->active,
+        ]);
+
+        return redirect()->route('administrator.calendar.index')
+            ->with('flash.bannerStyle','success')
+            ->with('flash.banner', "Το ημερολόγιο $calendar->name ενημερώθηκε επιτυχώς");
     }
 
     /**
