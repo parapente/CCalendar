@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
 
         if (cas()->isAuthenticated()) {
             $cas_user = CasUser::where('employee_number', cas()->getAttribute('employeenumber'))->first();
-            $cas_user_role = Role::where('cas_user_id', $cas_user->id)->first()->name;
+            $cas_user_role = $cas_user->role->name;
         }
 
         return array_merge(parent::share($request), [
