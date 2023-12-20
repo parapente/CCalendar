@@ -5,6 +5,7 @@
         "Jetstream",
         "Laracasts",
         "luxon",
+        "pageprops",
         "pinia",
         "tightenco"
     ]

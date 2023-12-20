@@ -6,16 +6,10 @@ export const useCalendarStore = defineStore("calendar", {
         calendarEvents: Array<
             App.Models.CalendarEvent & { cas_user?: App.Models.CasUser }
         >;
-        filteredCalendars: Array<App.Models.Calendar>;
-        filteredCalendarEvents: Array<
-            App.Models.CalendarEvent & { cas_user?: App.Models.CasUser }
-        >;
     } => {
         return {
             calendars: [],
             calendarEvents: [],
-            filteredCalendars: [],
-            filteredCalendarEvents: [],
         };
     },
 });
