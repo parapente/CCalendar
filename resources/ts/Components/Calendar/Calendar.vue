@@ -22,6 +22,8 @@ import CalendarLegend from "./CalendarLegend.vue";
 import CalendarFilters from "./CalendarFilters.vue";
 import { usePage } from "@inertiajs/vue3";
 import type { PageWithSharedProps } from "@/pageprops";
+import { useToast } from "vue-toast-notification";
+import "vue-toast-notification/dist/theme-default.css";
 import route from "ziggy";
 
 const props = withDefaults(
@@ -42,6 +44,8 @@ const routePrefix = computed(() => {
 });
 
 const calendarStore = useCalendarStore();
+
+const toast = useToast();
 
 const date = new Date();
 
@@ -164,30 +168,39 @@ const deleteCalendarEvent = (id: number) => {
                             calendarStore.calendarEvents.filter(
                                 (event) => event.id !== id
                             );
+                        toast.success(response.data.message, {
+                            position: "top-right",
+                        });
                     } else {
-                        alert(response.data.message);
+                        toast.error(response.data.message, {
+                            position: "top-right",
+                        });
                     }
                 }
             )
             .catch((error: AxiosError) => {
                 console.log(error);
+                toast.error(error.message, { position: "top-right" });
             });
     }
 };
 
 const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
-    console.log("Saving calendar event: ", event);
     axios
         .post(route("calendar.addEvent", event.calendar_id), event)
         .then((res) => {
-            console.log(res.data);
+            if (res.data.success) {
+                getCalendarEventData(view.year.value, view.month.value);
+                clearNewEvent();
+                toast.success(res.data.message, { position: "top-right" });
+            } else {
+                toast.error(res.data.message, { position: "top-right" });
+            }
         })
         .catch((error: AxiosError) => {
             console.log(error);
+            toast.error(error.message, { position: "top-right" });
         });
-
-    getCalendarEventData(view.year.value, view.month.value);
-    clearNewEvent();
 };
 
 const calendarEventVisible = ref(false);
@@ -261,6 +274,7 @@ const getCalendarEventData = async (year: number, month: number) => {
         })
         .catch((error: AxiosError) => {
             console.error(error.toJSON());
+            toast.error(error.message, { position: "top-right" });
         });
 
     calendarStore.calendarEvents = [...new_events];

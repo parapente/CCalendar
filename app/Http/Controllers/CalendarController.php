@@ -113,7 +113,7 @@ class CalendarController extends Controller
             ]);
         }
 
-        return json_encode(["success" => true, "message" => "Event added successfully"]);
+        return json_encode(["success" => true, "message" => "Η εκδήλωση προστέθηκε επιτυχώς!"]);
     }
 
     public function deleteEvent(Calendar $calendar, CalendarEvent $event)
@@ -121,9 +121,9 @@ class CalendarController extends Controller
         $deleted = $event->delete();
 
         if ($deleted) {
-            return json_encode(["success" => true, "message" => "Event deleted successfully"]);
+            return json_encode(["success" => true, "message" => "Η εκδήλωση διαγράφηκε επιτυχώς!"]);
         } else {
-            return json_encode(["success" => false, "message" => "Event not deleted"]);
+            return json_encode(["success" => false, "message" => "Η εκδήλωση δεν διαγράφηκε!"]);
         }
     }
 
