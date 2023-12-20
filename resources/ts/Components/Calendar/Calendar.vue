@@ -24,6 +24,7 @@ import { usePage } from "@inertiajs/vue3";
 import type { PageWithSharedProps } from "@/pageprops";
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-default.css";
+import route from "ziggy";
 
 const props = withDefaults(
     defineProps<{
@@ -152,7 +153,9 @@ const deleteCalendarEvent = (id: number) => {
     console.log("Event: ", event);
     if (event) {
         axios
-            .delete(`/calendar/${event.calendar_id}/event/${event.id}`)
+            .delete(
+                route("calendar.deleteEvent", [event.calendar_id, event.id])
+            )
             .then(
                 (
                     response: AxiosResponse<{
@@ -184,7 +187,7 @@ const deleteCalendarEvent = (id: number) => {
 
 const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
     axios
-        .post(`/calendar/${event.calendar_id}/event`, event)
+        .post(route("calendar.addEvent", event.calendar_id), event)
         .then((res) => {
             if (res.data.success) {
                 getCalendarEventData(view.year.value, view.month.value);
@@ -253,7 +256,10 @@ const getCalendarEventData = async (year: number, month: number) => {
     let new_events: App.Models.CalendarEvent[] = [];
     await axios
         .get(
-            `${routePrefix.value}/events/${view.year.value}/${view.month.value}`
+            route(`${routePrefix.value}events`, [
+                view.year.value,
+                view.month.value,
+            ])
         )
         .then((response) => {
             if (
@@ -332,9 +338,10 @@ onMounted(() => {
         v-if="administrator || page.props.cas_user_role === 'Supervisor'"
         v-model:calendar="calendarFilter"
         v-model:user="userFilter"
+        class="print:hidden"
     />
     <div
-        class="m-2 border border-black text-black bg-white dark:border-gray-400 dark:text-gray-300 dark:bg-gray-600 rounded-t-lg max-w-screen-xl w-full"
+        class="m-2 border border-black text-black bg-white dark:border-gray-400 dark:text-gray-300 dark:bg-gray-600 rounded-t-lg max-w-screen-xl w-full print:hidden"
     >
         <div class="px-1 flex text-center">
             <div class="w-full text-2xl font-bold">{{ view.year }}</div>
@@ -382,15 +389,17 @@ onMounted(() => {
         </div>
         <div class="flex justify-between"></div>
     </div>
-    <div class="flex flex-row max-w-screen-xl w-full pt-4">
+    <div class="flex flex-row max-w-screen-xl w-full pt-4 print:hidden">
         <CalendarLegend />
-        <div class="grow"></div>
     </div>
     <CalendarEventForm
         :event="newEvent"
         v-model:visible="calendarEventVisible"
         @save="saveCalendarEvent"
     />
+    <div class="hidden print:block">
+        Ημερολόγιο {{ monthName }} {{ view.year.value }}
+    </div>
     <CalendarEventList
         :filteredCalendars="filteredCalendars"
         :filteredCalendarEvents="filteredCalendarEvents"

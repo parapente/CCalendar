@@ -82,10 +82,10 @@ const showUser = computed(() => {
             <li
                 v-for="event in filteredCalendarEvents"
                 :key="event.id"
-                class="border-black border mb-2 p-2 dark:border-white dark:bg-gray-700"
+                class="border-black border mb-2 p-2 dark:border-white dark:bg-gray-700 break-inside-avoid print:bg-white"
             >
                 <div
-                    class="flex flex-row items-center px-2"
+                    class="flex flex-row items-center px-2 event_title"
                     :style="{
                         'background-color': `${bgColor(event)}`,
                         color: `${fgColor(event)}`,
@@ -117,13 +117,13 @@ const showUser = computed(() => {
                     </div>
                     <div class="flex grow justify-end">
                         <button
-                            class="my-1 px-3 py-2 rounded-lg bg-blue-500 shadow-md shadow-black hover:bg-blue-400 text-black"
+                            class="my-1 px-3 py-2 rounded-lg bg-blue-500 shadow-md shadow-black hover:bg-blue-400 text-black print:hidden"
                             @click="emit('editEvent', event.id)"
                         >
                             <FontAwesomeIcon :icon="faPencil" />
                         </button>
                         <button
-                            class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500 shadow-md shadow-black hover:bg-red-400 text-black"
+                            class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500 shadow-md shadow-black hover:bg-red-400 text-black print:hidden"
                             @click="confirmDeletion(event.id)"
                         >
                             <FontAwesomeIcon :icon="faTrashCan" />
@@ -161,3 +161,13 @@ const showUser = computed(() => {
         </ul>
     </div>
 </template>
+<style type="text/css">
+@media print {
+    .event_title {
+        color: black !important;
+        background-color: white !important;
+        border: 1px solid black !important;
+        border-radius: 1em;
+    }
+}
+</style>
