@@ -34,7 +34,7 @@ const props = withDefaults(
 
 const routePrefix = computed(() => {
     if (props.administrator) {
-        return "/administrator";
+        return "administrator.";
     } else {
         return "";
     }
