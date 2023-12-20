@@ -261,7 +261,7 @@ const getCalendarEventData = async (year: number, month: number) => {
 };
 
 const dayEvents = (day: CalendarDay) => {
-    return calendarStore.filteredCalendarEvents.filter((event) => {
+    return filteredCalendarEvents.value.filter((event) => {
         const start_date = DateTime.fromSQL(event.start_date).toISODate();
         const end_date = DateTime.fromSQL(event.end_date).toISODate();
         const day_date = DateTime.fromSQL(day.date).toISODate();
@@ -277,59 +277,39 @@ const dayEvents = (day: CalendarDay) => {
 
 const page = usePage<PageWithSharedProps>();
 
-const calendarFilter = ref(0);
-const userFilter = ref(0);
+const calendarFilter = ref("0");
+const userFilter = ref("0");
 
-const applyFilters = () => {
-    let filteredCalendars: Array<App.Models.Calendar> = [];
-    let filteredCalendarEvents: Array<
-        App.Models.CalendarEvent & { cas_user?: App.Models.CasUser }
-    >;
-
-    if (calendarFilter.value === 0) {
-        filteredCalendars = [...calendarStore.calendars];
-        filteredCalendarEvents = [...calendarStore.calendarEvents];
+const filteredCalendars = computed(() => {
+    if (calendarFilter.value === "0") {
+        return calendarStore.calendars;
     } else {
-        filteredCalendars = calendarStore.calendars.filter(
-            (calendar) => calendar.id === calendarFilter.value
-        );
-        filteredCalendarEvents = calendarStore.calendarEvents.filter(
-            (event) => event.calendar_id === calendarFilter.value
+        return calendarStore.calendars.filter(
+            (calendar) => calendar.id === parseInt(calendarFilter.value)
         );
     }
+});
 
-    if (userFilter.value !== 0) {
-        filteredCalendarEvents = filteredCalendarEvents.filter(
-            (event) => event.cas_user_id === userFilter.value
-        );
-    }
-
-    calendarStore.filteredCalendars = filteredCalendars;
-    calendarStore.filteredCalendarEvents = filteredCalendarEvents;
-};
+const filteredCalendarEvents = computed(() =>
+    calendarStore.calendarEvents
+        .filter(
+            (event) =>
+                calendarFilter.value === "0" ||
+                event.calendar_id === parseInt(calendarFilter.value)
+        )
+        .filter(
+            (event) =>
+                userFilter.value === "0" ||
+                event.cas_user_id === parseInt(userFilter.value)
+        )
+);
 
 watch([view.year, view.month], ([newYear, newMonth]) => {
     getCalendarEventData(newYear, newMonth);
-    applyFilters();
 });
-
-watch([calendarFilter, userFilter], ([newFilter, newUser]) => {
-    applyFilters();
-});
-
-watch(
-    calendarStore,
-    (newEvents) => {
-        applyFilters();
-    },
-    {
-        deep: true,
-    }
-);
 
 onMounted(() => {
     getCalendarEventData(view.year.value, view.month.value);
-    applyFilters();
 });
 </script>
 
@@ -398,6 +378,8 @@ onMounted(() => {
         @save="saveCalendarEvent"
     />
     <CalendarEventList
+        :filteredCalendars="filteredCalendars"
+        :filteredCalendarEvents="filteredCalendarEvents"
         class="max-w-screen-xl w-full mt-4"
         @editEvent="editCalendarEvent"
         @deleteEvent="deleteCalendarEvent"
