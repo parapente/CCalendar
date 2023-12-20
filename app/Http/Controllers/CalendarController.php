@@ -104,12 +104,12 @@ class CalendarController extends Controller
 
             $calendarEvent->update([
                 'title' => $request->title,
-                'description' => $request->description,
+                'description' => $request->description ?? "",
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
                 'calendar_id' => $calendar->id,
-                'location' => $request->location,
-                'url' => $request->url,
+                'location' => $request->location ?? "",
+                'url' => $request->url ?? "",
             ]);
         }
 
