@@ -378,6 +378,8 @@ onMounted(() => {
         @save="saveCalendarEvent"
     />
     <CalendarEventList
+        :filteredCalendars="filteredCalendars"
+        :filteredCalendarEvents="filteredCalendarEvents"
         class="max-w-screen-xl w-full mt-4"
         @editEvent="editCalendarEvent"
         @deleteEvent="deleteCalendarEvent"

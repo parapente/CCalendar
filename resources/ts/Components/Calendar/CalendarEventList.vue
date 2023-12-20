@@ -15,6 +15,11 @@ import { computed, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import type { PageWithSharedProps } from "@/pageprops";
 
+const props = defineProps<{
+    filteredCalendars: Array<App.Models.Calendar>;
+    filteredCalendarEvents: Array<App.Models.CalendarEvent>;
+}>();
+
 const calendarStore = useCalendarStore();
 const emit = defineEmits<{
     deleteEvent: [value: number];
@@ -46,10 +51,7 @@ const showUser = computed(() => {
 </script>
 
 <template>
-    <div
-        v-if="calendarStore.filteredCalendarEvents.length > 0"
-        class="dark:text-white"
-    >
+    <div v-if="filteredCalendarEvents.length > 0" class="dark:text-white">
         <DialogModal :show="showDeleteDialog" @close="showDeleteDialog = false">
             <template #title> Επιβεβαίωση διαγραφής εκδήλωσης </template>
             <template #content>
@@ -76,7 +78,7 @@ const showUser = computed(() => {
         <div class="text-xl text-bold mb-2">Εκδηλώσεις μήνα:</div>
         <ul>
             <li
-                v-for="event in calendarStore.filteredCalendarEvents"
+                v-for="event in filteredCalendarEvents"
                 :key="event.id"
                 class="border-black border mb-2 p-2 dark:border-white dark:bg-gray-700"
             >
