@@ -23,9 +23,9 @@ const page = usePage<PageWithSharedProps>();
 
         <Banner />
 
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 print:bg-white">
             <nav
-                class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700"
+                class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 print:hidden"
             >
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -170,7 +170,7 @@ const page = usePage<PageWithSharedProps>();
             <!-- Page Heading -->
             <header
                 v-if="$slots.header"
-                class="bg-white dark:bg-gray-800 shadow"
+                class="bg-white dark:bg-gray-800 shadow print:shadow-none"
             >
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />

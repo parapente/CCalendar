@@ -318,9 +318,10 @@ onMounted(() => {
         v-if="administrator || page.props.cas_user_role === 'Supervisor'"
         v-model:calendar="calendarFilter"
         v-model:user="userFilter"
+        class="print:hidden"
     />
     <div
-        class="m-2 border border-black text-black bg-white dark:border-gray-400 dark:text-gray-300 dark:bg-gray-600 rounded-t-lg max-w-screen-xl w-full"
+        class="m-2 border border-black text-black bg-white dark:border-gray-400 dark:text-gray-300 dark:bg-gray-600 rounded-t-lg max-w-screen-xl w-full print:hidden"
     >
         <div class="px-1 flex text-center">
             <div class="w-full text-2xl font-bold">{{ view.year }}</div>
@@ -368,15 +369,17 @@ onMounted(() => {
         </div>
         <div class="flex justify-between"></div>
     </div>
-    <div class="flex flex-row max-w-screen-xl w-full pt-4">
+    <div class="flex flex-row max-w-screen-xl w-full pt-4 print:hidden">
         <CalendarLegend />
-        <div class="grow"></div>
     </div>
     <CalendarEventForm
         :event="newEvent"
         v-model:visible="calendarEventVisible"
         @save="saveCalendarEvent"
     />
+    <div class="hidden print:block">
+        Ημερολόγιο {{ monthName }} {{ view.year.value }}
+    </div>
     <CalendarEventList
         :filteredCalendars="filteredCalendars"
         :filteredCalendarEvents="filteredCalendarEvents"
