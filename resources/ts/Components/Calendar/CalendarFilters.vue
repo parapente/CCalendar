@@ -5,12 +5,12 @@ import { computed, ref } from "vue";
 
 const props = withDefaults(
     defineProps<{
-        calendar: number;
-        user: number;
+        calendar: string;
+        user: string;
     }>(),
     {
-        calendar: 0,
-        user: 0,
+        calendar: "0",
+        user: "0",
     }
 );
 
@@ -35,8 +35,8 @@ const calendarUsers = computed(() => {
 });
 
 const emit = defineEmits<{
-    "update:calendar": [value: number];
-    "update:user": [value: number];
+    "update:calendar": [value: string];
+    "update:user": [value: string];
 }>();
 </script>
 
@@ -48,6 +48,7 @@ const emit = defineEmits<{
             <DropdownList
                 v-model="calendarFilter"
                 class="text-black col-span-5"
+                @update:model-value="emit('update:calendar', calendarFilter)"
             >
                 <option value="0">Όλα</option>
                 <option
@@ -59,7 +60,11 @@ const emit = defineEmits<{
                 </option>
             </DropdownList>
             <label for="userFilter" class="mr-2 my-auto">Χρήστες:</label>
-            <DropdownList v-model="userFilter" class="text-black col-span-5">
+            <DropdownList
+                v-model="userFilter"
+                class="text-black col-span-5"
+                @update:model-value="emit('update:user', userFilter)"
+            >
                 <option value="0">Όλα</option>
                 <option
                     v-for="user in calendarUsers"
