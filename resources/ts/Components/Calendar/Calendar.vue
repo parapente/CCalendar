@@ -22,6 +22,7 @@ import CalendarLegend from "./CalendarLegend.vue";
 import CalendarFilters from "./CalendarFilters.vue";
 import { usePage } from "@inertiajs/vue3";
 import type { PageWithSharedProps } from "@/pageprops";
+import route from "ziggy";
 
 const props = withDefaults(
     defineProps<{
@@ -148,7 +149,9 @@ const deleteCalendarEvent = (id: number) => {
     console.log("Event: ", event);
     if (event) {
         axios
-            .delete(`/calendar/${event.calendar_id}/event/${event.id}`)
+            .delete(
+                route("calendar.deleteEvent", [event.calendar_id, event.id])
+            )
             .then(
                 (
                     response: AxiosResponse<{
@@ -175,7 +178,7 @@ const deleteCalendarEvent = (id: number) => {
 const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
     console.log("Saving calendar event: ", event);
     axios
-        .post(`/calendar/${event.calendar_id}/event`, event)
+        .post(route("calendar.addEvent", event.calendar_id), event)
         .then((res) => {
             console.log(res.data);
         })
@@ -240,7 +243,10 @@ const getCalendarEventData = async (year: number, month: number) => {
     let new_events: App.Models.CalendarEvent[] = [];
     await axios
         .get(
-            `${routePrefix.value}/events/${view.year.value}/${view.month.value}`
+            route(`${routePrefix.value}events`, [
+                view.year.value,
+                view.month.value,
+            ])
         )
         .then((response) => {
             if (
