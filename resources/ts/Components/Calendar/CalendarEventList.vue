@@ -17,7 +17,9 @@ import type { PageWithSharedProps } from "@/pageprops";
 
 const props = defineProps<{
     filteredCalendars: Array<App.Models.Calendar>;
-    filteredCalendarEvents: Array<App.Models.CalendarEvent>;
+    filteredCalendarEvents: Array<
+        App.Models.CalendarEvent & { cas_user?: App.Models.CasUser }
+    >;
 }>();
 
 const calendarStore = useCalendarStore();
