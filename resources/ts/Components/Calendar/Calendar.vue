@@ -8,6 +8,7 @@ import {
     faCalendarAlt,
     faArrowLeft,
     faArrowRight,
+    faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import Day from "./Day.vue";
 import CalendarEventForm from "./CalendarEventForm.vue";
@@ -25,6 +26,8 @@ import type { PageWithSharedProps } from "@/pageprops";
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-default.css";
 import route from "ziggy";
+import ConfirmDeleteDialog from "./ConfirmDeleteDialog.vue";
+import EventModal from "./EventModal.vue";
 
 const props = withDefaults(
     defineProps<{
@@ -324,6 +327,41 @@ const filteredCalendarEvents = computed(() =>
         )
 );
 
+const showDeleteDialog = ref(false);
+const eventForDeletion = ref(0);
+
+const onDeleteEvent = (event: number) => {
+    showEventModal.value = false;
+    eventForDeletion.value = event;
+    showDeleteDialog.value = true;
+};
+
+const proceedWithDeletion = (answer: "yes" | "no") => {
+    showDeleteDialog.value = false;
+    if (answer === "yes") {
+        deleteCalendarEvent(eventForDeletion.value);
+    }
+};
+
+const eventForModal: Ref<
+    (App.Models.CalendarEvent & { cas_user?: App.Models.CasUser }) | null
+> = ref(null);
+
+const showEventModal = ref(false);
+
+const onCalendarEventClicked = (id: number) => {
+    eventForModal.value = calendarStore.calendarEvents.find(
+        (event) => event.id === id
+    )!;
+
+    showEventModal.value = true;
+};
+
+const onEditEventModal = (id: number) => {
+    showEventModal.value = false;
+    editCalendarEvent(id);
+};
+
 watch([view.year, view.month], ([newYear, newMonth]) => {
     getCalendarEventData(newYear, newMonth);
 });
@@ -334,6 +372,18 @@ onMounted(() => {
 </script>
 
 <template>
+    <ConfirmDeleteDialog
+        :show="showDeleteDialog"
+        @answer="proceedWithDeletion"
+    ></ConfirmDeleteDialog>
+
+    <EventModal
+        :event="eventForModal"
+        v-model:show="showEventModal"
+        @editEvent="onEditEventModal"
+        @deleteEvent="onDeleteEvent"
+    ></EventModal>
+
     <CalendarFilters
         v-if="administrator || page.props.cas_user_role === 'Supervisor'"
         v-model:calendar="calendarFilter"
@@ -385,6 +435,7 @@ onMounted(() => {
                 "
                 :calendarEvents="dayEvents(day)"
                 @triggered="addCalendarEvent"
+                @eventClicked="onCalendarEventClicked"
             ></Day>
         </div>
         <div class="flex justify-between"></div>
@@ -397,6 +448,12 @@ onMounted(() => {
         v-model:visible="calendarEventVisible"
         @save="saveCalendarEvent"
     />
+    <div
+        class="fixed bottom-0 right-5 px-4 py-3 mb-5 bg-red-500 hover:bg-red-700 rounded-full shadow-lg shadow-black cursor-pointer print:hidden"
+        @click="addCalendarEvent(DateTime.local().day)"
+    >
+        <FontAwesomeIcon :icon="faPlus" />
+    </div>
     <div class="hidden print:block">
         Ημερολόγιο {{ monthName }} {{ view.year.value }}
     </div>
@@ -405,6 +462,6 @@ onMounted(() => {
         :filteredCalendarEvents="filteredCalendarEvents"
         class="max-w-screen-xl w-full mt-4"
         @editEvent="editCalendarEvent"
-        @deleteEvent="deleteCalendarEvent"
+        @deleteEvent="onDeleteEvent"
     />
 </template>
