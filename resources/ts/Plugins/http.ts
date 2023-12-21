@@ -12,6 +12,9 @@ axios.interceptors.response.use(
 
             // Return a new request using the original request's configuration
             return axios(err.response.config);
+        } else if (status === 302 && err.response.headers.location) {
+            console.log(err.response.headers.location);
+            return window.location.replace(err.response.headers.location);
         }
 
         return Promise.reject(err);
