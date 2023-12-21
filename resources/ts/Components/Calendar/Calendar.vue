@@ -28,6 +28,7 @@ import "vue-toast-notification/dist/theme-default.css";
 import route from "ziggy";
 import ConfirmDeleteDialog from "./ConfirmDeleteDialog.vue";
 import EventModal from "./EventModal.vue";
+import { vIntersectionObserver } from "@vueuse/components";
 
 const props = withDefaults(
     defineProps<{
@@ -366,6 +367,14 @@ const print = () => {
     window.print();
 };
 
+const eventListVisible = ref(false);
+
+const onIntersectionObserver = ([
+    { isIntersecting },
+]: IntersectionObserverEntry[]) => {
+    eventListVisible.value = isIntersecting;
+};
+
 watch([view.year, view.month], ([newYear, newMonth]) => {
     getCalendarEventData(newYear, newMonth);
 });
@@ -458,12 +467,15 @@ onMounted(() => {
         v-model:visible="calendarEventVisible"
         @save="saveCalendarEvent"
     />
-    <div
-        class="fixed bottom-0 right-5 px-4 py-3 mb-5 bg-red-500 hover:bg-red-700 rounded-full shadow-lg shadow-black cursor-pointer print:hidden"
-        @click="addCalendarEvent(DateTime.local().day)"
-    >
-        <FontAwesomeIcon :icon="faPlus" />
-    </div>
+    <Transition name="fade">
+        <div
+            class="fixed bottom-0 right-5 px-4 py-3 mb-5 bg-red-500 hover:bg-red-700 rounded-full shadow-lg shadow-black cursor-pointer print:hidden"
+            @click="addCalendarEvent(DateTime.local().day)"
+            v-if="!eventListVisible"
+        >
+            <FontAwesomeIcon :icon="faPlus" />
+        </div>
+    </Transition>
     <div class="hidden print:block">
         Ημερολόγιο {{ monthName }} {{ view.year.value }}
     </div>
@@ -473,5 +485,16 @@ onMounted(() => {
         class="max-w-screen-xl w-full mt-4"
         @editEvent="editCalendarEvent"
         @deleteEvent="onDeleteEvent"
+        v-intersection-observer="onIntersectionObserver"
     />
 </template>
+<style type="css">
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>

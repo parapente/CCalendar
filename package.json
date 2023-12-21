@@ -28,6 +28,8 @@
         "@fortawesome/free-solid-svg-icons": "^6.5.1",
         "@fortawesome/vue-fontawesome": "^3.0.5",
         "@types/lodash": "^4.14.202",
+        "@vueuse/components": "^10.7.0",
+        "@vueuse/core": "^10.7.0",
         "greek-holidays": "^0.0.2",
         "lodash": "^4.17.21",
         "luxon": "^3.4.4",
