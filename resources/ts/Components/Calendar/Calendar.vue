@@ -362,6 +362,10 @@ const onEditEventModal = (id: number) => {
     editCalendarEvent(id);
 };
 
+const print = () => {
+    window.print();
+};
+
 watch([view.year, view.month], ([newYear, newMonth]) => {
     getCalendarEventData(newYear, newMonth);
 });
@@ -384,6 +388,12 @@ onMounted(() => {
         @deleteEvent="onDeleteEvent"
     ></EventModal>
 
+    <button
+        class="px-3 py-2 mt-2 bg-slate-400 hover:bg-slate-600 rounded-md dark:text-white print:hidden"
+        @click="print"
+    >
+        Εκτύπωση
+    </button>
     <CalendarFilters
         v-if="administrator || page.props.cas_user_role === 'Supervisor'"
         v-model:calendar="calendarFilter"
