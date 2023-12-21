@@ -2,7 +2,6 @@
 import { DateTime } from "luxon";
 import type { CalendarDay } from "./types";
 import { computed } from "vue";
-import { useCalendarStore } from "@/Stores/calendarStore";
 import { bgColor, fgColor } from "./utilities";
 
 const props = defineProps<{
@@ -10,13 +9,16 @@ const props = defineProps<{
     calendarEvents: Array<App.Models.CalendarEvent>;
 }>();
 
-const calendarStore = useCalendarStore();
-
 const dayNumber = computed(() => {
     return parseInt(
         DateTime.fromFormat(props.day.date, "yyyy-MM-dd").toFormat("dd")
     );
 });
+
+const emit = defineEmits<{
+    eventClicked: [id: number];
+    triggered: [id: number];
+}>();
 </script>
 
 <template>
@@ -41,6 +43,7 @@ const dayNumber = computed(() => {
                 'background-color': `${bgColor(event)}`,
                 color: `${fgColor(event)}`,
             }"
+            @click.stop="emit('eventClicked', event.id)"
         >
             {{ event.title }}
         </div>
