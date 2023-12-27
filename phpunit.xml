@@ -26,5 +26,8 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <ini name="log_errors" value="On" ></ini>
+        <ini name="display_errors" value="On"></ini>
+        <ini name="error_log" value="/tmp/error.log"></ini>
     </php>
 </phpunit>

@@ -5,12 +5,12 @@ use App\Models\User;
 test('profile information can be updated', function () {
     $this->actingAs($user = User::factory()->create());
 
-    $response = $this->put('/user/profile-information', [
+    $response = $this->put(route('user-profile-information.update'), [
         'name' => 'Test Name',
-        'email' => 'test@example.com',
+        'username' => 'test@example.com',
     ]);
 
     expect($user->fresh())
         ->name->toEqual('Test Name')
-        ->email->toEqual('test@example.com');
+        ->username->toEqual('test@example.com');
 });
