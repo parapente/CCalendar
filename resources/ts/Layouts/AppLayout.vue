@@ -225,15 +225,13 @@ const page = usePage<PageWithSharedProps>();
                                 :href="route('profile.show')"
                                 :active="route().current('profile.show')"
                             >
-                                Profile
+                                Προφίλ
                             </ResponsiveNavLink>
 
                             <!-- Authentication -->
-                            <form method="POST" @submit.prevent="logout">
-                                <ResponsiveNavLink as="button">
-                                    Log Out
-                                </ResponsiveNavLink>
-                            </form>
+                            <Link :href="route('logout')" as="button">
+                                Αποσύνδεση
+                            </Link>
                         </div>
                     </div>
                 </div>
