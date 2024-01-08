@@ -74,12 +74,20 @@ const showUser = computed(() => {
                 <button
                     class="my-1 px-3 py-2 rounded-lg bg-blue-500 shadow-md shadow-black hover:bg-blue-400 text-black print:hidden"
                     @click="emit('editEvent', event.id)"
+                    v-if="
+                        page.props.cas_user &&
+                        page.props.cas_user.id === event.cas_user_id
+                    "
                 >
                     <FontAwesomeIcon :icon="faPencil" />
                 </button>
                 <button
                     class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500 shadow-md shadow-black hover:bg-red-400 text-black print:hidden"
                     @click="emit('deleteEvent', event.id)"
+                    v-if="
+                        page.props.cas_user &&
+                        page.props.cas_user.id === event.cas_user_id
+                    "
                 >
                     <FontAwesomeIcon :icon="faTrashCan" />
                 </button>
