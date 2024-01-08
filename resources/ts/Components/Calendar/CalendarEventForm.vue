@@ -70,6 +70,13 @@ watch(
         deep: true,
     }
 );
+
+const startDateChanged = (e: Event) => {
+    const date = DateTime.fromISO((e.target as HTMLInputElement).value);
+    if (date.isValid) {
+        form.end_date = date.plus({ hours: 1 }).toFormat("yyyy-MM-dd'T'hh:mm");
+    }
+};
 </script>
 
 <template>
@@ -112,6 +119,7 @@ watch(
                 type="datetime-local"
                 name="start_date"
                 v-model="form.start_date"
+                @input="startDateChanged"
             />
             <label for="end_date">Ημερομηνία Λήξης:</label>
             <input
