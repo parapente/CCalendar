@@ -17,7 +17,10 @@ class CasUserRegistered
     public function handle(Request $request, Closure $next): Response
     {
         $employee_number = cas()->getAttribute('employeenumber');
-        $cas_user = CasUser::where('employee_number', $employee_number)->first();
+        $username = cas()->getAttribute('uid');
+        $cas_user = CasUser::where('employee_number', $employee_number)
+            ->orWhere('username', $username)
+            ->first();
 
         if (!$cas_user) {
             return to_route('invalid.cas_user');
