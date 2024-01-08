@@ -14,7 +14,11 @@ const props = defineProps<{
     user: Pick<App.Models.User, "id" | "name" | "username"> &
         (
             | { role: "Administrator" }
-            | { role: "User" | "Supervisor"; role_id: number }
+            | {
+                  role: "User" | "Supervisor";
+                  role_id: number;
+                  employee_number: string;
+              }
         );
     type: string;
     roles: App.Models.Role[];
@@ -23,6 +27,8 @@ const props = defineProps<{
 const form = useForm({
     name: props.user.name,
     username: props.user.username,
+    employee_number:
+        props.user.role !== "Administrator" ? props.user.employee_number : "",
     password: "",
     password_confirmation: "",
     role_id:
@@ -82,6 +88,25 @@ const submit = () => {
                         <InputError
                             class="mt-2"
                             :message="form.errors.username"
+                        />
+                    </div>
+
+                    <div class="mt-4" v-if="user.role !== 'Administrator'">
+                        <InputLabel
+                            for="employee_number"
+                            value="ΑΜ χρήστη στο ΠΣΔ"
+                        />
+                        <TextInput
+                            id="employee_number"
+                            v-model="form.employee_number"
+                            type="text"
+                            class="mt-1 block w-full"
+                            required
+                            autocomplete="employee_number"
+                        />
+                        <InputError
+                            class="mt-2"
+                            :message="form.errors.employee_number"
                         />
                     </div>
 

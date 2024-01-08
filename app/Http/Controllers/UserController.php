@@ -7,7 +7,6 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
@@ -58,6 +57,7 @@ class UserController extends Controller
                     Rule::unique('users'),
                     Rule::unique('cas_users'))
             ],
+            'employee_number' => ['string', 'max:255', Rule::requiredIf($request->type === 'cas')],
             'type' => ['required','string'],
             'role_id' => ['required_if:type,cas', 'integer'],
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
@@ -94,7 +94,7 @@ class UserController extends Controller
             $user = User::findOrFail($id, ['id', 'name', 'username']);
             $user->role = 'Administrator';
         } else if ($type === 'cas') {
-            $user = CasUser::findOrFail($id, ['id', 'name', 'username', 'role_id']);
+            $user = CasUser::findOrFail($id, ['id', 'name', 'username', 'role_id', 'employee_number']);
             $user->role = Role::find($user->role_id)->name;
         } else {
             abort(404);
@@ -121,6 +121,7 @@ class UserController extends Controller
                     Rule::unique('users')->ignore($id),
                     Rule::unique('cas_users')->ignore($id))
             ],
+            'employee_number' => ['string', 'max:255', Rule::requiredIf($request->type === 'cas')],
             'role_id' => [Rule::requiredIf($type === "cas"), 'integer'],
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
             'password_confirmation' => ['nullable', 'string', 'max:255', Rule::requiredIf(!is_null($request->password)), 'same:password'],

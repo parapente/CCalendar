@@ -17,6 +17,7 @@ const props = defineProps<{
 const form = useForm<{
     name: string;
     username: string;
+    employee_number: string;
     password: string;
     password_confirmation: string;
     type: "admin" | "cas";
@@ -24,6 +25,7 @@ const form = useForm<{
 }>({
     name: "",
     username: "",
+    employee_number: "",
     password: "",
     password_confirmation: "",
     type: "admin",
@@ -96,6 +98,25 @@ const submit = () => {
                         <InputError
                             class="mt-2"
                             :message="form.errors.username"
+                        />
+                    </div>
+
+                    <div class="mt-4" v-if="form.type === 'cas'">
+                        <InputLabel
+                            for="employee_number"
+                            value="ΑΜ χρήστη στο ΠΣΔ"
+                        />
+                        <TextInput
+                            id="employee_number"
+                            v-model="form.employee_number"
+                            type="text"
+                            class="mt-1 block w-full"
+                            required
+                            autocomplete="employee_number"
+                        />
+                        <InputError
+                            class="mt-2"
+                            :message="form.errors.employee_number"
                         />
                     </div>
 
