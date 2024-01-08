@@ -125,7 +125,7 @@ const page = usePage<PageWithSharedProps>();
                                         <DropdownLink
                                             :href="route('profile.show')"
                                         >
-                                            Profile
+                                            Προφίλ
                                         </DropdownLink>
 
                                         <div
@@ -135,7 +135,7 @@ const page = usePage<PageWithSharedProps>();
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
                                             <DropdownLink as="button">
-                                                Log Out
+                                                Αποσύνδεση
                                             </DropdownLink>
                                         </form>
                                     </template>
@@ -225,13 +225,13 @@ const page = usePage<PageWithSharedProps>();
                                 :href="route('profile.show')"
                                 :active="route().current('profile.show')"
                             >
-                                Profile
+                                Προφίλ
                             </ResponsiveNavLink>
 
                             <!-- Authentication -->
                             <form method="POST" @submit.prevent="logout">
                                 <ResponsiveNavLink as="button">
-                                    Log Out
+                                    Αποσύνδεση
                                 </ResponsiveNavLink>
                             </form>
                         </div>

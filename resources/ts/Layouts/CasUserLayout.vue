@@ -70,7 +70,7 @@ const page = usePage<PageWithSharedProps>();
                                             as="a"
                                             :href="route('cas.logout')"
                                         >
-                                            Log Out
+                                            Αποσύνδεση
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -160,7 +160,7 @@ const page = usePage<PageWithSharedProps>();
                                 as="a"
                                 :href="route('cas.logout')"
                             >
-                                Log Out
+                                Αποσύνδεση
                             </ResponsiveNavLink>
                         </div>
                     </div>
