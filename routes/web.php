@@ -3,8 +3,8 @@
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CasUserController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -40,6 +40,10 @@ Route::prefix('administrator')
     Route::resource('calendar', CalendarController::class)->except(['show', 'destroy']);
     Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
     Route::get('/cas_user/{user}/name', [CasUserController::class, 'getName'])->name('cas_user.name');
+    Route::post('/report/{report}/toggleActive', [ReportController::class, 'toggleActive'])->name('report.toggleActive');
+    Route::get('/report/{report}/getCalendarToWord', [ReportController::class, 'getCalendarToWord'])->name('report.getCalendarToWord');
+    Route::post('/report/{report}/upload', [ReportController::class, 'uploadReport'])->name('report.uploadReport');
+    Route::resource('report', ReportController::class);
 });
 
 Route::middleware([

@@ -7,6 +7,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import route from "ziggy";
 import type { PageWithSharedProps } from "@/pageprops";
+import NavLink from "@/Components/NavLink.vue";
 
 defineProps({
     title: String,
@@ -32,6 +33,20 @@ const page = usePage<PageWithSharedProps>();
                     <div class="flex justify-between h-16">
                         <div class="flex gap-3">
                             <!-- Navigation Links -->
+                            <div class="hidden space-x-8 sm:-my-px sm:flex">
+                                <NavLink
+                                    :href="route('calendar.index')"
+                                    :active="route().current('calendar.index')"
+                                >
+                                    Αρχική
+                                </NavLink>
+                                <NavLink
+                                    :href="route('calendar.index')"
+                                    :active="route().current('calendar.index')"
+                                >
+                                    Αναφορές
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -133,7 +148,7 @@ const page = usePage<PageWithSharedProps>();
                             :href="route('administrator.index')"
                             :active="route().current('administrator.index')"
                         >
-                            Dashboard
+                            Αρχική
                         </ResponsiveNavLink>
                     </div>
 

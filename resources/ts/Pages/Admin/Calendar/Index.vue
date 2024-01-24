@@ -24,15 +24,17 @@ const props = defineProps<{
                 Ημερολόγια
             </div>
         </template>
-        <div class="m-4 p-4 dark:text-white">
-            <Link
-                as="button"
-                :href="route('administrator.calendar.create')"
-                class="bg-blue-500 hover:bg-blue-300 text-black px-4 py-3 rounded-md"
-                ><FontAwesomeIcon :icon="faPlus" class="mr-1" />Δημιουργία νέου
-                ημερολογίου</Link
-            >
-            <ul>
+        <div class="py-4 max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
+            <div class="m-4 py-2">
+                <Link
+                    as="button"
+                    :href="route('administrator.calendar.create')"
+                    class="bg-blue-500 hover:bg-blue-300 text-black px-4 py-3 rounded-md shadow-lg"
+                    ><FontAwesomeIcon :icon="faPlus" class="mr-1" />Δημιουργία
+                    νέου ημερολογίου</Link
+                >
+            </div>
+            <ul class="m-4">
                 <li
                     v-for="calendar in calendars"
                     :key="calendar.id"

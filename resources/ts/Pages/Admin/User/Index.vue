@@ -22,42 +22,36 @@ const props = defineProps<{
             </div>
         </template>
 
-        <div class="py-4">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="overflow-hidden sm:rounded-lg">
-                    <div class="m-4 py-2">
-                        <Link
-                            :href="route('administrator.user.create')"
-                            class="bg-blue-500 px-4 py-3 rounded-md shadow-lg"
-                            ><FontAwesomeIcon :icon="faPlus" /> Δημιουργία νέου
-                            χρήστη</Link
-                        >
-                    </div>
-                    <div>
-                        <div class="m-4 py-2 dark:text-white">
-                            Διαχειριστές:
-                        </div>
-                        <TransitionGroup name="list" tag="div">
-                            <UserCard
-                                v-for="(user, index) in users"
-                                :key="user.id"
-                                :index="index"
-                                :user="user"
-                                type="admin"
-                            />
-                        </TransitionGroup>
-                        <div class="m-4 py-2 dark:text-white">Χρήστες ΠΣΔ:</div>
-                        <TransitionGroup name="list" tag="div">
-                            <UserCard
-                                v-for="(user, index) in casUsers"
-                                :key="user.id"
-                                :index="index"
-                                :user="user"
-                                type="cas"
-                            />
-                        </TransitionGroup>
-                    </div>
-                </div>
+        <div class="py-4 max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
+            <div class="m-4 py-2">
+                <Link
+                    :href="route('administrator.user.create')"
+                    class="bg-blue-500 hover:bg-blue-300 text-black px-4 py-3 rounded-md shadow-lg"
+                    ><FontAwesomeIcon :icon="faPlus" /> Δημιουργία νέου
+                    χρήστη</Link
+                >
+            </div>
+            <div>
+                <div class="m-4 py-2 dark:text-white">Διαχειριστές:</div>
+                <TransitionGroup name="list" tag="div">
+                    <UserCard
+                        v-for="(user, index) in users"
+                        :key="user.id"
+                        :index="index"
+                        :user="user"
+                        type="admin"
+                    />
+                </TransitionGroup>
+                <div class="m-4 py-2 dark:text-white">Χρήστες ΠΣΔ:</div>
+                <TransitionGroup name="list" tag="div">
+                    <UserCard
+                        v-for="(user, index) in casUsers"
+                        :key="user.id"
+                        :index="index"
+                        :user="user"
+                        type="cas"
+                    />
+                </TransitionGroup>
             </div>
         </div>
     </AppLayout>

@@ -1,4 +1,6 @@
 declare namespace App.Models {
+    import type { JsonObjectExpression } from "typescript";
+
     export interface User {
         id: number;
         name: string;
@@ -43,6 +45,25 @@ declare namespace App.Models {
         url: string;
         calendar_id: number;
         cas_user_id: number;
+        created_at: string | null;
+        updated_at: string | null;
+    }
+
+    export interface Report {
+        id: number;
+        name: string;
+        type: number;
+        active: boolean;
+        options: string | null;
+        created_at: string | null;
+        updated_at: string | null;
+    }
+
+    export interface ReportData {
+        id: number;
+        cas_user_id: number;
+        report_id: number;
+        data: string | null;
         created_at: string | null;
         updated_at: string | null;
     }
