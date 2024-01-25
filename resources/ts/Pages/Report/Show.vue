@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import ReportCreation from "@/Components/Reports/ReportCreation.vue";
-import AppLayout from "@/Layouts/AppLayout.vue";
+import ReportView from "@/Components/Reports/ReportView.vue";
+import CasUserLayout from "@/Layouts/CasUserLayout.vue";
 
 const props = defineProps<{
-    types: Array<Record<string, string>>;
+    report: App.Models.Report;
 }>();
 </script>
 
 <template>
-    <AppLayout title="Αναφορές">
+    <CasUserLayout title="Αναφορές">
         <template #header>
             <div
                 class="font-semibold text-xl text-gray-800 dark:text-white leading-tight"
@@ -16,6 +16,6 @@ const props = defineProps<{
                 Αναφορές
             </div>
         </template>
-        <ReportCreation :types="types" />
-    </AppLayout>
+        <ReportView :report="report"></ReportView>
+    </CasUserLayout>
 </template>

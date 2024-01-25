@@ -40,7 +40,11 @@ class ReportController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Report/Create', ['types' => Report::AvailableTypes]);
+        if (request()->user()) {
+            return Inertia::render('Admin/Report/Create', ['types' => Report::AvailableTypes]);
+        } else {
+            return Inertia::render('Report/Create', ['types' => Report::AvailableTypes]);
+        }
     }
 
     /**
@@ -57,13 +61,19 @@ class ReportController extends Controller
             ])
         ]);
 
+        if (request()->user()) {
+            $route = 'administrator.report.index';
+        } else {
+            $route = 'report.index';
+        }
+
         if (!$report) {
-            return redirect()->route('administrator.report.index')
+            return redirect()->route($route)
                 ->with('flash.bannerStyle', 'danger')
                 ->with('flash.banner', 'Η δημιουργία αναφοράς απέτυχε!');
         }
 
-        return redirect()->route('administrator.report.index')
+        return redirect()->route($route)
             ->with('flash.bannerStyle', 'success')
             ->with('flash.banner', 'Η αναφορά δημιουργήθηκε επιτυχώς');
     }
@@ -73,7 +83,13 @@ class ReportController extends Controller
      */
     public function show(Report $report)
     {
-        return Inertia::render('Admin/Report/Show', [
+        if (request()->user()) {
+            return Inertia::render('Admin/Report/Show', [
+                'report' => $report
+            ]);
+        }
+
+        return Inertia::render('Report/Show', [
             'report' => $report
         ]);
     }
@@ -148,6 +164,9 @@ class ReportController extends Controller
         $events = CalendarEvent::with('calendar')
             ->where('start_date', '>=', $options->from)
             ->where('end_date', '<', $options->to)
+            ->when(request('cas_user'), function ($query) {
+                $query->where('cas_user_id', request('cas_user')->id);
+            })
             ->orderBy('start_date', 'asc')
             ->get();
 
@@ -174,7 +193,7 @@ class ReportController extends Controller
         $templateProcessor->setValue('to', $options->to);
         $templateProcessor->cloneRowAndSetValues('aa', $tableData);
 
-        $tmpPart = request()->user() ? request()->user()->id : request('cas_user');
+        $tmpPart = request()->user() ? request()->user()->id : request('cas_user')->id;
         $tmpPart .= "-" . Carbon::now()->timestamp;
         $filename = "calendarEvents-".$tmpPart.".docx";
         $templateProcessor->saveAs(storage_path() . "/" . $filename);
@@ -183,12 +202,14 @@ class ReportController extends Controller
 
         return response()->streamDownload(function () use ($output) {
             echo $output;
-        }, $filename);
+        }, $filename, [
+            'Content-Length' => strlen($output),
+        ]);
     }
 
     public function uploadReport(UploadReportRequest $request, Report $report)
     {
-        $user_id = request()->session()->get('cas_user')->id;
+        $user_id = request('cas_user')->id;
         $path = "reports/{$report->id}/$user_id";
         if (!Storage::exists($path)) {
             Storage::makeDirectory($path);
@@ -196,21 +217,43 @@ class ReportController extends Controller
 
         $file = $request->file('file');
         $name = $file->hashName();
-        $ext = $file->extension();
 
         Storage::putFileAs(
-            "reports/{$report->id}",
+            $path,
             $request->file('file'),
-            "$name.$ext"
+            "$name"
         );
 
-        ReportData::create([
-            'cas_user_id' => $user_id,
-            'report_id' => $report->id,
-            'data' => json_encode([
-                'filename' => "$name.$ext",
-                'real_filename' => "{$file->getClientOriginalName()}.{$file->getClientOriginalExtension()}"
-            ])
-        ]);
+        $report_data = ReportData::where('cas_user_id', $user_id)
+            ->where('report_id', $report->id)
+            ->first();
+
+        if ($report_data) {
+            // Σβήσε το παλιό αρχείο
+            $current_data = json_decode($report_data->data);
+            $old_file = $path . "/" . $current_data->filename;
+            if (Storage::exists($old_file)) {
+                Storage::delete($old_file);
+            }
+
+            $report_data->data = json_encode([
+                'filename' => "$name",
+                'real_filename' => "{$file->getClientOriginalName()}}"
+            ]);
+            $report_data->save();
+        } else {
+            ReportData::create([
+                'cas_user_id' => $user_id,
+                'report_id' => $report->id,
+                'data' => json_encode([
+                    'filename' => "$name",
+                    'real_filename' => "{$file->getClientOriginalName()}}"
+                ])
+            ]);
+        }
+
+        return redirect()->route('report.index')
+            ->with('flash.bannerStyle', 'success')
+            ->with('flash.banner', 'Η αναφορά αποθηκεύτηκε επιτυχώς');
     }
 }

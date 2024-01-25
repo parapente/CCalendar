@@ -41,8 +41,8 @@ const page = usePage<PageWithSharedProps>();
                                     Αρχική
                                 </NavLink>
                                 <NavLink
-                                    :href="route('calendar.index')"
-                                    :active="route().current('calendar.index')"
+                                    :href="route('report.index')"
+                                    :active="route().current('report.index')"
                                 >
                                     Αναφορές
                                 </NavLink>
