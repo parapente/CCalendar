@@ -38,15 +38,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $cas_user = null;
-        $cas_user_role = null;
-
-        if (cas()->isAuthenticated()) {
-            $cas_user = CasUser::where('employee_number', cas()->getAttribute('employeenumber'))
-                ->orWhere('username', cas()->getAttribute('uid'))
-                ->first();
-            $cas_user_role = $cas_user?->role->name;
-        }
+        [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
 
         return array_merge(parent::share($request), [
             'cas_user' => $cas_user,

@@ -22,7 +22,9 @@ class ReportController extends Controller
     public function index()
     {
         $user = request()->user();
-        if ($user) { // Οι διαχειριστές τα βλέπουν όλα
+        [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
+
+        if ($user || ($cas_user && $cas_user_role === 'Supervisor')) { // Οι διαχειριστές τα βλέπουν όλα
             $reports = Report::all();
         } else {
             $reports = Report::where('active', 1)->get();
