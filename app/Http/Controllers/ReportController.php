@@ -25,9 +25,9 @@ class ReportController extends Controller
         [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
 
         if ($user || ($cas_user && $cas_user_role === 'Supervisor')) { // Οι διαχειριστές τα βλέπουν όλα
-            $reports = Report::all();
+            $reports = Report::orderBy('created_at', 'desc')->paginate(15);
         } else {
-            $reports = Report::where('active', 1)->get();
+            $reports = Report::where('active', 1)->orderBy('created_at', 'desc')->paginate(15);
         }
 
         if ($user) {
