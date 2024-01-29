@@ -125,7 +125,7 @@ library.add(faChevronLeft, faChevronRight);
                         >
                         <Link
                             :href="link.url"
-                            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 hover:bg-gray-950 focus:z-20 focus:outline-offset-0"
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 hover:dark:bg-gray-950 focus:z-20 focus:outline-offset-0"
                             v-if="
                                 index != 0 &&
                                 index != links.length - 1 &&
