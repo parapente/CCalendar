@@ -11,7 +11,7 @@ const props = defineProps<{
 
 const page = usePage<PageWithSharedProps>();
 
-const routePrefix = page.props.user ? "administrator." : "";
+const routePrefix = page.props.auth.user ? "administrator." : "";
 
 const forms = useForm<{
     name: string;

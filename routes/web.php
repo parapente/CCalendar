@@ -43,6 +43,8 @@ Route::prefix('administrator')
     Route::post('/report/{report}/toggleActive', [ReportController::class, 'toggleActive'])->name('report.toggleActive');
     Route::get('/report/{report}/getCalendarToWord', [ReportController::class, 'getCalendarToWord'])->name('report.getCalendarToWord');
     Route::post('/report/{report}/upload', [ReportController::class, 'uploadReport'])->name('report.uploadReport');
+    Route::get('/report/{report}/getFile/{report_data}', [ReportController::class, 'getFile'])->name('report.getFile');
+    Route::get('/report/{report}/getAllFiles', [ReportController::class, 'getAllFiles'])->name('report.getAllFiles');
     Route::resource('report', ReportController::class);
 });
 
@@ -58,6 +60,8 @@ Route::middleware([
     Route::post('/report/{report}/toggleActive', [ReportController::class, 'toggleActive'])->name('report.toggleActive');
     Route::get('/report/{report}/getCalendarToWord', [ReportController::class, 'getCalendarToWord'])->name('report.getCalendarToWord');
     Route::post('/report/{report}/upload', [ReportController::class, 'uploadReport'])->name('report.uploadReport');
+    Route::get('/report/{report}/getFile/{report_data}', [ReportController::class, 'getFile'])->name('report.getFile');
+    Route::get('/report/{report}/getAllFiles', [ReportController::class, 'getAllFiles'])->name('report.getAllFiles');
     Route::resource('report', ReportController::class);
 });
 

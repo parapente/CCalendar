@@ -27,7 +27,7 @@ const showModal = ref(false);
 
 const selectedForDeletion: Ref<App.Models.Report | undefined> = ref();
 
-const routePrefix = page.props.user ? "administrator." : "";
+const routePrefix = page.props.auth.user ? "administrator." : "";
 
 const deleteReport = (report: App.Models.Report) => {
     selectedForDeletion.value = report;
@@ -69,7 +69,7 @@ const toggleActiveForReport = (report_id: number) => {
             <div class="m-4 py-2">
                 <Link
                     v-if="
-                        page.props.user ||
+                        page.props.auth.user ||
                         page.props.cas_user_role === 'Supervisor'
                     "
                     as="button"
@@ -88,7 +88,10 @@ const toggleActiveForReport = (report_id: number) => {
                     >
                         <div class="mr-auto">{{ report.name }}</div>
                         <button
-                            v-if="page.props.cas_user_role === 'Supervisor'"
+                            v-if="
+                                page.props.auth.user ||
+                                page.props.cas_user_role === 'Supervisor'
+                            "
                             class="mr-4 px-3 py-2 rounded-lg"
                             @click="toggleActiveForReport(report.id)"
                         >
@@ -96,32 +99,38 @@ const toggleActiveForReport = (report_id: number) => {
                                 class="text-green-500"
                                 v-if="report.active"
                                 :icon="faCheckCircle"
-                            /><FontAwesomeIcon
+                            />
+                            <FontAwesomeIcon
                                 class="text-red-500"
                                 v-if="!report.active"
                                 :icon="faXmarkCircle"
                             />
                         </button>
                         <Link
-                            v-if="page.props.cas_user_role === 'Supervisor'"
+                            v-if="
+                                page.props.auth.user ||
+                                page.props.cas_user_role === 'Supervisor'
+                            "
                             as="button"
                             :href="
                                 route(routePrefix + 'report.edit', report.id)
                             "
                             class="px-3 py-2 bg-blue-500 hover:bg-blue-300 rounded-lg shadow-lg mr-4"
-                            ><FontAwesomeIcon :icon="faPen"
-                        /></Link>
+                        >
+                            <FontAwesomeIcon :icon="faPen" />
+                        </Link>
                         <Link
                             as="button"
                             :href="
                                 route(routePrefix + 'report.show', report.id)
                             "
                             class="px-3 py-2 bg-orange-500 hover:bg-orange-300 rounded-lg shadow-lg mr-4"
-                            ><FontAwesomeIcon :icon="faArrowRight"
-                        /></Link>
+                        >
+                            <FontAwesomeIcon :icon="faArrowRight" />
+                        </Link>
                         <button
                             v-if="!page.props.cas_user"
-                            class="px-3 py-2 bg-red-500 hover:bg-red-300 rounded-lg shadow-lg"
+                            class="px-3 py-2 bg-red-500 hover:bg-red-300 rounded-lg shadow-lg mr-4"
                             @click="deleteReport(report)"
                         >
                             <FontAwesomeIcon :icon="faTrashCan" />

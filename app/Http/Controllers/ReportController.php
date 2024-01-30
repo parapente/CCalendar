@@ -6,13 +6,17 @@ use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
 use App\Http\Requests\UploadReportRequest;
 use App\Models\CalendarEvent;
+use App\Models\CasUser;
 use App\Models\Report;
 use App\Models\ReportData;
+use App\Models\Role;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use PhpOffice\PhpWord\TemplateProcessor;
+use ZipArchive;
 
 class ReportController extends Controller
 {
@@ -85,15 +89,32 @@ class ReportController extends Controller
      */
     public function show(Report $report)
     {
-        if (request()->user()) {
-            return Inertia::render('Admin/Report/Show', [
+        [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
+
+        if ($cas_user && $cas_user_role === 'User') {
+            return Inertia::render('Report/Show', [
                 'report' => $report
             ]);
         }
 
-        return Inertia::render('Report/Show', [
-            'report' => $report
-        ]);
+        $users_that_answered = $report->data->map(function ($item) {
+            return $item->cas_user->id;
+        });
+
+        $missing = CasUser::where('active', 1)
+            ->where('role_id', '!=', Role::where('name', 'Supervisor')->first()->id)
+            ->whereNotIn('id', $users_that_answered)
+            ->get();
+
+        if (request()->user() || ($cas_user && $cas_user_role === 'Supervisor')) {
+            return Inertia::render(
+                request()->user() ? 'Admin/Report/Show' : 'Report/Show',
+                [
+                    'report' => $report,
+                    'data' => $report->data,
+                    'missing' => $missing
+            ]);
+        }
     }
 
     /**
@@ -240,7 +261,7 @@ class ReportController extends Controller
 
             $report_data->data = json_encode([
                 'filename' => "$name",
-                'real_filename' => "{$file->getClientOriginalName()}}"
+                'real_filename' => "{$file->getClientOriginalName()}"
             ]);
             $report_data->save();
         } else {
@@ -249,7 +270,7 @@ class ReportController extends Controller
                 'report_id' => $report->id,
                 'data' => json_encode([
                     'filename' => "$name",
-                    'real_filename' => "{$file->getClientOriginalName()}}"
+                    'real_filename' => "{$file->getClientOriginalName()}"
                 ])
             ]);
         }
@@ -257,5 +278,39 @@ class ReportController extends Controller
         return redirect()->route('report.index')
             ->with('flash.bannerStyle', 'success')
             ->with('flash.banner', 'Η αναφορά αποθηκεύτηκε επιτυχώς');
+    }
+
+    public function getFile(Report $report, ReportData $reportData)
+    {
+        $data = json_decode($reportData->data);
+
+        return Storage::download("reports/{$report->id}/{$reportData->cas_user_id}/{$data->filename}", $data->real_filename);
+    }
+
+    public function getAllFiles(Report $report)
+    {
+        [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
+        $user_path = $cas_user ? "/cas/{$cas_user->id}" : "/user/" . request()->user()->id;
+        $now = DateTime::createFromFormat('U.u', microtime(true));
+
+        $zip = new ZipArchive;
+        $zip_path = "/tmp" . $user_path . "/";
+        Storage::makeDirectory($zip_path);
+        $zip_name = $now->format('YmdHisu') . ".zip";
+        $zip->open(storage_path('app') . $zip_path . $zip_name, ZipArchive::CREATE);
+
+        foreach($report->data as $line) {
+            $decoded_data = json_decode($line->data);
+            $file_path = storage_path('app') . "/reports/{$report->id}/{$line->cas_user_id}/{$decoded_data->filename}";
+
+            // Αλλαγή ονόματος μέσα στο zip ώστε να μην υπάρχει πιθανότητα να
+            // συμπέσουν δύο αρχεία να έχουν το ίδιο όνομα
+            $filename = $line->cas_user->name . "." . pathinfo($decoded_data->filename)['extension'];
+            $zip->addFile($file_path, $filename);
+            $zip->setCompressionName($filename, ZipArchive::CM_STORE);
+        }
+
+        $zip->close();
+        return response()->download(storage_path('app') . $zip_path . $zip_name);
     }
 }

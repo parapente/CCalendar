@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Report extends Model
 {
@@ -24,7 +25,7 @@ class Report extends Model
         'options'
     ];
 
-    public function data()
+    public function data(): HasMany
     {
         return $this->hasMany(ReportData::class);
     }

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import AppLayout from "@/Layouts/AppLayout.vue";
 import ReportList from "@/Components/Reports/ReportList.vue";
+import type { PaginationProps } from "@/pagination";
 
 const props = defineProps<{
-    reports: Array<App.Models.Report>;
+    reports: PaginationProps<App.Models.Report>;
 }>();
 </script>
 
