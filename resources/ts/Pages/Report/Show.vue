@@ -28,6 +28,7 @@ const page = usePage<PageWithSharedProps>();
         <div class="py-4 max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
             <ReportView
                 :report="report"
+                :data="data"
                 v-if="page.props.cas_user_role !== 'Supervisor'"
             />
             <div v-else>

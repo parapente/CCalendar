@@ -5,6 +5,7 @@ import route from "ziggy";
 
 const props = defineProps<{
     report: App.Models.Report;
+    data: Array<App.Models.ReportData>;
 }>();
 
 const forms = useForm<{
@@ -31,6 +32,25 @@ const onSubmit = () => {
         })
     );
 };
+
+const parseFilename = (data: string | null): Array<string> => {
+    if (!data) return ["", ""];
+
+    const result = JSON.parse(data);
+
+    if (result.filename) {
+        return [result.filename, result.real_filename];
+    } else {
+        return ["", ""];
+    }
+};
+
+const getFileLink = (reportData: App.Models.ReportData): string => {
+    return route(routePrefix + "report.getFile", {
+        report: props.report,
+        report_data: reportData,
+    });
+};
 </script>
 
 <template>
@@ -47,6 +67,23 @@ const onSubmit = () => {
             >
                 Λήψη καταγραφών ημερολογίου
             </a>
+        </div>
+        <div
+            v-if="props.data && props.data.length"
+            class="flex flex-col bg-green-500 text-black p-2"
+        >
+            <div class="flex">
+                <div class="mr-2">Έχετε ανεβάσει ήδη το αρχείο:</div>
+                <a
+                    :href="getFileLink(props.data[0])"
+                    class="underline text-blue-600"
+                    >{{ parseFilename(props.data[0].data)[1] }}</a
+                >
+            </div>
+            <div>
+                Αν επιθυμείτε μπορείτε να ανεβάσετε νέο αρχείο πραγματοποιώντας
+                εκ νέου αποθήκευση.
+            </div>
         </div>
         <div>
             <label for="file" class="mr-4">Αρχείο τριμηνιαίας αναφοράς:</label>

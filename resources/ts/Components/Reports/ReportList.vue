@@ -19,6 +19,7 @@ import Pagination from "../Pagination.vue";
 
 const props = defineProps<{
     reports: PaginationProps<App.Models.Report>;
+    answered: Array<number>;
 }>();
 
 const page = usePage<PageWithSharedProps>();
@@ -85,6 +86,14 @@ const toggleActiveForReport = (report_id: number) => {
                         v-for="report in reports.data"
                         :key="report.id"
                         class="p-4 my-4 bg-slate-300 dark:bg-gray-800 text-black dark:text-white shadow-xl dark:shadow-md dark:shadow-gray-700 rounded-lg flex items-center"
+                        :class="
+                            page.props.cas_user &&
+                            page.props.cas_user_role !== 'Supervisor' &&
+                            answered &&
+                            answered.includes(report.id)
+                                ? 'bg-green-500 dark:bg-green-500'
+                                : ''
+                        "
                     >
                         <div class="mr-auto">{{ report.name }}</div>
                         <button

@@ -5,6 +5,7 @@ import type { PaginationProps } from "@/pagination";
 
 const props = defineProps<{
     reports: PaginationProps<App.Models.Report>;
+    answered: Array<number>;
 }>();
 </script>
 
@@ -17,6 +18,6 @@ const props = defineProps<{
                 Αναφορές
             </div>
         </template>
-        <ReportList :reports="reports"></ReportList>
+        <ReportList :reports="reports" :answered="answered" />
     </CasUserLayout>
 </template>

@@ -29,16 +29,39 @@ class ReportController extends Controller
         [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
 
         if ($user || ($cas_user && $cas_user_role === 'Supervisor')) { // Οι διαχειριστές τα βλέπουν όλα
-            $reports = Report::orderBy('created_at', 'desc')->paginate(15);
+            $reports = Report::with('data')
+                ->orderBy('created_at', 'desc')
+                ->paginate();
+
+            $answered = $reports->filter(function ($report) {
+                return count($report->data);
+            })
+                ->map(function ($report) {
+                    return $report->id;
+                })
+                ->toArray();
+            $answered = array_values($answered);
         } else {
-            $reports = Report::where('active', 1)->orderBy('created_at', 'desc')->paginate(15);
+            $reports = Report::with('data')
+                ->where('active', 1)
+                ->orderBy('created_at', 'desc')
+                ->paginate();
+
+            $answered = $reports->filter(function ($report) use ($cas_user) {
+                return $report->data->where('cas_user_id', $cas_user->id)->count();
+            })
+                ->map(function ($report) {
+                    return $report->id;
+                })
+                ->toArray();
+            $answered = array_values($answered);
         }
 
         if ($user) {
-            return Inertia::render('Admin/Report/Index', compact('reports'));
+            return Inertia::render('Admin/Report/Index', compact('reports', 'answered'));
         }
 
-        return Inertia::render('Report/Index', compact('reports'));
+        return Inertia::render('Report/Index', compact('reports', 'answered'));
     }
 
     /**
@@ -93,7 +116,10 @@ class ReportController extends Controller
 
         if ($cas_user && $cas_user_role === 'User') {
             return Inertia::render('Report/Show', [
-                'report' => $report
+                'report' => $report,
+                'data' => ReportData::where('cas_user_id', $cas_user->id)
+                    ->where('report_id', $report->id)
+                    ->get()
             ]);
         }
 
