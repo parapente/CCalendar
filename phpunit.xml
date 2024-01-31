@@ -27,7 +27,7 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <ini name="log_errors" value="On" ></ini>
-        <ini name="display_errors" value="On"></ini>
+        <ini name="display_errors" value="true"></ini>
         <ini name="error_log" value="/tmp/error.log"></ini>
     </php>
 </phpunit>
