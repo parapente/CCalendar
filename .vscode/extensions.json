@@ -52,6 +52,7 @@
         "msamgan.laravel-pint-vscode",
         "TabNine.tabnine-vscode",
         "nhedger.inertia",
-        "devsense.composer-php-vscode"
+        "devsense.composer-php-vscode",
+        "xdebug.php-debug"
     ]
 }
