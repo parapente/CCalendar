@@ -3,6 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import {
     faCalendarAlt,
     faEye,
+    faFileLines,
     faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -32,16 +33,16 @@ import route from "ziggy";
                     <div class="flex gap-4 my-4">
                         <Link
                             :href="route('administrator.user.index')"
-                            class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black"
+                            class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black w-56"
                         >
                             <div class="flex flex-col text-center text-black">
                                 <FontAwesomeIcon :icon="faUsers" size="5x" />
                                 <div class="mt-3">Διαχείριση χρηστών</div>
-                            </div></Link
-                        >
+                            </div>
+                        </Link>
                         <Link
                             :href="route('administrator.calendar.index')"
-                            class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black"
+                            class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black w-56"
                         >
                             <div class="flex flex-col text-center text-black">
                                 <FontAwesomeIcon
@@ -49,17 +50,29 @@ import route from "ziggy";
                                     size="5x"
                                 />
                                 <div class="mt-3">Διαχείριση ημερολογίων</div>
-                            </div></Link
-                        >
+                            </div>
+                        </Link>
                         <Link
                             :href="route('administrator.calendar.overview')"
-                            class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black"
+                            class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black w-56"
                         >
                             <div class="flex flex-col text-center text-black">
                                 <FontAwesomeIcon :icon="faEye" size="5x" />
                                 <div class="mt-3">Εποπτεία ημερολογίων</div>
-                            </div></Link
+                            </div>
+                        </Link>
+                        <Link
+                            :href="route('administrator.report.index')"
+                            class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black w-56"
                         >
+                            <div class="flex flex-col text-center text-black">
+                                <FontAwesomeIcon
+                                    :icon="faFileLines"
+                                    size="5x"
+                                />
+                                <div class="mt-3">Αναφορές</div>
+                            </div>
+                        </Link>
                     </div>
                 </div>
             </div>
