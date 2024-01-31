@@ -83,67 +83,83 @@ const toggleActiveForReport = (report_id: number) => {
             <div v-if="reports.data.length">
                 <ul class="m-4 py-2">
                     <li
-                        v-for="report in reports.data"
+                        v-for="(report, index) in reports.data"
                         :key="report.id"
-                        class="p-4 my-4 bg-slate-300 dark:bg-gray-800 text-black dark:text-white shadow-xl dark:shadow-md dark:shadow-gray-700 rounded-lg flex items-center"
-                        :class="
-                            page.props.cas_user &&
-                            page.props.cas_user_role !== 'Supervisor' &&
-                            answered &&
-                            answered.includes(report.id)
-                                ? 'bg-green-500 dark:bg-green-500'
-                                : ''
-                        "
+                        class="my-4 bg-slate-300 dark:bg-gray-800 text-black dark:text-white shadow-xl dark:shadow-md dark:shadow-gray-700 rounded-lg flex flex-col"
                     >
-                        <div class="mr-auto">{{ report.name }}</div>
-                        <button
-                            v-if="
-                                page.props.auth.user ||
-                                page.props.cas_user_role === 'Supervisor'
+                        <div class="p-4 flex items-center">
+                            <div class="mr-auto">
+                                {{ index + reports.from }}. {{ report.name }}
+                            </div>
+                            <button
+                                v-if="
+                                    page.props.auth.user ||
+                                    page.props.cas_user_role === 'Supervisor'
+                                "
+                                class="mr-4 px-3 py-2 rounded-lg"
+                                @click="toggleActiveForReport(report.id)"
+                            >
+                                <FontAwesomeIcon
+                                    class="text-green-500"
+                                    v-if="report.active"
+                                    :icon="faCheckCircle"
+                                />
+                                <FontAwesomeIcon
+                                    class="text-red-500"
+                                    v-if="!report.active"
+                                    :icon="faXmarkCircle"
+                                />
+                            </button>
+                            <Link
+                                v-if="
+                                    page.props.auth.user ||
+                                    page.props.cas_user_role === 'Supervisor'
+                                "
+                                as="button"
+                                :href="
+                                    route(
+                                        routePrefix + 'report.edit',
+                                        report.id
+                                    )
+                                "
+                                class="px-3 py-2 bg-blue-500 hover:bg-blue-300 rounded-lg shadow-lg mr-4"
+                            >
+                                <FontAwesomeIcon :icon="faPen" />
+                            </Link>
+                            <Link
+                                as="button"
+                                :href="
+                                    route(
+                                        routePrefix + 'report.show',
+                                        report.id
+                                    )
+                                "
+                                class="px-3 py-2 bg-orange-500 hover:bg-orange-300 rounded-lg shadow-lg mr-4"
+                            >
+                                <FontAwesomeIcon :icon="faArrowRight" />
+                            </Link>
+                            <button
+                                v-if="!page.props.cas_user"
+                                class="px-3 py-2 bg-red-500 hover:bg-red-300 rounded-lg shadow-lg mr-4"
+                                @click="deleteReport(report)"
+                            >
+                                <FontAwesomeIcon :icon="faTrashCan" />
+                            </button>
+                        </div>
+                        <div
+                            class="px-2 flex rounded-b-lg text-black"
+                            :class="
+                                answered && answered.includes(report.id)
+                                    ? 'bg-green-500 dark:bg-green-500'
+                                    : 'bg-gray-400'
                             "
-                            class="mr-4 px-3 py-2 rounded-lg"
-                            @click="toggleActiveForReport(report.id)"
                         >
-                            <FontAwesomeIcon
-                                class="text-green-500"
-                                v-if="report.active"
-                                :icon="faCheckCircle"
-                            />
-                            <FontAwesomeIcon
-                                class="text-red-500"
-                                v-if="!report.active"
-                                :icon="faXmarkCircle"
-                            />
-                        </button>
-                        <Link
-                            v-if="
-                                page.props.auth.user ||
-                                page.props.cas_user_role === 'Supervisor'
-                            "
-                            as="button"
-                            :href="
-                                route(routePrefix + 'report.edit', report.id)
-                            "
-                            class="px-3 py-2 bg-blue-500 hover:bg-blue-300 rounded-lg shadow-lg mr-4"
-                        >
-                            <FontAwesomeIcon :icon="faPen" />
-                        </Link>
-                        <Link
-                            as="button"
-                            :href="
-                                route(routePrefix + 'report.show', report.id)
-                            "
-                            class="px-3 py-2 bg-orange-500 hover:bg-orange-300 rounded-lg shadow-lg mr-4"
-                        >
-                            <FontAwesomeIcon :icon="faArrowRight" />
-                        </Link>
-                        <button
-                            v-if="!page.props.cas_user"
-                            class="px-3 py-2 bg-red-500 hover:bg-red-300 rounded-lg shadow-lg mr-4"
-                            @click="deleteReport(report)"
-                        >
-                            <FontAwesomeIcon :icon="faTrashCan" />
-                        </button>
+                            {{
+                                answered && answered.includes(report.id)
+                                    ? "Υπάρχουν απαντήσεις"
+                                    : "Σε αναμονή απαντήσεων"
+                            }}
+                        </div>
                     </li>
                 </ul>
                 <Pagination

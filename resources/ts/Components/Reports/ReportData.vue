@@ -47,7 +47,10 @@ const getFileLink = (reportData: App.Models.ReportData): string => {
                     <tr v-for="line in data">
                         <td>{{ line.cas_user.name }}</td>
                         <td>
-                            <a :href="getFileLink(line)">
+                            <a
+                                :href="getFileLink(line)"
+                                class="text-blue-500 underline"
+                            >
                                 {{ parseFilename(line.data)[1] }}
                             </a>
                         </td>

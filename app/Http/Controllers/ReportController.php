@@ -55,6 +55,11 @@ class ReportController extends Controller
                 })
                 ->toArray();
             $answered = array_values($answered);
+
+            // Αφαίρεσε τα δεδομένα για ασφάλεια
+            foreach ($reports as $report) {
+                $report->unsetRelation('data');
+            }
         }
 
         if ($user) {
