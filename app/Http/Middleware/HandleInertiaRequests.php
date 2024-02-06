@@ -38,11 +38,8 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
-
         return array_merge(parent::share($request), [
-            'cas_user' => $cas_user,
-            'cas_user_role' => $cas_user_role
+            //
         ]);
     }
 }

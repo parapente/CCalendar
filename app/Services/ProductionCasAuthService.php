@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Utils;
+namespace App\Services;
 
+use App\Contracts\CasAuthInterface;
 use App\Models\CasUser;
 
-class Cas
+class ProductionCasAuthService implements CasAuthInterface
 {
-    public static function getCasUser()
+    public function getCasUser(): array
     {
         $cas_user = null;
         $cas_user_role = null;

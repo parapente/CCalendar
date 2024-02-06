@@ -12,6 +12,7 @@ use App\Models\ReportData;
 use App\Models\Role;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -23,10 +24,11 @@ class ReportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = request()->user();
-        [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
+        $cas_user = $request->input('cas_user');
+        $cas_user_role = $request->input('cas_user_role');
 
         if ($user || ($cas_user && $cas_user_role === 'Supervisor')) { // Οι διαχειριστές τα βλέπουν όλα
             $reports = Report::with('data')
@@ -115,9 +117,10 @@ class ReportController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Report $report)
+    public function show(Request $request, Report $report)
     {
-        [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
+        $cas_user = $request->input('cas_user');
+        $cas_user_role = $request->input('cas_user_role');
 
         if ($cas_user && $cas_user_role === 'User') {
             return Inertia::render('Report/Show', [
@@ -318,9 +321,10 @@ class ReportController extends Controller
         return Storage::download("reports/{$report->id}/{$reportData->cas_user_id}/{$data->filename}", $data->real_filename);
     }
 
-    public function getAllFiles(Report $report)
+    public function getAllFiles(Request $request, Report $report)
     {
-        [$cas_user, $cas_user_role] = \App\Utils\Cas::getCasUser();
+        $cas_user = $request->input('cas_user');
+        $cas_user_role = $request->input('cas_user_role');
         $user_path = $cas_user ? "/cas/{$cas_user->id}" : "/user/" . request()->user()->id;
         $now = DateTime::createFromFormat('U.u', microtime(true));
 
