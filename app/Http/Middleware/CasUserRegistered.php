@@ -25,6 +25,14 @@ class CasUserRegistered
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $response = $this->auth->authenticate($request);
+        // Αν έχουμε απάντηση είναι γιατί κάτι απέτυχε. Επέστρεψε την απάντηση
+        if ($response) {
+            return $response;
+        }
+
+        // Προσπάθησε να κάνεις ταίριασμα χρήστη του cas με του χρήστες της
+        // εφαρμογής. Αν δεν βρεθεί ταίριασμα θα πάρουμε πίσω [null, null]
         [$cas_user, $cas_user_role] = $this->auth->getCasUser();
 
         if (!$cas_user) {
