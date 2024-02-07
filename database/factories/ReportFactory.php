@@ -18,7 +18,11 @@ class ReportFactory extends Factory
     {
         return [
             'name' => $this->faker->sentence(3),
-            'type' => 1 // Για την ώρα δεν έχουμε άλλο τύπο αναφοράς
+            'type' => 1, // Για την ώρα δεν έχουμε άλλο τύπο αναφοράς
+            'options' => json_encode([ // Απαιτούμενες ρυθμίσεις για τον τύπο 1
+                'from' => '2021-01-01',
+                'to' => '2021-01-31',
+            ]),
         ];
     }
 }
