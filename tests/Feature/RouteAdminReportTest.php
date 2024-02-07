@@ -7,6 +7,8 @@ use App\Models\Report;
 use App\Models\ReportData;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 test('admin can view reports', function () {
@@ -138,7 +140,38 @@ test('admin can toggle active status of a report', function () {
 
 test('admin can download all files of a report', function () {
     $report = Report::factory()->create();
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    // Φτιάξε 10 χρήστες και 10 αντίστοιχες απαντήσεις
+    $role = Role::factory()->create(['name' => 'User']);
+    $casUsers = CasUser::factory()
+        ->count(10)
+        ->sequence(fn (Sequence $sequence) => [
+            'role_id' => $role->id,
+            'employee_number' => $sequence->index + 1,
+        ])
+        ->create();
+    $reportData = ReportData::factory()
+        ->count(10)
+        ->sequence(fn (Sequence $sequence) => [
+            'cas_user_id' => $casUsers[$sequence->index]->id,
+            'report_id' => $report['id'],
+            'data' => json_encode([
+                'filename' => "{$casUsers[$sequence->index]->id}.pdf",
+                'real_filename' => "test{$casUsers[$sequence->index]->id}.pdf",
+            ]),
+        ])
+        ->create();
+    $files = [];
+    foreach ($casUsers as $casUser) {
+        $filename = "reports/{$report->id}/{$casUser->id}/{$casUser->id}.pdf";
+        $files[] = UploadedFile::fake()
+            ->create($filename, 1024, 'application/pdf')
+            ->storeAs($filename);
+    }
+    foreach ($files as $file) {
+        /** @var Illuminate\Foundation\Testing\TestCase $this */
+        $this->assertTrue(Storage::exists($file));
+    }
+
     $response = $this->get(route('administrator.report.getAllFiles', $report));
     $response->assertRedirect(route('login'));
 
@@ -146,7 +179,14 @@ test('admin can download all files of a report', function () {
     $response = $this->actingAs($user)
         ->get(route('administrator.report.getAllFiles', $report));
     $response->assertOk();
-})->skip();
+    $this->assertTrue($response->headers->get('Content-Type') === 'application/zip');
+
+    foreach ($files as $file) {
+        Storage::deleteDirectory("reports/{$report->id}");
+        $this->assertFalse(Storage::exists($file));
+        $this->assertFalse(Storage::exists("reports/{$report->id}"));
+    }
+});
 
 test('admin can download a file of a report', function () {
     $report = Report::factory()->create();

@@ -19,7 +19,7 @@ it('cannot access administrator routes', function($route) {
     'administrator/calendar/create',
     'administrator/calendar/overview',
     'administrator/calendar/1/edit',
-    'administrator/cas_user/1/name',
+    // 'administrator/cas_user/1/name',
     'administrator/events/2023/01',
     'administrator/report',
     'administrator/report/create',

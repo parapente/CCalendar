@@ -85,6 +85,6 @@ test('admin can update an existing calendar', function () {
 
 test('noone can delete an existing calendar', function () {
     expect(fn() => route('administrator.calendar.delete'))
-        ->toThrow(Symfony\Component\Routing\Exception\RouteNotFoundException::class);
+        ->toThrow(RouteNotFoundException::class);
 });
 
