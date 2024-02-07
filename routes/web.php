@@ -49,7 +49,6 @@ Route::prefix('administrator')
 });
 
 Route::middleware([
-    'cas.auth',
     'cas.registered'
 ])->group(function () {
     Route::get('/calendar', [CalendarController::class, 'showAll'])->name('calendar.index');
