@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCalendarEventRequest;
 use App\Http\Requests\UpdateCalendarEventRequest;
 use App\Models\CalendarEvent;
-use App\Models\CasUser;
 use App\Models\Role;
-use Illuminate\Support\Facades\DB;
 
 class CalendarEventController extends Controller
 {
@@ -31,8 +29,8 @@ class CalendarEventController extends Controller
 
         $calendarEvents = CalendarEvent::with('casUser')
             ->whereHas("calendar", function ($query) {
-            $query->where('active', true);
-        });
+                $query->where('active', true);
+            });
 
         if (!$getAll) {
             $calendarEvents = $calendarEvents->where('cas_user_id', request('cas_user')->id);
