@@ -4,10 +4,9 @@ use App\Models\Calendar;
 use App\Models\CalendarEvent;
 use App\Models\CasUser;
 use App\Models\Role;
-use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-it('returns calendar events when requested', function () {
+it('returns calendar events to cas users when requested', function () {
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $calendar = Calendar::factory()->create([
         'active' => true,
@@ -16,6 +15,10 @@ it('returns calendar events when requested', function () {
     $cas_user = CasUser::factory()->create([
         'role_id' => $role->id,
         'employee_number' => '111111',
+    ]);
+    $cas_user2 = CasUser::factory()->create([
+        'role_id' => $role->id,
+        'employee_number' => '111112',
     ]);
     $start_date = '2021-01-01';
     $end_date = '2021-01-02';
@@ -37,7 +40,7 @@ it('returns calendar events when requested', function () {
     $end_date = '2021-01-02';
     $calendarEvent3 = CalendarEvent::factory()->create([
         'calendar_id' => $calendar->id,
-        'cas_user_id' => $cas_user->id,
+        'cas_user_id' => $cas_user2->id,
         'start_date' => $start_date,
         'end_date' => $end_date,
     ]);
@@ -50,14 +53,15 @@ it('returns calendar events when requested', function () {
         'end_date' => $end_date,
     ]);
 
-    $response = $this->get(route('administrator.events', [
+    $response = $this->get(route('events', [
         'year' => 2021,
         'month' => 1,
     ]));
-    $response->assertRedirect(route('login'));
+    $response->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
 
-    $user = User::factory()->create();
-    $response = $this->actingAs($user)->get(route('administrator.events', [
+    cas_login_user($cas_user);
+
+    $response = $this->get(route('events', [
         'year' => 2021,
         'month' => 1,
     ]));
@@ -65,10 +69,10 @@ it('returns calendar events when requested', function () {
         ->assertJson(fn (AssertableJson $json) =>
             // Το αποτέλεσμα είναι πίνακας οπότε παίρνουμε το πρώτο αποτέλεσμα
             $json
-                ->has(3)
+                ->has(2)
                 ->first(fn (AssertableJson $json) =>
-                    $json->where('title', $calendarEvent3->title)
-                        ->where('description', $calendarEvent3->description)
+                    $json->where('title', $calendarEvent->title)
+                        ->where('description', $calendarEvent->description)
                         ->etc()
                 )
                 ->etc()
