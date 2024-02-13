@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,5 +20,33 @@ class CasUserFactory extends Factory
         return [
             'name' => $this->faker->name,
         ];
+    }
+
+    public function user(): Factory
+    {
+        $role = Role::where('name', 'User')->first();
+        if (!$role) {
+            $role = Role::factory()->create(['name' => 'User']);
+        }
+
+        return $this->state(function (array $attributes) use ($role) {
+            return [
+                'role_id' => $role->id,
+            ];
+        });
+    }
+
+    public function supervisor(): Factory
+    {
+        $role = Role::where('name', 'Supervisor')->first();
+        if (!$role) {
+            $role = Role::factory()->create(['name' => 'Supervisor']);
+        }
+
+        return $this->state(function (array $attributes) use ($role) {
+            return [
+                'role_id' => $role->id,
+            ];
+        });
     }
 }

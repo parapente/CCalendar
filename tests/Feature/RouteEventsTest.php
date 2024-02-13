@@ -11,13 +11,10 @@ it('returns calendar events to cas users when requested', function () {
     $calendar = Calendar::factory()->create([
         'active' => true,
     ]);
-    $role = Role::factory()->create(['name' => 'User']);
-    $cas_user = CasUser::factory()->create([
-        'role_id' => $role->id,
+    $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '111111',
     ]);
-    $cas_user2 = CasUser::factory()->create([
-        'role_id' => $role->id,
+    $cas_user2 = CasUser::factory()->user()->create([
         'employee_number' => '111112',
     ]);
     $start_date = '2021-01-01';

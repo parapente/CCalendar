@@ -11,8 +11,7 @@ test('cas user can view calendar', function() {
     $this->get(route('calendar.index'))
         ->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
 
-    $cas_user = CasUser::factory()->create([
-        'role_id' => Role::factory()->create(['name' => 'User'])->id,
+    $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
     ]);
 
@@ -39,8 +38,7 @@ test('cas user can add event to calendar', function() {
         ->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
     $this->assertDatabaseMissing('calendar_events', $calendar_event);
 
-    $cas_user = CasUser::factory()->create([
-        'role_id' => Role::factory()->create(['name' => 'User'])->id,
+    $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
     ]);
 
@@ -53,8 +51,7 @@ test('cas user can add event to calendar', function() {
 
 test('cas user can update calendar event', function() {
     $calendar = Calendar::factory()->create();
-    $cas_user = CasUser::factory()->create([
-        'role_id' => Role::factory()->create(['name' => 'User'])->id,
+    $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
     ]);
     $calendar_event = CalendarEvent::factory()->create([
@@ -86,8 +83,7 @@ test('cas user can update calendar event', function() {
 
 test('cas user can delete calendar event', function() {
     $calendar = Calendar::factory()->create();
-    $cas_user = CasUser::factory()->create([
-        'role_id' => Role::factory()->create(['name' => 'User'])->id,
+    $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
     ]);
     $calendar_event = CalendarEvent::factory()->create([
