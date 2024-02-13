@@ -2,6 +2,7 @@
 
 use App\Contracts\CasAuthInterface;
 use App\Models\CasUser;
+use App\Models\Role;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Tests\TestCase;
 
@@ -44,11 +45,13 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function cas_login_user(CasUser $user, $role = 'User')
+function cas_login_user(CasUser $user)
 {
-    test()->mock(CasAuthInterface::class, function ($mock) use ($user, $role) {
+    test()->mock(CasAuthInterface::class, function ($mock) use ($user) {
+        $role = Role::find($user->role_id);
+
         $mock->shouldReceive('getCasUser')
-            ->andReturn([$user, $role]);
+            ->andReturn([$user, $role->name]);
         $mock->shouldReceive('authenticate')
             ->andReturn(null);
     });
