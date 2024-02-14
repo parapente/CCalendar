@@ -1,0 +1,740 @@
+{
+  "debugbar.openhandler": {
+    "name": "debugbar.openhandler",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\OpenHandlerController@handle",
+    "uri": "_debugbar/open",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.clockwork": {
+    "name": "debugbar.clockwork",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\OpenHandlerController@clockwork",
+    "uri": "_debugbar/clockwork/{id}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.assets.css": {
+    "name": "debugbar.assets.css",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\AssetController@css",
+    "uri": "_debugbar/assets/stylesheets",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.assets.js": {
+    "name": "debugbar.assets.js",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\AssetController@js",
+    "uri": "_debugbar/assets/javascript",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.cache.delete": {
+    "name": "debugbar.cache.delete",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\CacheController@delete",
+    "uri": "_debugbar/cache/{key}/{tags?}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "cypress.factory": {
+    "name": "cypress.factory",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@factory",
+    "uri": "__cypress__/factory",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.login": {
+    "name": "cypress.login",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@login",
+    "uri": "__cypress__/login",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.logout": {
+    "name": "cypress.logout",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@logout",
+    "uri": "__cypress__/logout",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.artisan": {
+    "name": "cypress.artisan",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@artisan",
+    "uri": "__cypress__/artisan",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.run-php": {
+    "name": "cypress.run-php",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@runPhp",
+    "uri": "__cypress__/run-php",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.csrf-token": {
+    "name": "cypress.csrf-token",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@csrfToken",
+    "uri": "__cypress__/csrf_token",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "cypress.routes": {
+    "name": "cypress.routes",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@routes",
+    "uri": "__cypress__/routes",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.current-user": {
+    "name": "cypress.current-user",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@currentUser",
+    "uri": "__cypress__/current-user",
+    "method": [
+      "POST"
+    ]
+  },
+  "login": {
+    "name": "login",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\AuthenticatedSessionController@create",
+    "uri": "administrator/login",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "": {
+    "name": null,
+    "domain": null,
+    "action": "Closure",
+    "uri": "/",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "logout": {
+    "name": "logout",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\AuthenticatedSessionController@destroy",
+    "uri": "administrator/logout",
+    "method": [
+      "POST"
+    ]
+  },
+  "user-profile-information.update": {
+    "name": "user-profile-information.update",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ProfileInformationController@update",
+    "uri": "administrator/user/profile-information",
+    "method": [
+      "PUT"
+    ]
+  },
+  "user-password.update": {
+    "name": "user-password.update",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\PasswordController@update",
+    "uri": "administrator/user/password",
+    "method": [
+      "PUT"
+    ]
+  },
+  "password.confirmation": {
+    "name": "password.confirmation",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmedPasswordStatusController@show",
+    "uri": "administrator/user/confirmed-password-status",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "password.confirm": {
+    "name": "password.confirm",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmablePasswordController@store",
+    "uri": "administrator/user/confirm-password",
+    "method": [
+      "POST"
+    ]
+  },
+  "two-factor.login": {
+    "name": "two-factor.login",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticatedSessionController@create",
+    "uri": "administrator/two-factor-challenge",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "two-factor.enable": {
+    "name": "two-factor.enable",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticationController@store",
+    "uri": "administrator/user/two-factor-authentication",
+    "method": [
+      "POST"
+    ]
+  },
+  "two-factor.confirm": {
+    "name": "two-factor.confirm",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmedTwoFactorAuthenticationController@store",
+    "uri": "administrator/user/confirmed-two-factor-authentication",
+    "method": [
+      "POST"
+    ]
+  },
+  "two-factor.disable": {
+    "name": "two-factor.disable",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticationController@destroy",
+    "uri": "administrator/user/two-factor-authentication",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "two-factor.qr-code": {
+    "name": "two-factor.qr-code",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorQrCodeController@show",
+    "uri": "administrator/user/two-factor-qr-code",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "two-factor.secret-key": {
+    "name": "two-factor.secret-key",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorSecretKeyController@show",
+    "uri": "administrator/user/two-factor-secret-key",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "two-factor.recovery-codes": {
+    "name": "two-factor.recovery-codes",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\RecoveryCodeController@index",
+    "uri": "administrator/user/two-factor-recovery-codes",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "profile.show": {
+    "name": "profile.show",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\UserProfileController@show",
+    "uri": "user/profile",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "other-browser-sessions.destroy": {
+    "name": "other-browser-sessions.destroy",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\OtherBrowserSessionsController@destroy",
+    "uri": "user/other-browser-sessions",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "current-user-photo.destroy": {
+    "name": "current-user-photo.destroy",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\ProfilePhotoController@destroy",
+    "uri": "user/profile-photo",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "sanctum.csrf-cookie": {
+    "name": "sanctum.csrf-cookie",
+    "domain": null,
+    "action": "Laravel\\Sanctum\\Http\\Controllers\\CsrfCookieController@show",
+    "uri": "sanctum/csrf-cookie",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "ignition.healthCheck": {
+    "name": "ignition.healthCheck",
+    "domain": null,
+    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\HealthCheckController",
+    "uri": "_ignition/health-check",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "ignition.executeSolution": {
+    "name": "ignition.executeSolution",
+    "domain": null,
+    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\ExecuteSolutionController",
+    "uri": "_ignition/execute-solution",
+    "method": [
+      "POST"
+    ]
+  },
+  "ignition.updateConfig": {
+    "name": "ignition.updateConfig",
+    "domain": null,
+    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\UpdateConfigController",
+    "uri": "_ignition/update-config",
+    "method": [
+      "POST"
+    ]
+  },
+  "administrator.index": {
+    "name": "administrator.index",
+    "domain": null,
+    "action": "Closure",
+    "uri": "administrator",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.user.edit": {
+    "name": "administrator.user.edit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserController@edit",
+    "uri": "administrator/user/{user}/type/{type}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.user.update": {
+    "name": "administrator.user.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserController@update",
+    "uri": "administrator/user/{user}/type/{type}",
+    "method": [
+      "PUT"
+    ]
+  },
+  "administrator.user.index": {
+    "name": "administrator.user.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserController@index",
+    "uri": "administrator/user",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.user.create": {
+    "name": "administrator.user.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserController@create",
+    "uri": "administrator/user/create",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.user.store": {
+    "name": "administrator.user.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserController@store",
+    "uri": "administrator/user",
+    "method": [
+      "POST"
+    ]
+  },
+  "administrator.calendar.overview": {
+    "name": "administrator.calendar.overview",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@overview",
+    "uri": "administrator/calendar/overview",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.calendar.index": {
+    "name": "administrator.calendar.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@index",
+    "uri": "administrator/calendar",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.calendar.create": {
+    "name": "administrator.calendar.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@create",
+    "uri": "administrator/calendar/create",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.calendar.store": {
+    "name": "administrator.calendar.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@store",
+    "uri": "administrator/calendar",
+    "method": [
+      "POST"
+    ]
+  },
+  "administrator.calendar.edit": {
+    "name": "administrator.calendar.edit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@edit",
+    "uri": "administrator/calendar/{calendar}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.calendar.update": {
+    "name": "administrator.calendar.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@update",
+    "uri": "administrator/calendar/{calendar}",
+    "method": [
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "administrator.events": {
+    "name": "administrator.events",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarEventController@index",
+    "uri": "administrator/events/{year}/{month}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.report.toggleActive": {
+    "name": "administrator.report.toggleActive",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@toggleActive",
+    "uri": "administrator/report/{report}/toggleActive",
+    "method": [
+      "POST"
+    ]
+  },
+  "administrator.report.getCalendarToWord": {
+    "name": "administrator.report.getCalendarToWord",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@getCalendarToWord",
+    "uri": "administrator/report/{report}/getCalendarToWord",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.report.uploadReport": {
+    "name": "administrator.report.uploadReport",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@uploadReport",
+    "uri": "administrator/report/{report}/upload",
+    "method": [
+      "POST"
+    ]
+  },
+  "administrator.report.getFile": {
+    "name": "administrator.report.getFile",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@getFile",
+    "uri": "administrator/report/{report}/getFile/{report_data}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.report.getAllFiles": {
+    "name": "administrator.report.getAllFiles",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@getAllFiles",
+    "uri": "administrator/report/{report}/getAllFiles",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.report.index": {
+    "name": "administrator.report.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@index",
+    "uri": "administrator/report",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.report.create": {
+    "name": "administrator.report.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@create",
+    "uri": "administrator/report/create",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.report.store": {
+    "name": "administrator.report.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@store",
+    "uri": "administrator/report",
+    "method": [
+      "POST"
+    ]
+  },
+  "administrator.report.show": {
+    "name": "administrator.report.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@show",
+    "uri": "administrator/report/{report}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.report.edit": {
+    "name": "administrator.report.edit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@edit",
+    "uri": "administrator/report/{report}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "administrator.report.update": {
+    "name": "administrator.report.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@update",
+    "uri": "administrator/report/{report}",
+    "method": [
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "administrator.report.destroy": {
+    "name": "administrator.report.destroy",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@destroy",
+    "uri": "administrator/report/{report}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "calendar.index": {
+    "name": "calendar.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@showAll",
+    "uri": "calendar",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "calendar.addEvent": {
+    "name": "calendar.addEvent",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@addEvent",
+    "uri": "calendar/{calendar}/event",
+    "method": [
+      "POST"
+    ]
+  },
+  "calendar.deleteEvent": {
+    "name": "calendar.deleteEvent",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@deleteEvent",
+    "uri": "calendar/{calendar}/event/{event}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "events": {
+    "name": "events",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarEventController@index",
+    "uri": "events/{year}/{month}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "report.toggleActive": {
+    "name": "report.toggleActive",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@toggleActive",
+    "uri": "report/{report}/toggleActive",
+    "method": [
+      "POST"
+    ]
+  },
+  "report.getCalendarToWord": {
+    "name": "report.getCalendarToWord",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@getCalendarToWord",
+    "uri": "report/{report}/getCalendarToWord",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "report.uploadReport": {
+    "name": "report.uploadReport",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@uploadReport",
+    "uri": "report/{report}/upload",
+    "method": [
+      "POST"
+    ]
+  },
+  "report.getFile": {
+    "name": "report.getFile",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@getFile",
+    "uri": "report/{report}/getFile/{report_data}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "report.getAllFiles": {
+    "name": "report.getAllFiles",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@getAllFiles",
+    "uri": "report/{report}/getAllFiles",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "report.index": {
+    "name": "report.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@index",
+    "uri": "report",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "report.create": {
+    "name": "report.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@create",
+    "uri": "report/create",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "report.store": {
+    "name": "report.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@store",
+    "uri": "report",
+    "method": [
+      "POST"
+    ]
+  },
+  "report.show": {
+    "name": "report.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@show",
+    "uri": "report/{report}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "report.edit": {
+    "name": "report.edit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@edit",
+    "uri": "report/{report}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "report.update": {
+    "name": "report.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@update",
+    "uri": "report/{report}",
+    "method": [
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "report.destroy": {
+    "name": "report.destroy",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReportController@destroy",
+    "uri": "report/{report}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "invalid.cas_user": {
+    "name": "invalid.cas_user",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CasUserController@invalidCasUser",
+    "uri": "invalid/cas_user",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "cas.logout": {
+    "name": "cas.logout",
+    "domain": null,
+    "action": "Closure",
+    "uri": "logout",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  }
+}
