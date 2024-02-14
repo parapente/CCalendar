@@ -93,3 +93,26 @@ test('admin can update a user', function() {
         'role_id' => $role_supervisor->id,
     ]);
 });
+
+test('admin can view all available users', function () {
+    $admin = User::factory()->create();
+    $user = User::factory()->create();
+    $cas_user = CasUser::factory()->user()->create([
+        'employee_number' => '111111',
+    ]);
+    $cas_supervisor = CasUser::factory()->supervisor()->create([
+        'employee_number' => '111112',
+    ]);
+
+    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    $response = $this->get(route('administrator.user.index'));
+    $response->assertRedirect(route('login'));
+
+    $response = $this->actingAs($admin)->get(route('administrator.user.index'));
+    $response
+        ->assertOk()
+        ->assertSee($admin->name)
+        ->assertSee($user->name)
+        ->assertSee($cas_user->name)
+        ->assertSee($cas_supervisor->name);
+});
