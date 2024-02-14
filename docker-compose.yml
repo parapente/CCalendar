@@ -17,6 +17,7 @@ services:
             XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
             XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}"
             IGNITION_LOCAL_SITES_PATH: "${PWD}"
+            CYPRESS_INSTALL_BINARY: 0
         volumes:
             - ".:/var/www/html"
         networks:
@@ -94,7 +95,8 @@ services:
         environment:
             - CYPRESS_baseUrl=http://laravel.test:${APP_PORT:-80}
             - DISPLAY=novnc:0.0
-            # - DEBUG=cypress:*
+            - LARAVEL_BYPASS_ENV_CHECK=1
+            - DEBUG=cypress:*
         working_dir: /e2e
         entrypoint: cypress open --project /e2e
         volumes:

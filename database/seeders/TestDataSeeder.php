@@ -20,10 +20,10 @@ class TestDataSeeder extends Seeder
         })->toArray();
         $employee_numbers = ["111111", "999999"];
         $employees = new Collection();
-        foreach ($employee_numbers as $employee_number) {
+        foreach ($employee_numbers as $key => $employee_number) {
             $employees->push(\App\Models\CasUser::factory()->create([
                 'employee_number' => $employee_number,
-                'role_id' => $faker->randomElement($roles),
+                'role_id' => $roles[$key],
             ]));
         }
         $employee_ids = $employees->map(function ($employee) {
