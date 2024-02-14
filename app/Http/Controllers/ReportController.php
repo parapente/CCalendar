@@ -74,12 +74,18 @@ class ReportController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         if (request()->user()) {
             return Inertia::render('Admin/Report/Create', ['types' => Report::AvailableTypes]);
         } else {
-            return Inertia::render('Report/Create', ['types' => Report::AvailableTypes]);
+            $cas_user_role = $request->input('cas_user_role');
+
+            if ($cas_user_role === 'Supervisor') {
+                return Inertia::render('Report/Create', ['types' => Report::AvailableTypes]);
+            } else {
+                return to_route('report.index');
+            }
         }
     }
 
@@ -88,6 +94,12 @@ class ReportController extends Controller
      */
     public function store(StoreReportRequest $request)
     {
+        if (!$request->user() && $request->input('cas_user_role') !== 'Supervisor') {
+            return redirect()->route('report.index')
+                ->with('flash.bannerStyle', 'danger')
+                ->with('flash.banner', 'Δεν έχετε δικαίωμα δημιουργίας αναφοράς!');
+        }
+
         $report = Report::create([
             'name' => $request->name,
             'type' => $request->type,
@@ -123,6 +135,12 @@ class ReportController extends Controller
         $cas_user_role = $request->input('cas_user_role');
 
         if ($cas_user && $cas_user_role === 'User') {
+            if (!$report->active) {
+                return redirect()->route('report.index')
+                    ->with('flash.bannerStyle', 'danger')
+                    ->with('flash.banner', 'Δεν είναι δυνατή η προβολή ανενεργής αναφοράς!');
+            }
+
             return Inertia::render('Report/Show', [
                 'report' => $report,
                 'data' => ReportData::where('cas_user_id', $cas_user->id)
@@ -154,8 +172,14 @@ class ReportController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Report $report)
+    public function edit(Request $request, Report $report)
     {
+        $cas_user_role = $request->input('cas_user_role');
+
+        if (!$request->user() && $cas_user_role !== 'Supervisor') {
+            return to_route('report.index');
+        }
+
         return Inertia::render('Admin/Report/Edit', [
             'report' => $report,
             'types' => Report::AvailableTypes
@@ -167,6 +191,12 @@ class ReportController extends Controller
      */
     public function update(UpdateReportRequest $request, Report $report)
     {
+        if (!$request->user() && $request->input('cas_user_role') !== 'Supervisor') {
+            return redirect()->route('report.index')
+                ->with('flash.bannerStyle', 'danger')
+                ->with('flash.banner', 'Δεν έχετε δικαίωμα ενημέρωσης αναφοράς!');
+        }
+
         $report->name = $request->name;
         $report->type = $request->type;
         $report->options = json_encode([
@@ -175,13 +205,19 @@ class ReportController extends Controller
         ]);
         $result = $report->save();
 
+        if (request()->user()) {
+            $route = 'administrator.report.index';
+        } else {
+            $route = 'report.index';
+        }
+
         if (!$result) {
-            return redirect()->route('administrator.report.index')
+            return redirect()->route($route)
                 ->with('flash.bannerStyle', 'danger')
                 ->with('flash.banner', 'Η επεξεργασία της αναφοράς απέτυχε!');
         }
 
-        return redirect()->route('administrator.report.index')
+        return redirect()->route($route)
             ->with('flash.bannerStyle', 'success')
             ->with('flash.banner', 'Η αναφορά ενημερώθηκε επιτυχώς');
     }
@@ -189,23 +225,39 @@ class ReportController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Report $report)
+    public function destroy(Request $request, Report $report)
     {
+        if (!$request->user() && $request->input('cas_user_role') !== 'Supervisor') {
+            return redirect()->route('report.index')
+                ->with('flash.bannerStyle', 'danger')
+                ->with('flash.banner', 'Δεν έχετε δικαίωμα ενημέρωσης αναφοράς!');
+        }
+
         $result = $report->delete();
 
+        if (request()->user()) {
+            $route = 'administrator.report.index';
+        } else {
+            $route = 'report.index';
+        }
+
         if ($result) {
-            return redirect()->route('administrator.report.index')
+            return redirect()->route($route)
                 ->with('flash.bannerStyle', 'success')
                 ->with('flash.banner', 'Η αναφορά διαγράφηκε επιτυχώς');
         }
 
-        return redirect()->route('administrator.report.index')
+        return redirect()->route($route)
             ->with('flash.bannerStyle', 'danger')
             ->with('flash.banner', 'Αποτυχία διαγραφής αναφοράς!');
     }
 
-    public function toggleActive(Report $report)
+    public function toggleActive(Request $request, Report $report)
     {
+        if (!$request->user() && $request->input('cas_user_role') !== 'Supervisor') {
+            return;
+        }
+
         $report->active = !$report->active;
         $result = $report->save();
 
@@ -266,6 +318,12 @@ class ReportController extends Controller
 
     public function uploadReport(UploadReportRequest $request, Report $report)
     {
+        if (!$report->active) {
+            return redirect()->route('report.index')
+                ->with('flash.bannerStyle', 'danger')
+                ->with('flash.banner', 'Η αναφορά είναι απενεργοποιημένη! Το αρχείο δεν αποθηκεύτηκε');
+        }
+
         $user_id = request('cas_user')->id;
         $path = "reports/{$report->id}/$user_id";
         if (!Storage::exists($path)) {
@@ -314,8 +372,15 @@ class ReportController extends Controller
             ->with('flash.banner', 'Η αναφορά αποθηκεύτηκε επιτυχώς');
     }
 
-    public function getFile(Report $report, ReportData $reportData)
+    public function getFile(Request $request, Report $report, ReportData $reportData)
     {
+        $cas_user = $request->input('cas_user');
+        $cas_user_role = $request->input('cas_user_role');
+
+        if (!$request->user() && $cas_user_role !== 'Supervisor' && $cas_user->id !== $reportData->cas_user_id) {
+            abort(403);
+        }
+
         $data = json_decode($reportData->data);
 
         return Storage::download("reports/{$report->id}/{$reportData->cas_user_id}/{$data->filename}", $data->real_filename);
@@ -325,6 +390,11 @@ class ReportController extends Controller
     {
         $cas_user = $request->input('cas_user');
         $cas_user_role = $request->input('cas_user_role');
+
+        if (!$request->user() && $cas_user_role !== 'Supervisor') {
+            abort(403);
+        }
+
         $user_path = $cas_user ? "/cas/{$cas_user->id}" : "/user/" . request()->user()->id;
         $now = DateTime::createFromFormat('U.u', microtime(true));
 
