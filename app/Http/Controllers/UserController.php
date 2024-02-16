@@ -57,7 +57,7 @@ class UserController extends Controller
                     Rule::unique('users'),
                     Rule::unique('cas_users'))
             ],
-            'employee_number' => ['string', 'max:255', Rule::requiredIf($request->type === 'cas')],
+            'employee_number' => ['string', 'nullable', 'max:255', Rule::requiredIf($request->type === 'cas')],
             'type' => ['required','string'],
             'role_id' => ['required_if:type,cas', 'integer'],
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
@@ -121,7 +121,7 @@ class UserController extends Controller
                     Rule::unique('users')->ignore($id),
                     Rule::unique('cas_users')->ignore($id))
             ],
-            'employee_number' => ['string', 'max:255', Rule::requiredIf($request->type === 'cas')],
+            'employee_number' => ['string', 'nullable', 'max:255', Rule::requiredIf($request->type === 'cas')],
             'role_id' => [Rule::requiredIf($type === "cas"), 'integer'],
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
             'password_confirmation' => ['nullable', 'string', 'max:255', Rule::requiredIf(!is_null($request->password)), 'same:password'],
