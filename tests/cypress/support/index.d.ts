@@ -1,5 +1,21 @@
 /// <reference types="cypress" />
 
+type RouteObject = {
+    name: string;
+    domain: string | null;
+    action: string;
+    uri: string;
+    method: Array<"GET" | "HEAD" | "POST" | "PUT" | "PATCH" | "DELETE">;
+};
+
+type CreateModelType = {
+    model: string;
+    state: Array<string>;
+    attributes: Array<string>;
+    load: Array<string>;
+    count: number;
+};
+
 declare namespace Cypress {
     interface Chainable<Subject> {
         /**
@@ -9,7 +25,7 @@ declare namespace Cypress {
          * cy.login()
          * cy.login({ id: 1 })
          */
-        login(attributes?: object): Chainable<any>;
+        login(attributes?: Record<string, unknown>): Chainable<any>;
 
         /**
          * Log out the current user.
@@ -52,7 +68,7 @@ declare namespace Cypress {
          * cy.create('App\\User', 2, { active: false });
          * cy.create({ model: 'App\\User', state: ['guest'], relations: ['profile'], count: 2 }
          */
-        create(): Chainable<any>;
+        create(model: string | CreateModelType): Chainable<any>;
 
         /**
          * Refresh the database state using Laravel's migrate:fresh command.
@@ -61,7 +77,7 @@ declare namespace Cypress {
          * cy.refreshDatabase()
          * cy.refreshDatabase({ '--drop-views': true }
          */
-        refreshDatabase(options?: object): Chainable<any>;
+        refreshDatabase(options?: Record<string, unknown>): Chainable<any>;
 
         /**
          * Run Artisan's db:seed command.
@@ -80,8 +96,8 @@ declare namespace Cypress {
          */
         artisan(
             command: string,
-            parameters?: object,
-            options?: object
+            parameters?: Record<string, unknown>,
+            options?: Record<string, unknown>
         ): Chainable<any>;
 
         /**
@@ -92,12 +108,18 @@ declare namespace Cypress {
          * cy.php('App\\User::count()')
          */
         php(command: string): Chainable<any>;
+
+        cas_login(username: string, password: string): Chainable<void>;
     }
 
-    // interface Cypress {
-    //     Laravel: {
-    //         currentUser: Cypress.RequestBody | undefined;
-    //         routes: array;
-    //     };
-    // }
+    interface Cypress {
+        Laravel: {
+            currentUser?: Cypress.RequestBody | undefined;
+            routes: Record<string, RouteObject>;
+            route: (
+                name: string,
+                parameters: Record<string, unknown>
+            ) => string;
+        };
+    }
 }

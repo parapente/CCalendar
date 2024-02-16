@@ -16,6 +16,7 @@ import route from "ziggy";
             <a
                 :href="route('calendar.index')"
                 class="text-blue-500 my-4 py-2 px-4 rounded-md bg-blue-900 hover:bg-blue-600 hover:text-blue-300"
+                test-data-id="login"
             >
                 Είσοδος
             </a>
