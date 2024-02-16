@@ -12,6 +12,7 @@ export default defineConfig({
         videosFolder: "tests/cypress/videos",
         screenshotsFolder: "tests/cypress/screenshots",
         fixturesFolder: "tests/cypress/fixture",
+        specPattern: "resources/ts/**/*.cy.{js,jsx,ts,tsx}",
     },
 
     e2e: {
@@ -21,7 +22,7 @@ export default defineConfig({
         },
         specPattern: "tests/cypress/integration/**/*.cy.{js,jsx,ts,tsx}",
         supportFile: "tests/cypress/support/index.ts",
-        chromeWebSecurity: false,
+        // chromeWebSecurity: false,
         responseTimeout: 100000,
     },
 });

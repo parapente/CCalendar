@@ -39,12 +39,14 @@
 Cypress.Commands.add("cas_login", (username: string, password: string) => {
     cy.session({ username, password }, () => {
         cy.visit("/");
-        cy.get("a[href='/calendar']").click();
+        cy.get("a[test-data-id='login']").click();
 
         cy.origin(
-            "https://cas:8443/",
+            "https://cas:8443",
+            // @ts-ignore
             { args: { username, password } },
             (username: string, password: string): void => {
+                // cy.visit("/cas/login");
                 cy.get("input[name=username]").type("tstteacher");
                 cy.get("input[name=password]").type("password");
                 cy.get("button[type=submit]").click();
@@ -52,11 +54,3 @@ Cypress.Commands.add("cas_login", (username: string, password: string) => {
         );
     });
 });
-
-declare global {
-    namespace Cypress {
-        interface Chainable {
-            cas_login(username: string, password: string): Chainable<void>;
-        }
-    }
-}

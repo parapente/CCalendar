@@ -134,6 +134,32 @@ Cypress.Commands.add("refreshRoutes", () => {
  *          cy.visit({ route: 'home' });
  *          cy.visit({ route: 'team', parameters: { team: 1 } });
  */
+Cypress.Commands.overwrite(
+    "visit",
+    (
+        originalFn,
+        subject: Partial<Cypress.VisitOptions> & {
+            url: string;
+        } & {
+            route?: string;
+            parameters?: Record<string, unknown>;
+        }
+    ) => {
+        if (subject.route) {
+            return originalFn({
+                url: Cypress.Laravel.route(
+                    subject.route,
+                    subject.parameters || {}
+                ),
+                // @ts-ignore
+                method: Cypress.Laravel.routes[subject.route].method[0],
+            });
+        }
+
+        return originalFn(subject);
+    }
+);
+
 Cypress.Commands.overwrite("visit", (originalFn, subject, options) => {
     if (subject.route) {
         return originalFn({
@@ -169,7 +195,7 @@ Cypress.Commands.overwrite("visit", (originalFn, subject, options) => {
 Cypress.Commands.add(
     "create",
     (model, count = 1, attributes = {}, load = [], state = []) => {
-        let requestBody = {};
+        let requestBody: CreateModelType;
 
         if (typeof model !== "object") {
             if (Array.isArray(count)) {
@@ -209,7 +235,7 @@ Cypress.Commands.add(
                         (requestBody.count > 1
                             ? ` (${requestBody.count} times)`
                             : ""),
-                    consoleProps: () => ({ [model]: response.body }),
+                    consoleProps: () => ({ ["model"]: response.body }),
                 });
             })
             .its("body", { log: false });
@@ -237,7 +263,7 @@ Cypress.Commands.add("refreshDatabase", (options = {}) => {
  *          cy.seed('PlansTableSeeder');
  */
 Cypress.Commands.add("seed", (seederClass = "") => {
-    let options = {};
+    let options: Record<string, string> = {};
 
     if (seederClass) {
         options["--class"] = seederClass;
