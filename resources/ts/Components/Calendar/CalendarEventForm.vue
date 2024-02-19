@@ -83,6 +83,7 @@ const startDateChanged = (e: Event) => {
     <div
         v-if="props.visible"
         class="fixed top-5 left-5 w-11/12 max-w-3xl bg-white border border-black rounded-lg shadow-black shadow-2xl"
+        test-data-id="calendar-event-form"
     >
         <div class="bg-slate-300 p-2 rounded-t-md">
             {{ form.id ? "Επεξεργασία εκδήλωσης" : "Νέα εκδήλωση" }}
@@ -124,7 +125,7 @@ const startDateChanged = (e: Event) => {
             <label for="end_date">Ημερομηνία Λήξης:</label>
             <input
                 type="datetime-local"
-                name="start_date"
+                name="end_date"
                 v-model="form.end_date"
             />
             <label for="location">Τοποθεσία:</label>
@@ -145,6 +146,7 @@ const startDateChanged = (e: Event) => {
                 <button
                     type="button"
                     class="px-3 py-2 border border-red-600 bg-red-600 text-white hover:bg-red-400 rounded-lg"
+                    test-data-id="button-cancel"
                     @click="emit('update:visible', false)"
                 >
                     Άκυρο
@@ -152,6 +154,7 @@ const startDateChanged = (e: Event) => {
                 <button
                     type="submit"
                     class="px-3 py-2 border border-green-600 bg-green-600 text-white hover:bg-green-400 rounded-lg"
+                    test-data-id="button-save"
                 >
                     Αποθήκευση
                 </button>

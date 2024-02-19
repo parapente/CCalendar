@@ -408,6 +408,7 @@ onMounted(() => {
         v-model:calendar="calendarFilter"
         v-model:user="userFilter"
         class="print:hidden"
+        test-data-id="calendar-filters"
     />
     <div
         class="m-2 border border-black text-black bg-white dark:border-gray-400 dark:text-gray-300 dark:bg-gray-600 rounded-t-lg max-w-screen-xl w-full print:hidden"
@@ -460,7 +461,7 @@ onMounted(() => {
         <div class="flex justify-between"></div>
     </div>
     <div class="flex flex-row max-w-screen-xl w-full pt-4 print:hidden">
-        <CalendarLegend />
+        <CalendarLegend test-data-id="calendar-legend" />
     </div>
     <CalendarEventForm
         :event="newEvent"
@@ -472,6 +473,7 @@ onMounted(() => {
             class="fixed bottom-0 right-5 px-4 py-3 mb-5 bg-red-500 hover:bg-red-700 rounded-full shadow-lg shadow-black cursor-pointer print:hidden"
             @click="addCalendarEvent(DateTime.local().day)"
             v-if="!eventListVisible"
+            test-data-id="add-event-button"
         >
             <FontAwesomeIcon :icon="faPlus" />
         </div>
@@ -486,6 +488,7 @@ onMounted(() => {
         @editEvent="editCalendarEvent"
         @deleteEvent="onDeleteEvent"
         v-intersection-observer="onIntersectionObserver"
+        test-data-id="calendar-event-list"
     />
 </template>
 <style type="css">
