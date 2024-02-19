@@ -37,20 +37,34 @@
 // }
 
 Cypress.Commands.add("cas_login", (username: string, password: string) => {
-    cy.session({ username, password }, () => {
-        cy.visit("/");
-        cy.get("a[test-data-id='login']").click();
+    cy.session(
+        { username, password },
+        () => {
+            cy.log("Here!");
+            cy.visit("/");
+            cy.get("a[test-data-id='login']").click();
 
-        cy.origin(
-            "https://cas:8443",
-            // @ts-ignore
-            { args: { username, password } },
-            (username: string, password: string): void => {
-                // cy.visit("/cas/login");
-                cy.get("input[name=username]").type("tstteacher");
-                cy.get("input[name=password]").type("password");
-                cy.get("button[type=submit]").click();
-            }
-        );
-    });
+            cy.origin(
+                "https://cas:8443",
+                // @ts-ignore
+                { args: { username, password } },
+                ({ username, password }): void => {
+                    cy.get("input[name=username]").type(username);
+                    cy.get("input[name=password]").type(password);
+                    cy.get("button[type=submit]").click();
+                }
+            );
+        },
+        {
+            validate() {
+                cy.request({
+                    url: "/calendar",
+                    followRedirect: false,
+                })
+                    .its("status")
+                    .should("eq", 200);
+            },
+            cacheAcrossSpecs: true,
+        }
+    );
 });
