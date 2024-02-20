@@ -392,4 +392,33 @@ describe("CAS Supervisor", () => {
                 ).should("equal", 1);
             });
     });
+
+    it.only("can create a new trimester report", () => {
+        const testReport = {
+            name: "Test Report",
+            type: 1,
+            options: {
+                from: "2021-01-01",
+                to: "2021-04-01",
+            },
+        };
+
+        cy.cas_login("tstteacher", "password");
+        cy.visit("/calendar");
+        cy.get("[test-data-id='report-link']").click();
+        cy.get("[test-data-id='create-report-button']").click();
+        cy.contains("Δημιουργία νέας αναφοράς");
+        cy.get("#name").type(testReport.name);
+        cy.get("#from").type(testReport.options.from);
+        cy.get("#to").type(testReport.options.to);
+        cy.get("[test-data-id='report-save-button']").click();
+        cy.location("pathname").should("equal", "/report");
+        cy.log(JSON.stringify(testReport.options));
+        cy.php(
+            `App\\Models\\Report::where('name', '${testReport.name}')
+            ->where('type', '${testReport.type}')
+            ->where('options', '${JSON.stringify(testReport.options)}')
+            ->count()`
+        ).should("equal", 1);
+    });
 });
