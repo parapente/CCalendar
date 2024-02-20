@@ -78,6 +78,7 @@ const showUser = computed(() => {
                         page.props.cas_user &&
                         page.props.cas_user.id === event.cas_user_id
                     "
+                    test-data-id="event-card-edit-button"
                 >
                     <FontAwesomeIcon :icon="faPencil" />
                 </button>
@@ -88,6 +89,7 @@ const showUser = computed(() => {
                         page.props.cas_user &&
                         page.props.cas_user.id === event.cas_user_id
                     "
+                    test-data-id="event-card-delete-button"
                 >
                     <FontAwesomeIcon :icon="faTrashCan" />
                 </button>
