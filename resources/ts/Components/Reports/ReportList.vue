@@ -76,6 +76,7 @@ const toggleActiveForReport = (report_id: number) => {
                     as="button"
                     :href="route(routePrefix + 'report.create')"
                     class="bg-blue-500 hover:bg-blue-300 text-black px-4 py-3 rounded-md shadow-lg"
+                    test-data-id="create-report-button"
                     ><FontAwesomeIcon :icon="faPlus" class="mr-1" />Δημιουργία
                     νέας αναφοράς
                 </Link>
