@@ -24,6 +24,7 @@ const emit = defineEmits<{
                 :event="event"
                 @editEvent="emit('editEvent', event.id)"
                 @deleteEvent="emit('deleteEvent', event.id)"
+                :test-data-id="`event-card-${event.id}`"
             />
         </div>
     </div>

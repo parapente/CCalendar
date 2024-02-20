@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-describe("CAS User", () => {
+describe("CAS Supervisor", () => {
     beforeEach(() => {
         cy.refreshDatabase();
         cy.seed();
@@ -8,12 +8,13 @@ describe("CAS User", () => {
     });
 
     it("can login through cas", () => {
-        cy.cas_login("tstteacher2", "password");
+        cy.cas_login("tstteacher", "password");
         cy.visit("/calendar");
 
         // Κάνε έλεγχο ότι υπάρχουν όλα τα στοιχεία
-        cy.get("[test-data-id='calendar-filters']").should("not.exist");
+        cy.get("[test-data-id='calendar-filters']").should("exist");
         cy.contains("Εκτύπωση");
+        cy.contains("Φίλτρα");
         cy.contains("Ημερολόγια");
         cy.get("[test-data-id='calendar-legend']").should("exist");
         cy.get("[test-data-id='add-event-button']").should("exist");
@@ -23,7 +24,7 @@ describe("CAS User", () => {
     });
 
     it("can logout through cas", () => {
-        cy.cas_login("tstteacher2", "password");
+        cy.cas_login("tstteacher", "password");
         cy.visit("/calendar");
         cy.get("[test-data-id='user-menu']").click();
         cy.get("[test-data-id='user-logout']").click();
@@ -42,7 +43,7 @@ describe("CAS User", () => {
             url: "https://www.example.com",
         };
 
-        cy.cas_login("tstteacher2", "password");
+        cy.cas_login("tstteacher", "password");
         cy.visit("/calendar");
         cy.get("[test-data-id='add-event-button']").click();
         cy.get("[test-data-id='calendar-event-form'] > div").should(
@@ -118,7 +119,7 @@ describe("CAS User", () => {
         };
 
         cy.php(
-            "App\\Models\\CasUser::where('employee_number', '999999')->first()"
+            "App\\Models\\CasUser::where('employee_number', '111111')->first()"
         )
             .then((cas_user) => {
                 return cy
@@ -134,7 +135,7 @@ describe("CAS User", () => {
                     });
             })
             .then((calendar_event) => {
-                cy.cas_login("tstteacher2", "password");
+                cy.cas_login("tstteacher", "password");
                 cy.visit("/calendar");
                 cy.get(
                     `[test-data-id='event-card-${calendar_event.id}'] [test-data-id='event-card-edit-button']`
@@ -306,7 +307,7 @@ describe("CAS User", () => {
         };
 
         cy.php(
-            "App\\Models\\CasUser::where('employee_number', '999999')->first()"
+            "App\\Models\\CasUser::where('employee_number', '111111')->first()"
         )
             .then((cas_user) => {
                 return cy
@@ -322,7 +323,7 @@ describe("CAS User", () => {
                     });
             })
             .then((calendar_event) => {
-                cy.cas_login("tstteacher2", "password");
+                cy.cas_login("tstteacher", "password");
                 cy.visit("/calendar");
                 cy.get(
                     `[test-data-id='event-card-${calendar_event.id}'] [test-data-id='event-card-delete-button']`
@@ -358,7 +359,7 @@ describe("CAS User", () => {
         };
 
         cy.php(
-            "App\\Models\\CasUser::where('employee_number', '999999')->first()"
+            "App\\Models\\CasUser::where('employee_number', '111111')->first()"
         )
             .then((cas_user) => {
                 return cy
@@ -374,7 +375,7 @@ describe("CAS User", () => {
                     });
             })
             .then((calendar_event) => {
-                cy.cas_login("tstteacher2", "password");
+                cy.cas_login("tstteacher", "password");
                 cy.visit("/calendar");
                 cy.get(
                     `[test-data-id='event-card-${calendar_event.id}'] [test-data-id='event-card-delete-button']`

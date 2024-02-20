@@ -22,12 +22,14 @@ const emit = defineEmits<{
                 <button
                     @click="emit('answer', 'no')"
                     class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-auto"
+                    test-data-id="confirm-delete-no-button"
                 >
                     Όχι
                 </button>
                 <button
                     @click="emit('answer', 'yes')"
                     class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    test-data-id="confirm-delete-yes-button"
                 >
                     Ναι
                 </button>
