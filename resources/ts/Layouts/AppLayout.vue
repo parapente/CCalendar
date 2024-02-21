@@ -43,6 +43,7 @@ const page = usePage<PageWithSharedProps>();
                                     :active="
                                         route().current('administrator.index')
                                     "
+                                    test-data-id="home-link"
                                 >
                                     Αρχική
                                 </NavLink>
@@ -55,6 +56,7 @@ const page = usePage<PageWithSharedProps>();
                                             'administrator.user.index'
                                         )
                                     "
+                                    test-data-id="user-link"
                                 >
                                     Χρήστες
                                 </NavLink>
@@ -69,6 +71,7 @@ const page = usePage<PageWithSharedProps>();
                                             'administrator.calendar.index'
                                         )
                                     "
+                                    test-data-id="calendar-link"
                                 >
                                     Ημερολόγια
                                 </NavLink>
@@ -83,6 +86,7 @@ const page = usePage<PageWithSharedProps>();
                                             'administrator.calendar.overview'
                                         )
                                     "
+                                    test-data-id="overview-link"
                                 >
                                     Εποπτεία
                                 </NavLink>
@@ -95,6 +99,7 @@ const page = usePage<PageWithSharedProps>();
                                             'administrator.report.index'
                                         )
                                     "
+                                    test-data-id="report-link"
                                 >
                                     Αναφορές
                                 </NavLink>
@@ -110,6 +115,7 @@ const page = usePage<PageWithSharedProps>();
                                             <button
                                                 type="button"
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150"
+                                                test-data-id="admin-menu"
                                             >
                                                 {{ page.props.auth.user.name }}
 
@@ -136,6 +142,7 @@ const page = usePage<PageWithSharedProps>();
 
                                         <DropdownLink
                                             :href="route('profile.show')"
+                                            test-data-id="admin-profile"
                                         >
                                             Προφίλ
                                         </DropdownLink>
@@ -146,7 +153,10 @@ const page = usePage<PageWithSharedProps>();
 
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
-                                            <DropdownLink as="button">
+                                            <DropdownLink
+                                                as="button"
+                                                test-data-id="admin-logout"
+                                            >
                                                 Αποσύνδεση
                                             </DropdownLink>
                                         </form>

@@ -34,6 +34,7 @@ import route from "ziggy";
                         <Link
                             :href="route('administrator.user.index')"
                             class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black w-56"
+                            test-data-id="dashboard-user-button"
                         >
                             <div class="flex flex-col text-center text-black">
                                 <FontAwesomeIcon :icon="faUsers" size="5x" />
@@ -43,6 +44,7 @@ import route from "ziggy";
                         <Link
                             :href="route('administrator.calendar.index')"
                             class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black w-56"
+                            test-data-id="dashboard-calendar-button"
                         >
                             <div class="flex flex-col text-center text-black">
                                 <FontAwesomeIcon
@@ -55,6 +57,7 @@ import route from "ziggy";
                         <Link
                             :href="route('administrator.calendar.overview')"
                             class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black w-56"
+                            test-data-id="dashboard-overview-button"
                         >
                             <div class="flex flex-col text-center text-black">
                                 <FontAwesomeIcon :icon="faEye" size="5x" />
@@ -64,6 +67,7 @@ import route from "ziggy";
                         <Link
                             :href="route('administrator.report.index')"
                             class="border rounded-lg bg-sky-400 p-4 shadow-lg dark:shadow-black dark:border-black w-56"
+                            test-data-id="dashboard-report-button"
                         >
                             <div class="flex flex-col text-center text-black">
                                 <FontAwesomeIcon
