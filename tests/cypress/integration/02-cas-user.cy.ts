@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import * as fs from "fs";
 
 describe("CAS User", () => {
     beforeEach(() => {
@@ -308,12 +309,12 @@ describe("CAS User", () => {
         cy.php(
             "App\\Models\\CasUser::where('employee_number', '999999')->first()"
         )
-            .then((cas_user) => {
+            .then((cas_user: App.Models.CasUser) => {
                 return cy
                     .create("App\\Models\\Calendar", {
                         active: true,
                     })
-                    .then((calendar) => {
+                    .then((calendar: App.Models.Calendar) => {
                         return cy.create("App\\Models\\CalendarEvent", {
                             ...testEvent,
                             cas_user_id: cas_user.id,
@@ -321,7 +322,7 @@ describe("CAS User", () => {
                         });
                     });
             })
-            .then((calendar_event) => {
+            .then((calendar_event: App.Models.CalendarEvent) => {
                 cy.cas_login("tstteacher2", "password");
                 cy.visit("/calendar");
                 cy.get(
@@ -360,7 +361,7 @@ describe("CAS User", () => {
         cy.php(
             "App\\Models\\CasUser::where('employee_number', '999999')->first()"
         )
-            .then((cas_user) => {
+            .then((cas_user: App.Models.CasUser) => {
                 return cy
                     .create("App\\Models\\Calendar", {
                         active: true,
@@ -373,7 +374,7 @@ describe("CAS User", () => {
                         });
                     });
             })
-            .then((calendar_event) => {
+            .then((calendar_event: App.Models.CalendarEvent) => {
                 cy.cas_login("tstteacher2", "password");
                 cy.visit("/calendar");
                 cy.get(
@@ -390,5 +391,67 @@ describe("CAS User", () => {
                     ->count()`
                 ).should("equal", 1);
             });
+    });
+
+    it("can fill a trimester report", () => {
+        cy.php("App\\Models\\Report::factory()->create()").then(
+            (report: App.Models.Report) => {
+                cy.cas_login("tstteacher2", "password");
+                cy.visit("/report");
+                cy.get(
+                    `[test-data-id='report-${report.id}'] [test-data-id='show-report-button']`
+                ).click();
+                cy.contains(report.name);
+
+                // Έλεγξε αν μπορείς να κατεβάσεις το ημερολόγιο του τριμήνου σε docx
+                cy.deleteDownloadsFolder();
+                cy.get("[test-data-id='report-calendar-to-word']").click();
+                cy.verifyDownload(".docx", { contains: true });
+
+                // Ανέβασε την αναφορά
+                cy.get("input[name='file']").selectFile({
+                    contents: Cypress.Buffer.from("file contents"),
+                    fileName: "file.txt",
+                    mimeType: "text/plain",
+                    lastModified: Date.now(),
+                });
+                cy.get("[test-data-id='report-upload-button']").click();
+                cy.location("pathname").should("eq", "/report");
+                cy.php("App\\Models\\ReportData::all()->count()").should(
+                    "equal",
+                    1
+                );
+
+                // Έλεγξε αν μπορείς να κατεβάσεις το ήδη ανεβασμένο αρχείο της αναφοράς
+                cy.get(
+                    `[test-data-id='report-${report.id}'] [test-data-id='show-report-button']`
+                ).click();
+                cy.contains(report.name);
+                cy.deleteDownloadsFolder();
+                cy.get("[test-data-id='report-uploaded-file-link']").click();
+                cy.verifyDownload("file.txt");
+
+                // Έλεγξε αν μπορείς να αλλάξεις το αρχείο της αναφοράς
+                cy.get("input[name='file']").selectFile({
+                    contents: Cypress.Buffer.from("new file contents"),
+                    fileName: "file2.txt",
+                    mimeType: "text/plain",
+                    lastModified: Date.now(),
+                });
+                cy.get("[test-data-id='report-upload-button']").click();
+                cy.location("pathname").should("eq", "/report");
+                cy.php("App\\Models\\ReportData::all()->count()").should(
+                    "equal",
+                    1
+                );
+                cy.get(
+                    `[test-data-id='report-${report.id}'] [test-data-id='show-report-button']`
+                ).click();
+                cy.contains(report.name);
+                cy.deleteDownloadsFolder();
+                cy.get("[test-data-id='report-uploaded-file-link']").click();
+                cy.verifyDownload("file2.txt");
+            }
+        );
     });
 });

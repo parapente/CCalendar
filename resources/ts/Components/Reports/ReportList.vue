@@ -87,6 +87,7 @@ const toggleActiveForReport = (report_id: number) => {
                         v-for="(report, index) in reports.data"
                         :key="report.id"
                         class="my-4 bg-slate-300 dark:bg-gray-800 text-black dark:text-white shadow-xl dark:shadow-md dark:shadow-gray-700 rounded-lg flex flex-col"
+                        :test-data-id="`report-${report.id}`"
                     >
                         <div class="p-4 flex items-center">
                             <div class="mr-auto">
@@ -99,6 +100,7 @@ const toggleActiveForReport = (report_id: number) => {
                                 "
                                 class="mr-4 px-3 py-2 rounded-lg"
                                 @click="toggleActiveForReport(report.id)"
+                                test-data-id="toggle-active-button"
                             >
                                 <FontAwesomeIcon
                                     class="text-green-500"
@@ -124,6 +126,7 @@ const toggleActiveForReport = (report_id: number) => {
                                     )
                                 "
                                 class="px-3 py-2 bg-blue-500 hover:bg-blue-300 rounded-lg shadow-lg mr-4"
+                                test-data-id="edit-report-button"
                             >
                                 <FontAwesomeIcon :icon="faPen" />
                             </Link>
@@ -136,6 +139,7 @@ const toggleActiveForReport = (report_id: number) => {
                                     )
                                 "
                                 class="px-3 py-2 bg-orange-500 hover:bg-orange-300 rounded-lg shadow-lg mr-4"
+                                test-data-id="show-report-button"
                             >
                                 <FontAwesomeIcon :icon="faArrowRight" />
                             </Link>
@@ -143,6 +147,7 @@ const toggleActiveForReport = (report_id: number) => {
                                 v-if="!page.props.cas_user"
                                 class="px-3 py-2 bg-red-500 hover:bg-red-300 rounded-lg shadow-lg mr-4"
                                 @click="deleteReport(report)"
+                                test-data-id="delete-report-button"
                             >
                                 <FontAwesomeIcon :icon="faTrashCan" />
                             </button>
@@ -154,6 +159,7 @@ const toggleActiveForReport = (report_id: number) => {
                                     ? 'bg-green-500 dark:bg-green-500'
                                     : 'bg-gray-400'
                             "
+                            test-data-id="report-status"
                         >
                             {{
                                 answered && answered.includes(report.id)

@@ -218,7 +218,7 @@ describe("CAS Supervisor", () => {
         };
 
         cy.php(
-            "App\\Models\\CasUser::where('employee_number', '999999')->first()"
+            "App\\Models\\CasUser::where('employee_number', '111111')->first()"
         )
             .then((cas_user) => {
                 return cy
@@ -234,7 +234,7 @@ describe("CAS Supervisor", () => {
                     });
             })
             .then((calendar_event) => {
-                cy.cas_login("tstteacher2", "password");
+                cy.cas_login("tstteacher", "password");
                 cy.visit("/calendar");
                 cy.get(
                     `[test-data-id='event-card-${calendar_event.id}'] [test-data-id='event-card-edit-button']`
@@ -393,7 +393,7 @@ describe("CAS Supervisor", () => {
             });
     });
 
-    it.only("can create a new trimester report", () => {
+    it("can create a new trimester report", () => {
         const testReport = {
             name: "Test Report",
             type: 1,
@@ -413,12 +413,111 @@ describe("CAS Supervisor", () => {
         cy.get("#to").type(testReport.options.to);
         cy.get("[test-data-id='report-save-button']").click();
         cy.location("pathname").should("equal", "/report");
-        cy.log(JSON.stringify(testReport.options));
         cy.php(
             `App\\Models\\Report::where('name', '${testReport.name}')
             ->where('type', '${testReport.type}')
             ->where('options', '${JSON.stringify(testReport.options)}')
             ->count()`
         ).should("equal", 1);
+    });
+
+    it("can edit an existing trimester report", () => {
+        const newReport = {
+            name: "Test Report",
+            type: 1,
+            options: {
+                from: "2021-01-01",
+                to: "2021-04-01",
+            },
+        };
+
+        cy.php("App\\Models\\Report::factory()->create()")
+            .then((report: App.Models.Report) => {
+                return cy
+                    .php(
+                        "App\\Models\\CasUser::where('employee_number', '999999')->first()"
+                    )
+                    .then((cas_user: App.Models.CasUser) => {
+                        return [report, cas_user];
+                    });
+            })
+            .then(([report, cas_user]) => {
+                cy.php(`App\\Models\\ReportData::factory()->create([
+                'cas_user_id' => ${cas_user.id},
+                'report_id' => ${report.id},
+                'data' => '{"filename":"abcd.txt", "real_filename":"abcd.txt"}',
+            ])`);
+                cy.cas_login("tstteacher", "password");
+                cy.visit("/report");
+                cy.get(
+                    `[test-data-id='report-${report.id}'] [test-data-id='edit-report-button']`
+                ).click();
+                cy.get("#name").clear().type(newReport.name);
+                cy.get("#from").clear().type(newReport.options.from);
+                cy.get("#to").clear().type(newReport.options.to);
+                cy.get("[test-data-id='report-save-button']").click();
+                cy.php(
+                    `App\\Models\\Report::where('name', '${newReport.name}')
+                    ->where('type', '${newReport.type}')
+                    ->where('options', '${JSON.stringify(newReport.options)}')
+                    ->count()`
+                ).should("equal", 1);
+            });
+    });
+
+    it("can toggle the visibility of a trimester report", () => {
+        cy.php(
+            "App\\Models\\Report::factory()->create(['active' => true])"
+        ).then((report: App.Models.Report) => {
+            cy.cas_login("tstteacher", "password");
+            cy.visit("/report");
+            cy.get(
+                `[test-data-id='report-${report.id}'] [test-data-id='toggle-active-button']`
+            ).click();
+            cy.location("pathname").should("equal", "/report");
+            cy.php(
+                `App\\Models\\Report::where('name', '${report.name}')
+                ->where('type', '${report.type}')
+                ->where('active', false)
+                ->count()`
+            ).should("equal", 1);
+            cy.get(
+                `[test-data-id='report-${report.id}'] [test-data-id='toggle-active-button']`
+            ).click();
+            cy.location("pathname").should("equal", "/report");
+            cy.php(
+                `App\\Models\\Report::where('name', '${report.name}')
+                ->where('type', '${report.type}')
+                ->where('active', true)
+                ->count()`
+            ).should("equal", 1);
+        });
+    });
+
+    it("can see trimester report uploads", () => {
+        cy.php("App\\Models\\Report::factory()->create()")
+            .then((report: App.Models.Report) => {
+                return cy
+                    .php(
+                        "App\\Models\\CasUser::where('employee_number', '999999')->first()"
+                    )
+                    .then((cas_user: App.Models.CasUser) => {
+                        return [report, cas_user];
+                    });
+            })
+            .then(([report, cas_user]) => {
+                cy.php(`App\\Models\\ReportData::factory()->create([
+                    'cas_user_id' => ${cas_user.id},
+                    'report_id' => ${report.id},
+                    'data' => '{"filename":"abcd.txt", "real_filename":"abcd.txt"}',
+                ])`);
+                cy.cas_login("tstteacher", "password");
+                cy.visit("/report");
+                cy.get(
+                    `[test-data-id='report-${report.id}'] [test-data-id='show-report-button']`
+                ).click();
+                cy.contains(cas_user.name);
+                cy.contains("abcd.txt");
+            });
     });
 });
