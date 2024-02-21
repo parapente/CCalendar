@@ -40,7 +40,6 @@ Cypress.Commands.add("cas_login", (username: string, password: string) => {
     cy.session(
         { username, password },
         () => {
-            cy.log("Here!");
             cy.visit("/");
             cy.get("a[test-data-id='login']").click();
 
@@ -59,6 +58,32 @@ Cypress.Commands.add("cas_login", (username: string, password: string) => {
             validate() {
                 cy.request({
                     url: "/calendar",
+                    followRedirect: false,
+                })
+                    .its("status")
+                    .should("eq", 200);
+            },
+            cacheAcrossSpecs: true,
+        }
+    );
+});
+
+Cypress.Commands.add("admin_login", (username?: string, password?: string) => {
+    const admin_username = username ?? "admin";
+    const admin_password = password ?? "password";
+    cy.session(
+        { admin_username, admin_password },
+        () => {
+            cy.visit("/administrator/login");
+            cy.get("#username").type(admin_username);
+            cy.get("#password").type(admin_password);
+            cy.get("[test-data-id='login-submit']").click().wait(2000);
+            cy.location("pathname").should("equal", "/administrator");
+        },
+        {
+            validate() {
+                cy.request({
+                    url: "/administrator",
                     followRedirect: false,
                 })
                     .its("status")

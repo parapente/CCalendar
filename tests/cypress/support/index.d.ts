@@ -116,6 +116,7 @@ declare namespace Cypress {
         php(command: string): Chainable<any>;
 
         cas_login(username: string, password: string): Chainable<void>;
+        admin_login(username?: string, password?: string): Chainable<void>;
     }
 
     interface Cypress {
