@@ -13,6 +13,9 @@
 // the project's config changing)
 
 import swap_env from "./swap-env";
+import cy_verify_downloads_pkg from "cy-verify-downloads";
+import { removeDirectory } from "cypress-delete-downloads-folder";
+const { verifyDownloadTasks } = cy_verify_downloads_pkg;
 
 /**
  * @type {Cypress.PluginConfig}
@@ -24,5 +27,9 @@ export default (
     // `on` is used to hook into various events Cypress emits
     // `config` is the resolved Cypress config
 
-    on("task", swap_env);
+    on("task", {
+        ...swap_env,
+        ...verifyDownloadTasks,
+        removeDirectory,
+    });
 };

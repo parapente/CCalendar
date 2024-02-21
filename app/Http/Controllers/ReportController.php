@@ -180,6 +180,13 @@ class ReportController extends Controller
             return to_route('report.index');
         }
 
+        if ($cas_user_role === 'Supervisor') {
+            return Inertia::render('Report/Edit', [
+                'report' => $report,
+                'types' => Report::AvailableTypes
+            ]);
+        }
+
         return Inertia::render('Admin/Report/Edit', [
             'report' => $report,
             'types' => Report::AvailableTypes

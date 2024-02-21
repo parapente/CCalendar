@@ -20,6 +20,9 @@ import "./commands";
 import "./laravel-routes";
 import "./assertions";
 
+require("cy-verify-downloads").addCustomCommand();
+require("cypress-delete-downloads-folder").addCustomCommand();
+
 before(() => {
     cy.task("activateCypressEnvFile", {}, { log: false });
     cy.artisan("config:clear", {}, { log: false });
