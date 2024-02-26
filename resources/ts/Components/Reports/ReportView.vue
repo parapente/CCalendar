@@ -5,7 +5,7 @@ import route from "ziggy";
 
 const props = defineProps<{
     report: App.Models.Report;
-    data: Array<App.Models.ReportData>;
+    data?: Array<App.Models.ReportData>;
 }>();
 
 const forms = useForm<{
