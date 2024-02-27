@@ -388,6 +388,15 @@
       "HEAD"
     ]
   },
+  "administrator.calendar.toggleActive": {
+    "name": "administrator.calendar.toggleActive",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CalendarController@toggleActive",
+    "uri": "administrator/calendar/{calendar}/toggleActive",
+    "method": [
+      "POST"
+    ]
+  },
   "administrator.calendar.index": {
     "name": "administrator.calendar.index",
     "domain": null,

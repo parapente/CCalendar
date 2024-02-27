@@ -60,6 +60,7 @@ const onSubmit = () => {
                     >Ενεργό:</label
                 >
                 <Checkbox
+                    id="active"
                     name="active"
                     class="my-auto"
                     :checked="forms.active"
@@ -70,6 +71,7 @@ const onSubmit = () => {
                     type="submit"
                     class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     @click.prevent="onSubmit"
+                    test-data-id="submit-button"
                 >
                     Αποθήκευση
                 </button>
