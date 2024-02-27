@@ -296,8 +296,8 @@ class ReportController extends Controller
 
             return [
                 'aa' => ++$key,
-                'start_date' => $event->start_date,
-                'end_date' => $event->end_date,
+                'start_date' => (new \DateTime($event->start_date))->format('d/m/Y H:i'),
+                'end_date' => (new \DateTime($event->end_date))->format('d/m/Y H:i'),
                 'type' => $event->calendar->name,
                 'title' => $event->title,
                 'details' => $details,
@@ -305,8 +305,8 @@ class ReportController extends Controller
         });
 
         $templateProcessor = new TemplateProcessor(app()->path().'/WordTemplates/calendarEvents.docx');
-        $templateProcessor->setValue('from', $options->from);
-        $templateProcessor->setValue('to', $options->to);
+        $templateProcessor->setValue('from', (new \DateTime($options->from))->format('d/m/Y'));
+        $templateProcessor->setValue('to', (new \DateTime($options->to))->format('d/m/Y'));
         $templateProcessor->cloneRowAndSetValues('aa', $tableData);
 
         $tmpPart = request()->user() ? request()->user()->id : request('cas_user')->id;
