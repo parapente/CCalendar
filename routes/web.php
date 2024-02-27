@@ -37,6 +37,7 @@ Route::prefix('administrator')
     Route::put('/user/{user}/type/{type}', [UserController::class, 'update'])->name('user.update');
     Route::resource('user', UserController::class)->only(['index', 'create', 'store']);
     Route::get('/calendar/overview', [CalendarController::class, 'overview'])->name('calendar.overview');
+    Route::post('/calendar/{calendar}/toggleActive', [CalendarController::class, 'toggleActive'])->name('calendar.toggleActive');
     Route::resource('calendar', CalendarController::class)->except(['show', 'destroy']);
     Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
     // Route::get('/cas_user/{user}/name', [CasUserController::class, 'getName'])->name('cas_user.name');

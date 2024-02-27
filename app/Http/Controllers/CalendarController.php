@@ -85,6 +85,12 @@ class CalendarController extends Controller
         //
     }
 
+    public function toggleActive(Calendar $calendar)
+    {
+        $calendar->active = !$calendar->active;
+        $calendar->save();
+    }
+
     public function addEvent(Calendar $calendar, StoreCalendarEventRequest $request)
     {
         if (!$request->id) {
