@@ -40,4 +40,6 @@ export interface PageWithSharedProps extends PageProps {
         danger: string;
         warning: string;
     };
+
+    organization: string;
 }
