@@ -7,12 +7,29 @@ import {
     faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import route from "ziggy";
 
 const props = defineProps<{
     calendars: App.Models.Calendar[];
 }>();
+
+const toggleActiveForCalendar = (calendar_id: number) => {
+    router.post(
+        route("administrator.calendar.toggleActive", {
+            id: calendar_id,
+        }),
+        {},
+        {
+            onSuccess: () => {
+                router.reload({
+                    only: ["reports"],
+                    preserveScroll: true,
+                });
+            },
+        }
+    );
+};
 </script>
 
 <template>
@@ -30,9 +47,10 @@ const props = defineProps<{
                     as="button"
                     :href="route('administrator.calendar.create')"
                     class="bg-blue-500 hover:bg-blue-300 text-black px-4 py-3 rounded-md shadow-lg"
+                    test-data-id="create-calendar-button"
                     ><FontAwesomeIcon :icon="faPlus" class="mr-1" />Δημιουργία
-                    νέου ημερολογίου</Link
-                >
+                    νέου ημερολογίου
+                </Link>
             </div>
             <ul class="m-4">
                 <li
@@ -45,28 +63,29 @@ const props = defineProps<{
                         class="mx-2 p-4 border-black border"
                         :style="{ 'background-color': calendar.color }"
                     ></div>
-                    <Link
+                    <button
                         as="button"
                         class="ml-auto mr-4 px-3 py-2 rounded-lg"
-                        :href="
-                            route('administrator.calendar.edit', {
-                                id: calendar.id,
-                            })
-                        "
-                        ><FontAwesomeIcon
+                        @click="toggleActiveForCalendar(calendar.id)"
+                        :test-data-id="`toggle-calendar-${calendar.id}-button`"
+                    >
+                        <FontAwesomeIcon
                             class="text-green-500"
                             v-if="calendar.active"
-                            :icon="faCheckCircle" /><FontAwesomeIcon
+                            :icon="faCheckCircle"
+                        /><FontAwesomeIcon
                             class="text-red-500"
                             v-if="!calendar.active"
                             :icon="faXmarkCircle"
-                    /></Link>
+                        />
+                    </button>
                     <Link
                         as="button"
                         :href="
                             route('administrator.calendar.edit', calendar.id)
                         "
                         class="px-3 py-2 bg-blue-500 hover:bg-blue-300 rounded-lg shadow-lg"
+                        :test-data-id="`edit-calendar-${calendar.id}-button`"
                         ><FontAwesomeIcon :icon="faPen"
                     /></Link>
                 </li>
