@@ -27,9 +27,9 @@ const props = defineProps<{
                 <Link
                     :href="route('administrator.user.create')"
                     class="bg-blue-500 hover:bg-blue-300 text-black px-4 py-3 rounded-md shadow-lg"
-                    ><FontAwesomeIcon :icon="faPlus" /> Δημιουργία νέου
-                    χρήστη</Link
-                >
+                    test-data-id="create-user-button"
+                    ><FontAwesomeIcon :icon="faPlus" /> Δημιουργία νέου χρήστη
+                </Link>
             </div>
             <div>
                 <div class="m-4 py-2 dark:text-white">Διαχειριστές:</div>

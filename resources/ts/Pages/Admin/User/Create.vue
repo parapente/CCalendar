@@ -178,12 +178,14 @@ const submit = () => {
                             @click="
                                 router.get(route('administrator.user.index'))
                             "
+                            test-data-id="cancel-button"
                         >
                             ΑΚΥΡΩΣΗ
                         </DangerButton>
                         <PrimaryButton
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"
+                            test-data-id="submit-button"
                         >
                             ΑΠΟΘΗΚΕΥΣΗ
                         </PrimaryButton>

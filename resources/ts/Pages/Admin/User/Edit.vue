@@ -45,7 +45,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AppLayout title="Δημιουργία νέου χρήστη">
+    <AppLayout title="Επεξεργασία στοιχείων χρήστη">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Χρήστες
@@ -163,12 +163,14 @@ const submit = () => {
                             @click="
                                 router.get(route('administrator.user.index'))
                             "
+                            test-data-id="cancel-button"
                         >
                             ΑΚΥΡΩΣΗ
                         </DangerButton>
                         <PrimaryButton
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"
+                            test-data-id="submit-button"
                         >
                             ΑΠΟΘΗΚΕΥΣΗ
                         </PrimaryButton>

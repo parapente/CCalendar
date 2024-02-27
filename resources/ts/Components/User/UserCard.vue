@@ -51,7 +51,10 @@ const page = usePage<PageWithSharedProps>();
         <Link
             :href="route('administrator.user.edit', [user.id, type])"
             class="transition ease-in-out duration-300 mx-1 hover:bg-sky-300 hover:shadow-xl hover:-translate-y-0.5 rounded-md px-3 py-2"
-            ><FontAwesomeIcon :icon="faPencil"
-        /></Link>
+            :test-data-id="`edit-user-${
+                user.role === 'Administrator' ? 'admin' : 'cas'
+            }-${user.id}-button`"
+            ><FontAwesomeIcon :icon="faPencil" />
+        </Link>
     </div>
 </template>
