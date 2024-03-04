@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use PhpOffice\PhpWord\Element\PreserveText;
 use PhpOffice\PhpWord\TemplateProcessor;
 use ZipArchive;
 
@@ -292,7 +293,8 @@ class ReportController extends Controller
             $details .= $event->url ? "Ιστοσελίδα: {$event->url}\n" : '';
 
             // Μετέτρεψε τα \n σε αλλαγή γραμμής
-            $details = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $details );
+            // $details = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $details );
+            $details = str_replace("\n", '${newline}', $details );
 
             return [
                 'aa' => ++$key,
@@ -304,10 +306,17 @@ class ReportController extends Controller
             ];
         });
 
+        \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
         $templateProcessor = new TemplateProcessor(app()->path().'/WordTemplates/calendarEvents.docx');
         $templateProcessor->setValue('from', (new \DateTime($options->from))->format('d/m/Y'));
         $templateProcessor->setValue('to', (new \DateTime($options->to))->format('d/m/Y'));
         $templateProcessor->cloneRowAndSetValues('aa', $tableData);
+
+        \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(false);
+        $newline = new PreserveText('</w:t><w:br/><w:t>');
+        while (isset($templateProcessor->getVariableCount()['newline'])) {
+            $templateProcessor->setComplexValue('newline', $newline);
+        }
 
         $tmpPart = request()->user() ? request()->user()->id : request('cas_user')->id;
         $tmpPart .= "-" . Carbon::now()->timestamp;
