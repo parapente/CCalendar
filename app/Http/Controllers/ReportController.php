@@ -301,7 +301,7 @@ class ReportController extends Controller
                 'start_date' => (new \DateTime($event->start_date))->format('d/m/Y H:i'),
                 'end_date' => (new \DateTime($event->end_date))->format('d/m/Y H:i'),
                 'type' => $event->calendar->name,
-                'title' => $event->title,
+                'title' => $event->title . ($event->cancelled ? ' (Ακυρώθηκε)' : ''),
                 'details' => $details,
             ];
         });
