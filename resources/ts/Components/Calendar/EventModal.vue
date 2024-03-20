@@ -20,6 +20,7 @@ const emit = defineEmits<{
     "update:show": [show: boolean];
     editEvent: [id: number];
     deleteEvent: [id: number];
+    cancelEvent: [id: number];
 }>();
 </script>
 
@@ -39,6 +40,7 @@ const emit = defineEmits<{
             class="dark:text-white m-2"
             @editEvent="emit('editEvent', event.id)"
             @deleteEvent="emit('deleteEvent', event.id)"
+            @cancelEvent="emit('cancelEvent', event.id)"
         ></EventCard>
     </Modal>
 </template>

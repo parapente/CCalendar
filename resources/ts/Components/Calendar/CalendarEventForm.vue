@@ -17,7 +17,7 @@ const props = withDefaults(
 const calendarStore = useCalendarStore();
 
 const form = useForm<
-    Omit<App.Models.CalendarEvent, "updated_at" | "created_at">
+    Omit<App.Models.CalendarEvent, "updated_at" | "created_at" | "cancelled">
 >({
     id: 0,
     title: "",
@@ -48,6 +48,7 @@ const onSubmit = () => {
         cas_user_id: 0,
         created_at: null,
         updated_at: null,
+        cancelled: false,
     });
 
     form.reset();

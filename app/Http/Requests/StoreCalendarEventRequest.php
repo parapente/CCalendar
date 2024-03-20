@@ -29,6 +29,7 @@ class StoreCalendarEventRequest extends FormRequest
             'end_date' => ['required', 'date'],
             'location' => ['nullable','string'],
             'url' => ['nullable','url'],
+            'cancelled' => ['nullable','boolean'],
         ];
     }
 }

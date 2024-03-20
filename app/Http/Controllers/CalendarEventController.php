@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCalendarEventRequest;
 use App\Http\Requests\UpdateCalendarEventRequest;
+use App\Models\Calendar;
 use App\Models\CalendarEvent;
 use App\Models\Role;
+use Illuminate\Http\Request;
 
 class CalendarEventController extends Controller
 {
@@ -104,5 +106,28 @@ class CalendarEventController extends Controller
     public function destroy(CalendarEvent $calendarEvent)
     {
         //
+    }
+
+    public function toggleActive(Request $request, Calendar $calendar, CalendarEvent $event)
+    {
+        /** @var \App\Models\CasUser $user */
+        $user = $request->input('cas_user');
+        if (!$user || ($user->id !== $event->cas_user_id)) {
+            return json_encode(["success" => false, "message" => "Δεν επιτρέπεται η λειτουργία σε αυτόν τον χρήστη"]);
+        }
+
+        $event->cancelled =!$event->cancelled;
+
+        if ($event->cancelled) {
+            $message = "Η εκδήλωση ακυρώθηκε";
+        } else {
+            $message = "Η εκδήλωση σημειώθηκε ως ενεργή";
+        }
+
+        if ($event->save()) {
+            return json_encode(["success" => true, "message" => $message]);
+        }
+
+        return json_encode(["success" => false, "message" => "Απέτυχε η αποθήκευση της τροποποίησης"]);
     }
 }
