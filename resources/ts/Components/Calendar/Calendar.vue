@@ -228,6 +228,7 @@ const newEvent: Ref<App.Models.CalendarEvent> = ref({
     cas_user_id: 0,
     created_at: null,
     updated_at: null,
+    cancelled: false,
 });
 
 const holidays = ref(greekHolidays(`${view.year.value}`));
@@ -253,6 +254,7 @@ const clearNewEvent = () => {
         cas_user_id: 0,
         created_at: null,
         updated_at: null,
+        cancelled: false,
     };
 };
 
@@ -337,6 +339,41 @@ const onDeleteEvent = (event: number) => {
     showDeleteDialog.value = true;
 };
 
+const onCancelEvent = async (event: number) => {
+    console.log("Cancelled event: " + event);
+    eventForModal.value = calendarStore.calendarEvents.find(
+        (item) => item.id === event
+    )!;
+
+    await axios
+        .post(
+            route("calendarEvent.toggleActive", [
+                eventForModal.value.calendar_id,
+                eventForModal.value.id,
+            ])
+        )
+        .then(async (res) => {
+            if (res.data.success) {
+                await getCalendarEventData(view.year.value, view.month.value);
+                toast.success(res.data.message, { position: "top-right" });
+
+                // TODO: Αυτό κανονικά δεν θα έπρεπε να χρειάζεται να το αλλάζουμε χειροκίνητα
+                // Κάτι δεν παίζει σωστά με το reactivity και αλλάζει η τιμή με καθυστέρηση
+                // (σε δεύτερο βήμα αλλαγής)
+                if (eventForModal.value) {
+                    eventForModal.value.cancelled =
+                        !eventForModal.value.cancelled;
+                }
+            } else {
+                toast.error(res.data.message, { position: "top-right" });
+            }
+        })
+        .catch((error: AxiosError) => {
+            console.log(error);
+            toast.error(error.message, { position: "top-right" });
+        });
+};
+
 const proceedWithDeletion = (answer: "yes" | "no") => {
     showDeleteDialog.value = false;
     if (answer === "yes") {
@@ -395,6 +432,7 @@ onMounted(() => {
         v-model:show="showEventModal"
         @editEvent="onEditEventModal"
         @deleteEvent="onDeleteEvent"
+        @cancelEvent="onCancelEvent"
     ></EventModal>
 
     <button

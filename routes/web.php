@@ -55,6 +55,7 @@ Route::middleware([
     Route::get('/calendar', [CalendarController::class, 'showAll'])->name('calendar.index');
     Route::post('/calendar/{calendar}/event', [CalendarController::class, 'addEvent'])->name('calendar.addEvent');
     Route::delete('/calendar/{calendar}/event/{event}', [CalendarController::class, 'deleteEvent'])->name('calendar.deleteEvent');
+    Route::post('/calendar/{calendar}/event/{event}/toggleActive', [CalendarEventController::class, 'toggleActive'])->name('calendarEvent.toggleActive');
     Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
     // Route::get('/cas_user/{user}/name', [CasUserController::class, 'getName'])->name('cas_user.name');
     Route::post('/report/{report}/toggleActive', [ReportController::class, 'toggleActive'])->name('report.toggleActive');

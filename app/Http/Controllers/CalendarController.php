@@ -103,6 +103,7 @@ class CalendarController extends Controller
                 'location' => $request->location ?? "",
                 'url' => $request->url ?? "",
                 'cas_user_id' => $request->cas_user->id,
+                'cancelled' => $request->cancelled ?? false,
             ]);
         } else {
             // Ενημέρωσε παλιά εκδήλωση
@@ -116,6 +117,7 @@ class CalendarController extends Controller
                 'calendar_id' => $calendar->id,
                 'location' => $request->location ?? "",
                 'url' => $request->url ?? "",
+                'cancelled' => $request->cancelled ? 1 : 0,
             ]);
         }
 

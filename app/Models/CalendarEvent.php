@@ -17,7 +17,8 @@ class CalendarEvent extends Model
         'location',
         'url',
         'calendar_id',
-        'cas_user_id'
+        'cas_user_id',
+        'cancelled',
     ];
 
     public function calendar() {

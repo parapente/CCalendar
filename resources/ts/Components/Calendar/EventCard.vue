@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+    faBan,
     faCalendarDay,
     faGlobe,
     faMapLocation,
@@ -10,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { DateTime } from "luxon";
 import { bgColor, fgColor } from "./utilities";
 import { useCalendarStore } from "@/Stores/calendarStore";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import type { PageWithSharedProps } from "@/pageprops";
 
@@ -22,6 +23,7 @@ const calendarStore = useCalendarStore();
 
 const emit = defineEmits<{
     deleteEvent: [value: number];
+    cancelEvent: [value: number];
     editEvent: [value: number];
 }>();
 
@@ -83,6 +85,17 @@ const showUser = computed(() => {
                     <FontAwesomeIcon :icon="faPencil" />
                 </button>
                 <button
+                    class="ml-2 my-1 px-3 py-2 rounded-lg bg-orange-500 shadow-md shadow-black hover:bg-orange-400 text-black print:hidden"
+                    @click="emit('cancelEvent', event.id)"
+                    v-if="
+                        page.props.cas_user &&
+                        page.props.cas_user.id === event.cas_user_id
+                    "
+                    test-data-id="event-card-cancel-button"
+                >
+                    <FontAwesomeIcon :icon="faBan" />
+                </button>
+                <button
                     class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500 shadow-md shadow-black hover:bg-red-400 text-black print:hidden"
                     @click="emit('deleteEvent', event.id)"
                     v-if="
@@ -95,11 +108,17 @@ const showUser = computed(() => {
                 </button>
             </div>
         </div>
-        <div class="flex">
+        <div class="flex items-center">
             <div class="text-lg font-bold mr-2" v-if="showUser">
                 {{ event.cas_user?.name }}:
             </div>
             <u class="text-lg font-bold">{{ event.title }}</u>
+            <div
+                class="ml-1 italic font-bold text-red-600 dark:text-red-400"
+                v-if="event.cancelled"
+            >
+                (Ακυρώθηκε)
+            </div>
         </div>
         <div class="text">
             {{ event.description }}
