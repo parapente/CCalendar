@@ -108,7 +108,12 @@ const startDateChanged = (e: Event) => {
                 <option
                     v-for="event_type in calendarStore.calendars.map(
                         (calendar) => {
-                            return { id: calendar.id, name: calendar.name };
+                            return {
+                                id: calendar.id,
+                                name: calendar.shared
+                                    ? `${calendar.name} (Κοινόχρηστο)`
+                                    : calendar.name,
+                            };
                         }
                     )"
                     :value="event_type.id"
