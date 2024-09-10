@@ -25,6 +25,7 @@ class StoreCalendarRequest extends FormRequest
             'name' => ['required','string','max:255'],
             'color' => ['required','hex_color','max:7'],
             'active' => ['required', 'boolean'],
+            'shared' => ['required', 'boolean'],
         ];
     }
 }

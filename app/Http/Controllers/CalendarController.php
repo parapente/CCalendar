@@ -34,11 +34,7 @@ class CalendarController extends Controller
      */
     public function store(StoreCalendarRequest $request)
     {
-        Calendar::create([
-            'name' => $request->name,
-            'color' => $request->color,
-            'active' => $request->active,
-        ]);
+        Calendar::create($request->validated());
 
         return redirect()->route('administrator.calendar.index')
             ->with('flash.bannerStyle', 'success')
@@ -66,11 +62,7 @@ class CalendarController extends Controller
      */
     public function update(UpdateCalendarRequest $request, Calendar $calendar)
     {
-        $calendar->update([
-            'name' => $request->name,
-            'color' => $request->color,
-            'active' => $request->active,
-        ]);
+        $calendar->update($request->validated());
 
         return redirect()->route('administrator.calendar.index')
             ->with('flash.bannerStyle','success')

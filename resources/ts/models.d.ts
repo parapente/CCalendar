@@ -33,6 +33,7 @@ declare namespace App.Models {
         active: boolean;
         created_at: string | null;
         updated_at: string | null;
+        shared: boolean;
     }
 
     export interface CalendarEvent {

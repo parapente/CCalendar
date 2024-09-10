@@ -58,7 +58,14 @@ const toggleActiveForCalendar = (calendar_id: number) => {
                     :key="calendar.id"
                     class="p-4 my-4 bg-slate-300 dark:bg-gray-800 text-black dark:text-white shadow-xl dark:shadow-md dark:shadow-gray-700 rounded-lg flex items-center"
                 >
-                    <div>{{ calendar.name }}</div>
+                    <div>
+                        {{ calendar.name
+                        }}<span
+                            class="bg-slate-600 text-green-500 mx-1 p-1 rounded-lg"
+                            v-if="calendar.shared"
+                            >(Κοινόχρηστο)</span
+                        >
+                    </div>
                     <div
                         class="mx-2 p-4 border-black border"
                         :style="{ 'background-color': calendar.color }"

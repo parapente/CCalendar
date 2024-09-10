@@ -9,6 +9,7 @@ const forms = useForm({
     name: "",
     color: "#000000",
     active: true,
+    shared: false,
 });
 
 const onSubmit = () => {
@@ -62,9 +63,30 @@ const onSubmit = () => {
                 <Checkbox
                     id="active"
                     name="active"
-                    class="my-auto"
+                    class="col-span-4 my-auto"
                     :checked="forms.active"
                 />
+                <div
+                    class="col-span-6 text-red-500 text-sm"
+                    v-if="forms.errors.active"
+                >
+                    {{ forms.errors.active }}
+                </div>
+                <label for="shared" class="dark:text-white col-span-2 my-auto"
+                    >Κοινόχρηστο:</label
+                >
+                <Checkbox
+                    id="shared"
+                    name="shared"
+                    class="col-span-4 my-auto"
+                    :checked="forms.shared"
+                />
+                <div
+                    class="col-span-6 text-red-500 text-sm"
+                    v-if="forms.errors.shared"
+                >
+                    {{ forms.errors.shared }}
+                </div>
             </template>
             <template #actions>
                 <button
