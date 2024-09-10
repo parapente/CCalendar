@@ -56,7 +56,11 @@ const emit = defineEmits<{
                     :key="calendar.id"
                     :value="calendar.id"
                 >
-                    {{ calendar.name }}
+                    {{
+                        calendar.shared
+                            ? `${calendar.name} (Κοινόχρηστο)`
+                            : calendar.name
+                    }}
                 </option>
             </DropdownList>
             <label for="userFilter" class="mr-2 my-auto">Χρήστες:</label>
