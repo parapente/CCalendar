@@ -39,8 +39,10 @@ class CalendarEventController extends Controller
                 ->get()
                 ->map(fn($item) => $item->id);
 
-            $calendarEvents = $calendarEvents->where('cas_user_id', request('cas_user')->id)
-                ->orWhereIn('calendar_id', $shared_calendars);
+            $calendarEvents = $calendarEvents->where(function ($query) use ($shared_calendars) {
+                $query->where('cas_user_id', request('cas_user')->id)
+                    ->orWhereIn('calendar_id', $shared_calendars);
+            });
         }
 
         $calendarEvents = $calendarEvents->where(function ($query) use ($year, $month) {
