@@ -29,6 +29,7 @@ import route from "ziggy";
 import ConfirmDeleteDialog from "./ConfirmDeleteDialog.vue";
 import EventModal from "./EventModal.vue";
 import { vIntersectionObserver } from "@vueuse/components";
+import Checkbox from "../Checkbox.vue";
 
 const props = withDefaults(
     defineProps<{
@@ -301,8 +302,6 @@ const dayEvents = (day: CalendarDay) => {
     });
 };
 
-const page = usePage<PageWithSharedProps>();
-
 const calendarFilter = ref("0");
 const userFilter = ref("0");
 
@@ -316,19 +315,26 @@ const filteredCalendars = computed(() => {
     }
 });
 
-const filteredCalendarEvents = computed(() =>
-    calendarStore.calendarEvents
-        .filter(
-            (event) =>
-                calendarFilter.value === "0" ||
-                event.calendar_id === parseInt(calendarFilter.value)
-        )
+const filteredCalendarEvents = computed(() => {
+    const sharedCalendarsIDs = calendarStore.calendars
+        .filter((calendar) => calendar.shared)
+        .map((calendar) => calendar.id);
+
+    return calendarStore.calendarEvents
+        .filter((event) => {
+            return (
+                (calendarFilter.value === "0" ||
+                    event.calendar_id === parseInt(calendarFilter.value)) &&
+                (showSharedCalendars.value ||
+                    !sharedCalendarsIDs.includes(event.calendar_id))
+            );
+        })
         .filter(
             (event) =>
                 userFilter.value === "0" ||
                 event.cas_user_id === parseInt(userFilter.value)
-        )
-);
+        );
+});
 
 const showDeleteDialog = ref(false);
 const eventForDeletion = ref(0);
@@ -412,6 +418,8 @@ const onIntersectionObserver = ([
     eventListVisible.value = isIntersecting;
 };
 
+const showSharedCalendars = ref(false);
+
 watch([view.year, view.month], ([newYear, newMonth]) => {
     getCalendarEventData(newYear, newMonth);
 });
@@ -442,12 +450,18 @@ onMounted(() => {
         Εκτύπωση
     </button>
     <CalendarFilters
-        v-if="administrator || page.props.cas_user_role === 'Supervisor'"
+        :administrator="administrator"
         v-model:calendar="calendarFilter"
         v-model:user="userFilter"
         class="print:hidden"
         test-data-id="calendar-filters"
     />
+    <div class="p-2">
+        <label for="show_shared" class="dark:text-white mx-2"
+            >Εμφάνιση κοινόχρηστων ημερολογίων</label
+        >
+        <Checkbox id="show_shared" v-model="showSharedCalendars" />
+    </div>
     <div
         class="m-2 border border-black text-black bg-white dark:border-gray-400 dark:text-gray-300 dark:bg-gray-600 rounded-t-lg max-w-screen-xl w-full print:hidden"
     >

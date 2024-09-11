@@ -1,18 +1,24 @@
 <script setup lang="ts">
 import DropdownList from "@/Components/DropdownList.vue";
+import type { PageWithSharedProps } from "@/pageprops";
 import { useCalendarStore } from "@/Stores/calendarStore";
+import { usePage } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 
 const props = withDefaults(
     defineProps<{
         calendar: string;
         user: string;
+        administrator?: boolean;
     }>(),
     {
         calendar: "0",
         user: "0",
+        administrator: false,
     }
 );
+
+const page = usePage<PageWithSharedProps>();
 
 const calendarFilter = ref(props.calendar);
 
@@ -63,21 +69,27 @@ const emit = defineEmits<{
                     }}
                 </option>
             </DropdownList>
-            <label for="userFilter" class="mr-2 my-auto">Χρήστες:</label>
-            <DropdownList
-                v-model="userFilter"
-                class="text-black col-span-5"
-                @update:model-value="emit('update:user', userFilter)"
+            <div
+                v-if="
+                    administrator || page.props.cas_user_role === 'Supervisor'
+                "
             >
-                <option value="0">Όλα</option>
-                <option
-                    v-for="user in calendarUsers"
-                    :key="user?.id"
-                    :value="user?.id"
+                <label for="userFilter" class="mr-2 my-auto">Χρήστες:</label>
+                <DropdownList
+                    v-model="userFilter"
+                    class="text-black col-span-5"
+                    @update:model-value="emit('update:user', userFilter)"
                 >
-                    {{ user?.name }}
-                </option>
-            </DropdownList>
+                    <option value="0">Όλα</option>
+                    <option
+                        v-for="user in calendarUsers"
+                        :key="user?.id"
+                        :value="user?.id"
+                    >
+                        {{ user?.name }}
+                    </option>
+                </DropdownList>
+            </div>
         </div>
     </div>
 </template>
