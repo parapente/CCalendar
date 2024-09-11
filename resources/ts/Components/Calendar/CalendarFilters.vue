@@ -69,27 +69,31 @@ const emit = defineEmits<{
                     }}
                 </option>
             </DropdownList>
-            <div
+            <label
                 v-if="
                     administrator || page.props.cas_user_role === 'Supervisor'
                 "
+                for="userFilter"
+                class="mr-2 my-auto"
+                >Χρήστες:</label
             >
-                <label for="userFilter" class="mr-2 my-auto">Χρήστες:</label>
-                <DropdownList
-                    v-model="userFilter"
-                    class="text-black col-span-5"
-                    @update:model-value="emit('update:user', userFilter)"
+            <DropdownList
+                v-if="
+                    administrator || page.props.cas_user_role === 'Supervisor'
+                "
+                v-model="userFilter"
+                class="text-black col-span-5"
+                @update:model-value="emit('update:user', userFilter)"
+            >
+                <option value="0">Όλα</option>
+                <option
+                    v-for="user in calendarUsers"
+                    :key="user?.id"
+                    :value="user?.id"
                 >
-                    <option value="0">Όλα</option>
-                    <option
-                        v-for="user in calendarUsers"
-                        :key="user?.id"
-                        :value="user?.id"
-                    >
-                        {{ user?.name }}
-                    </option>
-                </DropdownList>
-            </div>
+                    {{ user?.name }}
+                </option>
+            </DropdownList>
         </div>
     </div>
 </template>
