@@ -453,15 +453,10 @@ onMounted(() => {
         :administrator="administrator"
         v-model:calendar="calendarFilter"
         v-model:user="userFilter"
+        v-model:shared="showSharedCalendars"
         class="print:hidden"
         test-data-id="calendar-filters"
     />
-    <div class="p-2">
-        <label for="show_shared" class="dark:text-white mx-2"
-            >Εμφάνιση κοινόχρηστων ημερολογίων</label
-        >
-        <Checkbox id="show_shared" v-model="showSharedCalendars" />
-    </div>
     <div
         class="m-2 border border-black text-black bg-white dark:border-gray-400 dark:text-gray-300 dark:bg-gray-600 rounded-t-lg max-w-screen-xl w-full print:hidden"
     >

@@ -4,16 +4,19 @@ import type { PageWithSharedProps } from "@/pageprops";
 import { useCalendarStore } from "@/Stores/calendarStore";
 import { usePage } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
+import Checkbox from "../Checkbox.vue";
 
 const props = withDefaults(
     defineProps<{
         calendar: string;
         user: string;
+        shared: boolean;
         administrator?: boolean;
     }>(),
     {
         calendar: "0",
         user: "0",
+        shared: false,
         administrator: false,
     }
 );
@@ -43,6 +46,7 @@ const calendarUsers = computed(() => {
 const emit = defineEmits<{
     "update:calendar": [value: string];
     "update:user": [value: string];
+    "update:shared": [value: boolean];
 }>();
 </script>
 
@@ -94,6 +98,16 @@ const emit = defineEmits<{
                     {{ user?.name }}
                 </option>
             </DropdownList>
+        </div>
+        <div class="p-2">
+            <label for="show_shared" class="dark:text-white mx-2"
+                >Εμφάνιση κοινόχρηστων ημερολογίων</label
+            >
+            <Checkbox
+                id="show_shared"
+                :checked="shared"
+                @update:checked="(value) => emit('update:shared', value)"
+            />
         </div>
     </div>
 </template>
