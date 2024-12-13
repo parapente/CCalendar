@@ -14,15 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(CasAuthInterface::class, function ($app) {
-            // Check if we are running tests
-            if ($app->runningUnitTests()) {
-                return new TestCasAuthService();
-            } else {
-                // In production, use the production authentication service
-                return new ProductionCasAuthService();
-            }
-        });
+        $this->app->bind(CasAuthInterface::class, ProductionCasAuthService::class);
     }
 
     /**

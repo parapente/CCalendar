@@ -17,7 +17,11 @@ use Tests\TestCase;
 |
 */
 
-uses(TestCase::class, LazilyRefreshDatabase::class)->in('Feature');
+uses(TestCase::class, LazilyRefreshDatabase::class)
+    ->beforeEach(function () {
+        $this->app->bind(CasAuthInterface::class, TestCasAuthService::class);
+    })
+    ->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
