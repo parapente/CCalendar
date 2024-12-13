@@ -1,6 +1,7 @@
 <?php
 
 use App\Contracts\CasAuthInterface;
+use App\Services\TestCasAuthService;
 use App\Models\CasUser;
 use App\Models\Role;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
