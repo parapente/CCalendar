@@ -8,28 +8,40 @@ export const daysOfMonth = (
     month: number,
     holidays: ReturnType<typeof greekHolidays>
 ) => {
+    console.log("daysOfMonth", year, month);
     const days: CalendarDay[] = [];
     const firstDay = DateTime.local(year, month, 1).startOf("week").day;
-    const endOfPreviousMonth = DateTime.local(year, month - 1, 1).endOf(
-        "month"
-    ).day;
+    const endOfPreviousMonth = DateTime.local(
+        year,
+        month - 1 !== 0 ? month - 1 : 12,
+        1
+    ).endOf("month").day;
     const endOfCurrentMonth = DateTime.local(year, month, 1).endOf("month").day;
 
     // Ο προηγούμενος μήνας εμφανίζεται πριν την πρώτη
     // ημέρα αν το firstDay δεν είναι η 1η του τρέχοντος μήνα
     let previousMonthDisplayed = firstDay === 1;
+    console.log(previousMonthDisplayed);
     if (!previousMonthDisplayed) {
         for (let i = firstDay; i <= endOfPreviousMonth; i++) {
             days.push({
-                date: DateTime.local(year, month - 1, i).toFormat("yyyy-MM-dd"),
+                date: DateTime.local(
+                    year,
+                    month - 1 !== 0 ? month - 1 : 12,
+                    i
+                ).toFormat("yyyy-MM-dd"),
                 isDisabled: true,
                 isHoliday: false,
                 isToday:
-                    DateTime.local(year, month - 1, i).toFormat(
-                        "yyyy-MM-dd"
-                    ) === DateTime.local().toFormat("yyyy-MM-dd"),
+                    DateTime.local(
+                        year,
+                        month - 1 !== 0 ? month - 1 : 12,
+                        i
+                    ).toFormat("yyyy-MM-dd") ===
+                    DateTime.local().toFormat("yyyy-MM-dd"),
             });
         }
+        console.log(firstDay);
         previousMonthDisplayed = true;
     }
     for (let i = 1; i <= endOfCurrentMonth; i++) {
