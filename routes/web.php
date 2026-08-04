@@ -19,9 +19,7 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-});
+Route::get('/', fn() => Inertia::render('Welcome'));
 
 Route::prefix('administrator')
     ->name('administrator.')
@@ -30,9 +28,7 @@ Route::prefix('administrator')
     config('jetstream.auth_session'),
     'verified',
 ])->group(function (): void {
-    Route::get('/', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->name('index');
+    Route::get('/', fn() => Inertia::render('Admin/Dashboard'))->name('index');
     Route::get('/user/{user}/type/{type}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/{user}/type/{type}', [UserController::class, 'update'])->name('user.update');
     Route::resource('user', UserController::class)->only(['index', 'create', 'store']);

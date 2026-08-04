@@ -36,12 +36,8 @@ class ReportController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate();
 
-            $answered = $reports->filter(function ($report) {
-                return count($report->data);
-            })
-                ->map(function ($report) {
-                    return $report->id;
-                })
+            $answered = $reports->filter(fn($report) => count($report->data))
+                ->map(fn($report) => $report->id)
                 ->toArray();
             $answered = array_values($answered);
         } else {
@@ -50,12 +46,8 @@ class ReportController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate();
 
-            $answered = $reports->filter(function ($report) use ($cas_user) {
-                return $report->data->where('cas_user_id', $cas_user->id)->count();
-            })
-                ->map(function ($report) {
-                    return $report->id;
-                })
+            $answered = $reports->filter(fn($report) => $report->data->where('cas_user_id', $cas_user->id)->count())
+                ->map(fn($report) => $report->id)
                 ->toArray();
             $answered = array_values($answered);
 
@@ -150,9 +142,7 @@ class ReportController extends Controller
             ]);
         }
 
-        $users_that_answered = $report->data->map(function ($item) {
-            return $item->cas_user->id;
-        });
+        $users_that_answered = $report->data->map(fn($item) => $item->cas_user->id);
 
         $missing = CasUser::where('active', 1)
             ->where('role_id', '!=', Role::where('name', 'Supervisor')->first()->id)
