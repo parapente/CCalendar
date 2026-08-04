@@ -11,6 +11,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     deleteEvent: [value: number];
     editEvent: [value: number];
+    cancelEvent: [value: number];
 }>();
 </script>
 
@@ -24,6 +25,7 @@ const emit = defineEmits<{
                 :event="event"
                 @editEvent="emit('editEvent', event.id)"
                 @deleteEvent="emit('deleteEvent', event.id)"
+                @cancelEvent="emit('cancelEvent', event.id)"
                 :test-data-id="`event-card-${event.id}`"
             />
         </div>

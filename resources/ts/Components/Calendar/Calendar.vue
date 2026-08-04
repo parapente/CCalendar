@@ -37,7 +37,7 @@ const props = withDefaults(
     }>(),
     {
         administrator: false,
-    }
+    },
 );
 
 const routePrefix = computed(() => {
@@ -159,19 +159,19 @@ const deleteCalendarEvent = (id: number) => {
     if (event) {
         axios
             .delete(
-                route("calendar.deleteEvent", [event.calendar_id, event.id])
+                route("calendar.deleteEvent", [event.calendar_id, event.id]),
             )
             .then(
                 (
                     response: AxiosResponse<{
                         success: boolean;
                         message: string;
-                    }>
+                    }>,
                 ) => {
                     if (response.data.success) {
                         calendarStore.calendarEvents =
                             calendarStore.calendarEvents.filter(
-                                (event) => event.id !== id
+                                (event) => event.id !== id,
                             );
                         toast.success(response.data.message, {
                             position: "top-right",
@@ -181,7 +181,7 @@ const deleteCalendarEvent = (id: number) => {
                             position: "top-right",
                         });
                     }
-                }
+                },
             )
             .catch((error: AxiosError) => {
                 console.log(error);
@@ -266,7 +266,7 @@ const getCalendarEventData = async (year: number, month: number) => {
             route(`${routePrefix.value}events`, [
                 view.year.value,
                 view.month.value,
-            ])
+            ]),
         )
         .then((response) => {
             if (
@@ -310,7 +310,7 @@ const filteredCalendars = computed(() => {
         return calendarStore.calendars;
     } else {
         return calendarStore.calendars.filter(
-            (calendar) => calendar.id === parseInt(calendarFilter.value)
+            (calendar) => calendar.id === parseInt(calendarFilter.value),
         );
     }
 });
@@ -332,7 +332,7 @@ const filteredCalendarEvents = computed(() => {
         .filter(
             (event) =>
                 userFilter.value === "0" ||
-                event.cas_user_id === parseInt(userFilter.value)
+                event.cas_user_id === parseInt(userFilter.value),
         );
 });
 
@@ -348,7 +348,7 @@ const onDeleteEvent = (event: number) => {
 const onCancelEvent = async (event: number) => {
     console.log("Cancelled event: " + event);
     eventForModal.value = calendarStore.calendarEvents.find(
-        (item) => item.id === event
+        (item) => item.id === event,
     )!;
 
     await axios
@@ -356,7 +356,7 @@ const onCancelEvent = async (event: number) => {
             route("calendarEvent.toggleActive", [
                 eventForModal.value.calendar_id,
                 eventForModal.value.id,
-            ])
+            ]),
         )
         .then(async (res) => {
             if (res.data.success) {
@@ -395,7 +395,7 @@ const showEventModal = ref(false);
 
 const onCalendarEventClicked = (id: number) => {
     eventForModal.value = calendarStore.calendarEvents.find(
-        (event) => event.id === id
+        (event) => event.id === id,
     )!;
 
     showEventModal.value = true;
@@ -489,7 +489,7 @@ onMounted(() => {
                 v-for="(day, index) in daysOfMonth(
                     view.year.value,
                     view.month.value,
-                    holidays
+                    holidays,
                 )"
                 :day="day"
                 class="h-36 max-h-36 text-center overflow-hidden border-black dark:border-gray-400 border-b"
@@ -534,6 +534,7 @@ onMounted(() => {
         class="max-w-screen-xl w-full mt-4"
         @editEvent="editCalendarEvent"
         @deleteEvent="onDeleteEvent"
+        @cancelEvent="onCancelEvent"
         v-intersection-observer="onIntersectionObserver"
         test-data-id="calendar-event-list"
     />
