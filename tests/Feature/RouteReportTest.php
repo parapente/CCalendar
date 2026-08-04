@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-test('cas supervisors can see all reports', function () {
+test('cas supervisors can see all reports', function (): void {
     $active_reports = Report::factory()->count(3)->create([
         'active' => true,
     ]);
@@ -35,7 +35,7 @@ test('cas supervisors can see all reports', function () {
     }
 });
 
-test('cas users can see active reports', function() {
+test('cas users can see active reports', function(): void {
     $active_reports = Report::factory()->count(3)->create([
         'active' => true,
     ]);
@@ -64,7 +64,7 @@ test('cas users can see active reports', function() {
     }
 });
 
-test('cas user cannot create a new report', function () {
+test('cas user cannot create a new report', function (): void {
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $this->get(route('report.create'))
         ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
@@ -91,7 +91,7 @@ test('cas user cannot create a new report', function () {
     ]);
 });
 
-test('cas supervisor can create a new report', function () {
+test('cas supervisor can create a new report', function (): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $this->get(route('report.create'))
@@ -123,7 +123,7 @@ test('cas supervisor can create a new report', function () {
     ]);
 });
 
-test('cas user cannot view inactive reports', function () {
+test('cas user cannot view inactive reports', function (): void {
     $report = Report::factory()->create([
         'active' => false
     ]);
@@ -142,7 +142,7 @@ test('cas user cannot view inactive reports', function () {
     $response->assertRedirect(route('report.index'));
 });
 
-test('cas supervisor can view inactive reports', function () {
+test('cas supervisor can view inactive reports', function (): void {
     $report = Report::factory()->create([
         'active' => false
     ]);
@@ -162,7 +162,7 @@ test('cas supervisor can view inactive reports', function () {
     $response->assertSee($report->name);
 });
 
-test('cas user can view an active report', function () {
+test('cas user can view an active report', function (): void {
     $report = Report::factory()->create([
         'active' => true
     ]);
@@ -182,7 +182,7 @@ test('cas user can view an active report', function () {
     $response->assertSee($report->name);
 });
 
-test('cas supervisor can view an active report', function () {
+test('cas supervisor can view an active report', function (): void {
     $report = Report::factory()->create([
         'active' => true
     ]);
@@ -202,7 +202,7 @@ test('cas supervisor can view an active report', function () {
     $response->assertSee($report->name);
 });
 
-test('cas user cannot edit a report', function () {
+test('cas user cannot edit a report', function (): void {
     $report = Report::factory()->create([
         'active' => true
     ]);
@@ -221,7 +221,7 @@ test('cas user cannot edit a report', function () {
     $response->assertRedirect(route('report.index'));
 });
 
-test('cas supervisor can edit a report', function () {
+test('cas supervisor can edit a report', function (): void {
     $report = Report::factory()->create([
         'active' => true
     ]);
@@ -241,7 +241,7 @@ test('cas supervisor can edit a report', function () {
     $response->assertSee($report->name);
 });
 
-test('cas user cannot update a report', function () {
+test('cas user cannot update a report', function (): void {
     $report = Report::factory()->create([
         'active' => true
     ]);
@@ -274,7 +274,7 @@ test('cas user cannot update a report', function () {
     ]);
 });
 
-test('cas supervisor can update a report', function () {
+test('cas supervisor can update a report', function (): void {
     $report = Report::factory()->create();
     $report_data = Report::factory()->make([
         'from' => '2020-01-01',
@@ -303,7 +303,7 @@ test('cas supervisor can update a report', function () {
     ]);
 });
 
-test('cas user cannot delete a report', function () {
+test('cas user cannot delete a report', function (): void {
     $report = Report::factory()->create([
         'active' => true
     ]);
@@ -323,7 +323,7 @@ test('cas user cannot delete a report', function () {
     $this->assertDatabaseHas('reports', $report->toArray());
 });
 
-test('cas supervisor can delete a report', function () {
+test('cas supervisor can delete a report', function (): void {
     $report = Report::factory()->create([
         'active' => true
     ]);
@@ -343,7 +343,7 @@ test('cas supervisor can delete a report', function () {
     $this->assertDatabaseMissing('reports', $report->toArray());
 });
 
-test('cas user cannot toggle active status of a report', function () {
+test('cas user cannot toggle active status of a report', function (): void {
     $report = Report::factory()->create([
         'active' => true
     ]);
@@ -364,7 +364,7 @@ test('cas user cannot toggle active status of a report', function () {
     expect($report->active)->toBeTruthy();
 });
 
-test('cas supervisor can toggle active status of a report', function () {
+test('cas supervisor can toggle active status of a report', function (): void {
     $report = Report::factory()->create([
         'active' => true
     ]);
@@ -385,7 +385,7 @@ test('cas supervisor can toggle active status of a report', function () {
     expect($report->active)->toBeFalsy();
 });
 
-test('cas user can download a doc with calendar events', function () {
+test('cas user can download a doc with calendar events', function (): void {
     $calendar = Calendar::factory()->create();
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
@@ -417,7 +417,7 @@ test('cas user can download a doc with calendar events', function () {
     $this->assertTrue(str_starts_with($response->headers->get('content-disposition'), 'attachment; filename='));
 });
 
-test('cas supervisor can download a doc with calendar events', function () {
+test('cas supervisor can download a doc with calendar events', function (): void {
     $calendar = Calendar::factory()->create();
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '123456789',
@@ -449,7 +449,7 @@ test('cas supervisor can download a doc with calendar events', function () {
     $this->assertTrue(str_starts_with($response->headers->get('content-disposition'), 'attachment; filename='));
 });
 
-test('cas user cannot upload a file on an inactive report', function () {
+test('cas user cannot upload a file on an inactive report', function (): void {
     $report = Report::factory()->create(['active' => false]);
     Storage::fake('local');
 
@@ -473,7 +473,7 @@ test('cas user cannot upload a file on an inactive report', function () {
     expect($report_data)->toBeNull();
 });
 
-test('cas user can upload a file on report', function () {
+test('cas user can upload a file on report', function (): void {
     $report = Report::factory()->create();
     Storage::fake('local');
 
@@ -510,7 +510,7 @@ test('cas user can upload a file on report', function () {
     Storage::disk('local')->assertExists("reports/{$report->id}/{$cas_user->id}/{$data['filename']}");
 });
 
-test('cas users can download their files of a report', function () {
+test('cas users can download their files of a report', function (): void {
     $report = Report::factory()->create();
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
@@ -539,7 +539,7 @@ test('cas users can download their files of a report', function () {
     $response->assertOk();
 });
 
-test('cas supervisor can download files of a report', function () {
+test('cas supervisor can download files of a report', function (): void {
     $report = Report::factory()->create();
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
@@ -571,7 +571,7 @@ test('cas supervisor can download files of a report', function () {
     $response->assertOk();
 });
 
-test('cas users cannot download files of other users of a report', function () {
+test('cas users cannot download files of other users of a report', function (): void {
     $report = Report::factory()->create();
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
@@ -603,7 +603,7 @@ test('cas users cannot download files of other users of a report', function () {
     $response->assertForbidden();
 });
 
-test('cas user cannot download all files of a report', function () {
+test('cas user cannot download all files of a report', function (): void {
     $report = Report::factory()->create();
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
@@ -655,7 +655,7 @@ test('cas user cannot download all files of a report', function () {
     }
 });
 
-test('cas supervisor can download all files of a report', function () {
+test('cas supervisor can download all files of a report', function (): void {
     $report = Report::factory()->create();
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '123456789',

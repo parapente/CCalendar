@@ -4,7 +4,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
 
-test('api token permissions can be updated', function () {
+test('api token permissions can be updated', function (): void {
     if (Features::hasTeamFeatures()) {
         $this->actingAs($user = User::factory()->withPersonalTeam()->create());
     } else {

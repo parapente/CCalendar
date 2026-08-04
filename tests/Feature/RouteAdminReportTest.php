@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-test('admin can view reports', function () {
+test('admin can view reports', function (): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->get(route('administrator.report.index'));
@@ -25,7 +25,7 @@ test('admin can view reports', function () {
         ->assertSee($report->name);
 });
 
-test('admin can create a new report', function () {
+test('admin can create a new report', function (): void {
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->get(route('administrator.report.create'));
     $response->assertRedirect(route('login'));
@@ -59,7 +59,7 @@ test('admin can create a new report', function () {
     ]);
 });
 
-test('admin can edit an existing report', function () {
+test('admin can edit an existing report', function (): void {
     $report = Report::factory()->create();
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->get(route('administrator.report.edit', $report));
@@ -70,7 +70,7 @@ test('admin can edit an existing report', function () {
     $response->assertOk();
 });
 
-test('admin can update an existing report', function () {
+test('admin can update an existing report', function (): void {
     $report = Report::factory()->create();
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->put(route('administrator.report.update', $report), [
@@ -100,7 +100,7 @@ test('admin can update an existing report', function () {
     ]);
 });
 
-test('admin can delete an existing report', function () {
+test('admin can delete an existing report', function (): void {
     $report = Report::factory()->create();
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->delete(route('administrator.report.destroy', $report));
@@ -120,7 +120,7 @@ test('admin can delete an existing report', function () {
     ]);
 });
 
-test('admin can toggle active status of a report', function () {
+test('admin can toggle active status of a report', function (): void {
     $report = Report::factory()->create();
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->post(route('administrator.report.toggleActive', $report));
@@ -138,7 +138,7 @@ test('admin can toggle active status of a report', function () {
     ]);
 });
 
-test('admin can download all files of a report', function () {
+test('admin can download all files of a report', function (): void {
     $report = Report::factory()->create();
     // Φτιάξε 10 χρήστες και 10 αντίστοιχες απαντήσεις
     $role = Role::factory()->create(['name' => 'User']);
@@ -188,7 +188,7 @@ test('admin can download all files of a report', function () {
     }
 });
 
-test('admin can download a file of a report', function () {
+test('admin can download a file of a report', function (): void {
     $report = Report::factory()->create();
     $role = Role::factory()->create(['name' => 'User']);
     $casUser = CasUser::factory()->create([
@@ -219,10 +219,10 @@ test('admin can download a file of a report', function () {
     $response->assertOk();
 });
 
-test('admin can upload a file on a report', function () {
+test('admin can upload a file on a report', function (): void {
 })->skip();
 
-test('admin can download a doc with calendar events', function () {
+test('admin can download a doc with calendar events', function (): void {
     $calendar = Calendar::factory()->create();
     $role = Role::factory()->create(['name' => 'User']);
     $cas_user = CasUser::factory()->create([

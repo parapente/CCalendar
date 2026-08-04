@@ -5,7 +5,7 @@ use App\Models\CalendarEvent;
 use App\Models\CasUser;
 use App\Models\Role;
 
-test('cas user can view calendar', function() {
+test('cas user can view calendar', function(): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $this->get(route('calendar.index'))
@@ -22,7 +22,7 @@ test('cas user can view calendar', function() {
         ->assertSee($cas_user->name);
 });
 
-test('cas user can add event to calendar', function() {
+test('cas user can add event to calendar', function(): void {
     $calendar = Calendar::factory()->create();
     $calendar_event = [
         'title' => 'Test Event',
@@ -49,7 +49,7 @@ test('cas user can add event to calendar', function() {
     $this->assertDatabaseHas('calendar_events', $calendar_event);
 });
 
-test('cas user can update calendar event', function() {
+test('cas user can update calendar event', function(): void {
     $calendar = Calendar::factory()->create();
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
@@ -81,7 +81,7 @@ test('cas user can update calendar event', function() {
     $this->assertDatabaseHas('calendar_events', $updated_calendar_event);
 });
 
-test('cas user can delete calendar event', function() {
+test('cas user can delete calendar event', function(): void {
     $calendar = Calendar::factory()->create();
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',

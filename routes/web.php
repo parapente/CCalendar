@@ -29,7 +29,7 @@ Route::prefix('administrator')
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-])->group(function () {
+])->group(function (): void {
     Route::get('/', function () {
         return Inertia::render('Admin/Dashboard');
     })->name('index');
@@ -51,7 +51,7 @@ Route::prefix('administrator')
 
 Route::middleware([
     'cas.registered'
-])->group(function () {
+])->group(function (): void {
     Route::get('/calendar', [CalendarController::class, 'showAll'])->name('calendar.index');
     Route::post('/calendar/{calendar}/event', [CalendarController::class, 'addEvent'])->name('calendar.addEvent');
     Route::delete('/calendar/{calendar}/event/{event}', [CalendarController::class, 'deleteEvent'])->name('calendar.deleteEvent');
@@ -67,6 +67,6 @@ Route::middleware([
 });
 
 Route::get('/invalid/cas_user', [CasUserController::class, 'invalidCasUser'])->name('invalid.cas_user');
-Route::get('/logout', function() {
+Route::get('/logout', function(): void {
     cas()->logoutWithUrl(route('calendar.index'));
 })->name('cas.logout')->middleware('cas.auth');

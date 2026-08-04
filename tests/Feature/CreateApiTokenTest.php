@@ -3,7 +3,7 @@
 use App\Models\User;
 use Laravel\Jetstream\Features;
 
-test('api tokens can be created', function () {
+test('api tokens can be created', function (): void {
     if (Features::hasTeamFeatures()) {
         $this->actingAs($user = User::factory()->withPersonalTeam()->create());
     } else {

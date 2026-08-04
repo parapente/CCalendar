@@ -30,7 +30,7 @@ class CalendarEventController extends Controller
         }
 
         $calendarEvents = CalendarEvent::with('casUser')
-            ->whereHas("calendar", function ($query) {
+            ->whereHas("calendar", function ($query): void {
                 $query->where('active', true);
             });
 
@@ -39,22 +39,22 @@ class CalendarEventController extends Controller
                 ->get()
                 ->map(fn($item) => $item->id);
 
-            $calendarEvents = $calendarEvents->where(function ($query) use ($shared_calendars) {
+            $calendarEvents = $calendarEvents->where(function ($query) use ($shared_calendars): void {
                 $query->where('cas_user_id', request('cas_user')->id)
                     ->orWhereIn('calendar_id', $shared_calendars);
             });
         }
 
-        $calendarEvents = $calendarEvents->where(function ($query) use ($year, $month) {
-            $query->where(function ($query) use ($year, $month) {
+        $calendarEvents = $calendarEvents->where(function ($query) use ($year, $month): void {
+            $query->where(function ($query) use ($year, $month): void {
                 $query->whereYear('start_date', $year)
                     ->whereMonth('start_date', $month);
             })
-            ->orWhere(function ($query) use ($year, $month) {
+            ->orWhere(function ($query) use ($year, $month): void {
                 $query->whereYear('end_date', $year)
                     ->whereMonth('end_date', $month);
             })
-            ->orWhere(function ($query) use ($year, $month) {
+            ->orWhere(function ($query) use ($year, $month): void {
                 $nextMonth = $month < 12 ? $month + 1 : 1 ;
                 $nextYear = $nextMonth === 1 ? $year + 1 : $year;
                 $query->whereDate('start_date', '<', "$year-$month-1")

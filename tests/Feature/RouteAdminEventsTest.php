@@ -7,7 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-it('returns calendar events when requested', function () {
+it('returns calendar events when requested', function (): void {
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $calendar = Calendar::factory()->create([
         'active' => true,

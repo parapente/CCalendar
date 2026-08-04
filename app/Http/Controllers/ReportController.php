@@ -281,7 +281,7 @@ class ReportController extends Controller
         $events = CalendarEvent::with('calendar')
             ->where('start_date', '>=', $options->from)
             ->where('end_date', '<', $options->to)
-            ->when(request('cas_user'), function ($query) {
+            ->when(request('cas_user'), function ($query): void {
                 $query->where('cas_user_id', request('cas_user')->id);
             })
             ->orderBy('start_date', 'asc')
@@ -325,7 +325,7 @@ class ReportController extends Controller
         $output = file_get_contents(storage_path() . "/" . $filename);
         File::delete(storage_path() . "/" . $filename);
 
-        return response()->streamDownload(function () use ($output) {
+        return response()->streamDownload(function () use ($output): void {
             echo $output;
         }, $filename, [
             'Content-Length' => strlen($output),

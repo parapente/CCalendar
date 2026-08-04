@@ -4,7 +4,7 @@ use App\Models\CasUser;
 use App\Models\Role;
 use App\Models\User;
 
-test('admin can create a new user', function() {
+test('admin can create a new user', function(): void {
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->get(route('administrator.user.create'));
     $response->assertRedirect(route('login'));
@@ -46,7 +46,7 @@ test('admin can create a new user', function() {
     ]);
 });
 
-test('admin can update a user', function() {
+test('admin can update a user', function(): void {
     $admin = User::factory()->create();
     $user = User::factory()->create();
 
@@ -94,7 +94,7 @@ test('admin can update a user', function() {
     ]);
 });
 
-test('admin can view all available users', function () {
+test('admin can view all available users', function (): void {
     $admin = User::factory()->create();
     $user = User::factory()->create();
     $cas_user = CasUser::factory()->user()->create([

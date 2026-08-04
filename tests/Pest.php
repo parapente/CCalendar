@@ -19,7 +19,7 @@ use Tests\TestCase;
 */
 
 uses(TestCase::class, LazilyRefreshDatabase::class)
-    ->beforeEach(function () {
+    ->beforeEach(function (): void {
         $this->app->bind(CasAuthInterface::class, TestCasAuthService::class);
     })
     ->in('Feature');
@@ -52,7 +52,7 @@ expect()->extend('toBeOne', function () {
 
 function cas_login_user(CasUser $user)
 {
-    test()->mock(CasAuthInterface::class, function ($mock) use ($user) {
+    test()->mock(CasAuthInterface::class, function ($mock) use ($user): void {
         $role = Role::find($user->role_id);
 
         $mock->shouldReceive('getCasUser')

@@ -4,7 +4,7 @@ use App\Models\Calendar;
 use App\Models\User;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
-test('admin can view the calendar overview', function () {
+test('admin can view the calendar overview', function (): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->get(route('administrator.calendar.overview'));
@@ -15,7 +15,7 @@ test('admin can view the calendar overview', function () {
     $response->assertOk();
 });
 
-test('admin can view the calendar list', function () {
+test('admin can view the calendar list', function (): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $calendar = Calendar::factory()->create();
@@ -28,7 +28,7 @@ test('admin can view the calendar list', function () {
         ->assertSee($calendar->name);
 });
 
-test('admin can create a new calendar', function () {
+test('admin can create a new calendar', function (): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->get(route('administrator.calendar.create'));
@@ -50,7 +50,7 @@ test('admin can create a new calendar', function () {
     $this->assertDatabaseHas('calendars', ['name' => 'Test Calendar']);
 });
 
-test('admin can edit an existing calendar', function () {
+test('admin can edit an existing calendar', function (): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $calendar = Calendar::factory()->create();
@@ -62,7 +62,7 @@ test('admin can edit an existing calendar', function () {
     $response->assertOk();
 });
 
-test('admin can update an existing calendar', function () {
+test('admin can update an existing calendar', function (): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $calendar = Calendar::factory()->create();
@@ -86,7 +86,7 @@ test('admin can update an existing calendar', function () {
     expect($calendar->shared)->toBe(1);
 });
 
-test('noone can delete an existing calendar', function () {
+test('noone can delete an existing calendar', function (): void {
     expect(fn() => route('administrator.calendar.delete'))
         ->toThrow(RouteNotFoundException::class);
 });

@@ -1,6 +1,6 @@
 <?php
 
-it('can access public routes', function($route) {
+it('can access public routes', function($route): void {
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->get($route);
     $response->assertOk();
@@ -9,7 +9,7 @@ it('can access public routes', function($route) {
     'administrator/login',
 ]);
 
-it('cannot access administrator routes', function($route) {
+it('cannot access administrator routes', function($route): void {
     /** @var Illuminate\Foundation\Testing\TestCase $this */
     $response = $this->get($route);
     $response->assertRedirect(route('login'));
