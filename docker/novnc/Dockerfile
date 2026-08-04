@@ -30,9 +30,14 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8080
 
-RUN addgroup -g ${WWWGROUP} sail
+#RUN addgroup -g ${WWWGROUP} sail
+# Alpine addgroup does not support gids and uids over 256000 so we improvise
+RUN echo "sail:x:${WWWUSER}:${WWWGROUP}::/home/sail:/bin/sh" >> /etc/passwd && \
+    echo "sail:x:${WWWGROUP}:" >> /etc/group && \
+    echo "sail:x::0:99999:7:::" >> /etc/shadow
+
 # do not log creating new user, otherwise there could be a lot of messages
-RUN adduser --disabled-password --gecos "" --uid ${WWWUSER} --ingroup sail sail
+#RUN adduser --disabled-password --gecos "" --uid ${WWWUSER} --ingroup sail sail
 RUN install -d -m 0755 -o sail -g sail /home/sail
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
