@@ -48,6 +48,7 @@
         "msamgan.laravel-pint-vscode",
         "nhedger.inertia",
         "devsense.composer-php-vscode",
-        "xdebug.php-debug"
+        "xdebug.php-debug",
+        "vue.volar"
     ]
 }
