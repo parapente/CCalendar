@@ -1,0 +1,21 @@
+{
+    "agents": [
+        "copilot",
+        "opencode"
+    ],
+    "cloud": false,
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch": false,
+    "packages": [
+        "barryvdh/laravel-debugbar"
+    ],
+    "sail": true,
+    "skills": [
+        "fortify-development",
+        "laravel-best-practices",
+        "inertia-vue-development",
+        "tailwindcss-development",
+        "debug-using-debugbar"
+    ]
+}
