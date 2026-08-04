@@ -43,7 +43,8 @@ test('admin can create a new calendar', function () {
     $response = $this->post(route('administrator.calendar.store'), [
         'name' => 'Test Calendar',
         'color' => '#000000',
-        'active' => 1
+        'active' => 1,
+        'shared' => 1,
     ]);
     $response->assertRedirect(route('administrator.calendar.index'));
     $this->assertDatabaseHas('calendars', ['name' => 'Test Calendar']);
@@ -75,12 +76,14 @@ test('admin can update an existing calendar', function () {
     $response = $this->actingAs($user)->put(route('administrator.calendar.update', $calendar), [
         'name' => 'Updated Calendar',
         'color' => '#000001',
-        'active' => 0
+        'active' => 0,
+        'shared' => 1,
     ]);
     $calendar->refresh();
     expect($calendar->name)->toBe('Updated Calendar');
     expect($calendar->color)->toBe('#000001');
     expect($calendar->active)->toBe(0);
+    expect($calendar->shared)->toBe(1);
 });
 
 test('noone can delete an existing calendar', function () {
