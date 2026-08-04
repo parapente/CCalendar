@@ -30,6 +30,8 @@
         "nunomaduro/collision": "^7.0",
         "pestphp/pest": "^2.33",
         "pestphp/pest-plugin-laravel": "^2.0",
+        "phpstan/phpstan": "^2.2",
+        "rector/rector": "^2.6",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
