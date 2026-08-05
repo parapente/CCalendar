@@ -19,34 +19,35 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', fn() => Inertia::render('Welcome'));
+Route::get('/', fn () => Inertia::render('Welcome'));
 
 Route::prefix('administrator')
     ->name('administrator.')
     ->middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function (): void {
-    Route::get('/', fn() => Inertia::render('Admin/Dashboard'))->name('index');
-    Route::get('/user/{user}/type/{type}/edit', [UserController::class, 'edit'])->name('user.edit');
-    Route::put('/user/{user}/type/{type}', [UserController::class, 'update'])->name('user.update');
-    Route::resource('user', UserController::class)->only(['index', 'create', 'store']);
-    Route::get('/calendar/overview', [CalendarController::class, 'overview'])->name('calendar.overview');
-    Route::post('/calendar/{calendar}/toggleActive', [CalendarController::class, 'toggleActive'])->name('calendar.toggleActive');
-    Route::resource('calendar', CalendarController::class)->except(['show', 'destroy']);
-    Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
-    // Route::get('/cas_user/{user}/name', [CasUserController::class, 'getName'])->name('cas_user.name');
-    Route::post('/report/{report}/toggleActive', [ReportController::class, 'toggleActive'])->name('report.toggleActive');
-    Route::get('/report/{report}/getCalendarToWord', [ReportController::class, 'getCalendarToWord'])->name('report.getCalendarToWord');
-    Route::post('/report/{report}/upload', [ReportController::class, 'uploadReport'])->name('report.uploadReport');
-    Route::get('/report/{report}/getFile/{report_data}', [ReportController::class, 'getFile'])->name('report.getFile');
-    Route::get('/report/{report}/getAllFiles', [ReportController::class, 'getAllFiles'])->name('report.getAllFiles');
-    Route::resource('report', ReportController::class);
-});
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ])->group(function (): void {
+        Route::get('/', fn () => Inertia::render('Admin/Dashboard'))->name('index');
+        Route::get('/user/{user}/type/{type}/edit', [UserController::class, 'edit'])->name('user.edit');
+        Route::put('/user/{user}/type/{type}', [UserController::class, 'update'])->name('user.update');
+        Route::resource('user', UserController::class)->only(['index', 'create', 'store', 'destroy']);
+        Route::post('/user/{user}/type/{type}/toggleActive', [UserController::class, 'toggleActive'])->name('user.toggleActive');
+        Route::get('/calendar/overview', [CalendarController::class, 'overview'])->name('calendar.overview');
+        Route::post('/calendar/{calendar}/toggleActive', [CalendarController::class, 'toggleActive'])->name('calendar.toggleActive');
+        Route::resource('calendar', CalendarController::class)->except(['show', 'destroy']);
+        Route::get('/events/{year}/{month}', [CalendarEventController::class, 'index'])->name('events');
+        // Route::get('/cas_user/{user}/name', [CasUserController::class, 'getName'])->name('cas_user.name');
+        Route::post('/report/{report}/toggleActive', [ReportController::class, 'toggleActive'])->name('report.toggleActive');
+        Route::get('/report/{report}/getCalendarToWord', [ReportController::class, 'getCalendarToWord'])->name('report.getCalendarToWord');
+        Route::post('/report/{report}/upload', [ReportController::class, 'uploadReport'])->name('report.uploadReport');
+        Route::get('/report/{report}/getFile/{report_data}', [ReportController::class, 'getFile'])->name('report.getFile');
+        Route::get('/report/{report}/getAllFiles', [ReportController::class, 'getAllFiles'])->name('report.getAllFiles');
+        Route::resource('report', ReportController::class);
+    });
 
 Route::middleware([
-    'cas.registered'
+    'cas.registered',
 ])->group(function (): void {
     Route::get('/calendar', [CalendarController::class, 'showAll'])->name('calendar.index');
     Route::post('/calendar/{calendar}/event', [CalendarController::class, 'addEvent'])->name('calendar.addEvent');
@@ -63,6 +64,6 @@ Route::middleware([
 });
 
 Route::get('/invalid/cas_user', [CasUserController::class, 'invalidCasUser'])->name('invalid.cas_user');
-Route::get('/logout', function(): void {
+Route::get('/logout', function (): void {
     cas()->logoutWithUrl(route('calendar.index'));
 })->name('cas.logout')->middleware('cas.auth');

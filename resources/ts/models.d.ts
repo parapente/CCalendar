@@ -5,6 +5,7 @@ declare namespace App.Models {
         id: number;
         name: string;
         username: string;
+        active: boolean;
         created_at: string | null;
         updated_at: string | null;
     }

@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Contracts\CasAuthInterface;
-use App\Models\CasUser;
 use Closure;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,7 +20,7 @@ class CasUserRegistered
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -35,7 +34,11 @@ class CasUserRegistered
         // εφαρμογής. Αν δεν βρεθεί ταίριασμα θα πάρουμε πίσω [null, null]
         [$cas_user, $cas_user_role] = $this->auth->getCasUser();
 
-        if (!$cas_user) {
+        if (! $cas_user) {
+            return to_route('invalid.cas_user');
+        }
+
+        if (! $cas_user->active) {
             return to_route('invalid.cas_user');
         }
 

@@ -17,13 +17,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::select(['id', 'name', 'username', DB::raw("'Administrator' as role")])->get();
+        $users = User::select(['id', 'name', 'username', 'active', DB::raw("'Administrator' as role")])->get();
 
         $casUsers = CasUser::select([
             'cas_users.id as id',
             'cas_users.name as name',
             'username',
-            'roles.name as role'
+            'cas_users.active as active',
+            'roles.name as role',
         ])
             ->join('roles', 'roles.id', '=', 'cas_users.role_id')
             ->get();
@@ -47,7 +48,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required','string','max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'username' => [
                 'required',
                 'string',
@@ -55,13 +56,13 @@ class UserController extends Controller
                 Rule::when(
                     $request->type === 'admin',
                     Rule::unique('users'),
-                    Rule::unique('cas_users'))
+                    Rule::unique('cas_users')),
             ],
             'employee_number' => ['string', 'nullable', 'max:255', Rule::requiredIf($request->type === 'cas')],
-            'type' => ['required','string'],
+            'type' => ['required', 'string'],
             'role_id' => ['required_if:type,cas', 'integer'],
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
-            'password_confirmation' => ['nullable', 'string', 'max:255', Rule::requiredIf(!is_null($request->password)), 'same:password'],
+            'password_confirmation' => ['nullable', 'string', 'max:255', Rule::requiredIf(! is_null($request->password)), 'same:password'],
         ]);
 
         if ($request->type === 'admin') {
@@ -93,7 +94,7 @@ class UserController extends Controller
         if ($type === 'admin') {
             $user = User::findOrFail($id, ['id', 'name', 'username']);
             $user->role = 'Administrator';
-        } else if ($type === 'cas') {
+        } elseif ($type === 'cas') {
             $user = CasUser::findOrFail($id, ['id', 'name', 'username', 'role_id', 'employee_number']);
             $user->role = Role::find($user->role_id)->name;
         } else {
@@ -111,7 +112,7 @@ class UserController extends Controller
     public function update(Request $request, string $id, string $type)
     {
         $validated = $request->validate([
-            'name' => ['required','string','max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'username' => [
                 'required',
                 'string',
@@ -119,12 +120,12 @@ class UserController extends Controller
                 Rule::when(
                     $type === 'admin',
                     Rule::unique('users')->ignore($id),
-                    Rule::unique('cas_users')->ignore($id))
+                    Rule::unique('cas_users')->ignore($id)),
             ],
             'employee_number' => ['string', 'nullable', 'max:255', Rule::requiredIf($request->type === 'cas')],
-            'role_id' => [Rule::requiredIf($type === "cas"), 'integer'],
+            'role_id' => [Rule::requiredIf($type === 'cas'), 'integer'],
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
-            'password_confirmation' => ['nullable', 'string', 'max:255', Rule::requiredIf(!is_null($request->password)), 'same:password'],
+            'password_confirmation' => ['nullable', 'string', 'max:255', Rule::requiredIf(! is_null($request->password)), 'same:password'],
         ]);
 
         if ($type === 'admin') {
@@ -153,8 +154,48 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id, string $type)
     {
-        //
+        if ($request->user()->id == $id && $type === 'admin') {
+            return back()->withErrors(['error' => 'Δεν μπορείτε να διαγράψετε τον εαυτό σας']);
+        }
+
+        if ($type === 'admin') {
+            User::findOrFail($id)->delete();
+        } elseif ($type === 'cas') {
+            CasUser::findOrFail($id)->delete();
+        } else {
+            abort(404);
+        }
+
+        return to_route('administrator.user.index')
+            ->with('flash.bannerStyle', 'success')
+            ->with('flash.banner', 'Ο χρήστης διαγράφηκε επιτυχώς');
+    }
+
+    /**
+     * Toggle the active status of the specified resource.
+     */
+    public function toggleActive(Request $request, string $id, string $type)
+    {
+        if ($request->user()->id == $id && $type === 'admin') {
+            return back()->withErrors(['error' => 'Δεν μπορείτε να απενεργοποιήσετε τον εαυτό σας']);
+        }
+
+        if ($type === 'admin') {
+            $user = User::findOrFail($id);
+        } elseif ($type === 'cas') {
+            $user = CasUser::findOrFail($id);
+        } else {
+            abort(404);
+        }
+
+        $user->update(['active' => ! $user->active]);
+
+        $status = $user->active ? 'ενεργοποιήθηκε' : 'απενεργοποιήθηκε';
+
+        return to_route('administrator.user.index')
+            ->with('flash.bannerStyle', 'success')
+            ->with('flash.banner', "Ο χρήστης {$status} επιτυχώς");
     }
 }
