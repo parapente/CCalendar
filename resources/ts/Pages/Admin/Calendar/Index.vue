@@ -71,10 +71,13 @@ const toggleActiveForCalendar = (calendar_id: number) => {
                         class="mx-2 p-4 border-black border"
                         :style="{ 'background-color': calendar.color }"
                     ></div>
-                    <Tooltip message="Ενεργοποίηση/Απενεργοποίηση ημερολογίου">
+                    <Tooltip
+                        message="Ενεργοποίηση/Απενεργοποίηση ημερολογίου"
+                        class="ml-auto"
+                    >
                         <button
                             as="button"
-                            class="ml-auto mr-4 px-3 py-2 rounded-lg"
+                            class="mr-4 px-3 py-2 rounded-lg"
                             @click="toggleActiveForCalendar(calendar.id)"
                             :test-data-id="`toggle-calendar-${calendar.id}-button`"
                         >
