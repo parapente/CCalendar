@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\CasUser;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CasUser>
+ * @extends Factory<CasUser>
  */
 class CasUserFactory extends Factory
 {
@@ -19,13 +20,14 @@ class CasUserFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
+            'active' => 1,
         ];
     }
 
     public function user(): Factory
     {
         $role = Role::where('name', 'User')->first();
-        if (!$role) {
+        if (! $role) {
             $role = Role::factory()->create(['name' => 'User']);
         }
 
@@ -39,7 +41,7 @@ class CasUserFactory extends Factory
     public function supervisor(): Factory
     {
         $role = Role::where('name', 'Supervisor')->first();
-        if (!$role) {
+        if (! $role) {
             $role = Role::factory()->create(['name' => 'Supervisor']);
         }
 
