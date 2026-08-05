@@ -16,6 +16,7 @@ import { usePage } from "@inertiajs/vue3";
 import type { PageWithSharedProps } from "@/pageprops";
 import type { PaginationProps } from "@/pagination";
 import Pagination from "../Pagination.vue";
+import Tooltip from "../Tooltip.vue";
 
 const props = defineProps<{
     reports: PaginationProps<App.Models.Report>;
@@ -42,7 +43,7 @@ const deletionApproved = () => {
             onFinish: () => {
                 showModal.value = false;
             },
-        }
+        },
     );
 };
 
@@ -59,7 +60,7 @@ const toggleActiveForReport = (report_id: number) => {
                     preserveScroll: true,
                 });
             },
-        }
+        },
     );
 };
 </script>
@@ -93,64 +94,76 @@ const toggleActiveForReport = (report_id: number) => {
                             <div class="mr-auto">
                                 {{ index + reports.from }}. {{ report.name }}
                             </div>
-                            <button
-                                v-if="
-                                    page.props.auth.user ||
-                                    page.props.cas_user_role === 'Supervisor'
-                                "
-                                class="mr-4 px-3 py-2 rounded-lg"
-                                @click="toggleActiveForReport(report.id)"
-                                test-data-id="toggle-active-button"
+                            <Tooltip
+                                message="Ενεργοποίηση/Απενεργοποίηση αναφοράς"
                             >
-                                <FontAwesomeIcon
-                                    class="text-green-500"
-                                    v-if="report.active"
-                                    :icon="faCheckCircle"
-                                />
-                                <FontAwesomeIcon
-                                    class="text-red-500"
-                                    v-if="!report.active"
-                                    :icon="faXmarkCircle"
-                                />
-                            </button>
-                            <Link
-                                v-if="
-                                    page.props.auth.user ||
-                                    page.props.cas_user_role === 'Supervisor'
-                                "
-                                as="button"
-                                :href="
-                                    route(
-                                        routePrefix + 'report.edit',
-                                        report.id
-                                    )
-                                "
-                                class="px-3 py-2 bg-blue-500 hover:bg-blue-300 rounded-lg shadow-lg mr-4"
-                                test-data-id="edit-report-button"
-                            >
-                                <FontAwesomeIcon :icon="faPen" />
-                            </Link>
-                            <Link
-                                as="button"
-                                :href="
-                                    route(
-                                        routePrefix + 'report.show',
-                                        report.id
-                                    )
-                                "
-                                class="px-3 py-2 bg-orange-500 hover:bg-orange-300 rounded-lg shadow-lg mr-4"
-                                test-data-id="show-report-button"
-                            >
-                                <FontAwesomeIcon :icon="faArrowRight" />
-                            </Link>
-                            <button
-                                v-if="!page.props.cas_user"
-                                class="px-3 py-2 bg-red-500 hover:bg-red-300 rounded-lg shadow-lg mr-4"
-                                @click="deleteReport(report)"
-                                test-data-id="delete-report-button"
-                            >
-                                <FontAwesomeIcon :icon="faTrashCan" />
-                            </button>
+                                <button
+                                    v-if="
+                                        page.props.auth.user ||
+                                        page.props.cas_user_role ===
+                                            'Supervisor'
+                                    "
+                                    class="mr-4 px-3 py-2 rounded-lg"
+                                    @click="toggleActiveForReport(report.id)"
+                                    test-data-id="toggle-active-button"
+                                >
+                                    <FontAwesomeIcon
+                                        class="text-green-500"
+                                        v-if="report.active"
+                                        :icon="faCheckCircle"
+                                    />
+                                    <FontAwesomeIcon
+                                        class="text-red-500"
+                                        v-if="!report.active"
+                                        :icon="faXmarkCircle"
+                                    />
+                                </button>
+                            </Tooltip>
+                            <Tooltip message="Επεξεργασία αναφοράς">
+                                <Link
+                                    v-if="
+                                        page.props.auth.user ||
+                                        page.props.cas_user_role ===
+                                            'Supervisor'
+                                    "
+                                    as="button"
+                                    :href="
+                                        route(
+                                            routePrefix + 'report.edit',
+                                            report.id,
+                                        )
+                                    "
+                                    class="px-3 py-2 bg-blue-500 hover:bg-blue-300 rounded-lg shadow-lg mr-4"
+                                    test-data-id="edit-report-button"
+                                >
+                                    <FontAwesomeIcon :icon="faPen" />
+                                </Link>
+                            </Tooltip>
+                            <Tooltip message="Προβολή αναφοράς">
+                                <Link
+                                    as="button"
+                                    :href="
+                                        route(
+                                            routePrefix + 'report.show',
+                                            report.id,
+                                        )
+                                    "
+                                    class="px-3 py-2 bg-orange-500 hover:bg-orange-300 rounded-lg shadow-lg mr-4"
+                                    test-data-id="show-report-button"
+                                >
+                                    <FontAwesomeIcon :icon="faArrowRight" />
+                                </Link>
+                            </Tooltip>
+                            <Tooltip message="Διαγραφή αναφοράς">
+                                <button
+                                    v-if="!page.props.cas_user"
+                                    class="px-3 py-2 bg-red-500 hover:bg-red-300 rounded-lg shadow-lg mr-4"
+                                    @click="deleteReport(report)"
+                                    test-data-id="delete-report-button"
+                                >
+                                    <FontAwesomeIcon :icon="faTrashCan" />
+                                </button>
+                            </Tooltip>
                         </div>
                         <div
                             class="px-2 flex rounded-b-lg text-black"

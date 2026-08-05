@@ -9,6 +9,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Link, usePage } from "@inertiajs/vue3";
 import route from "ziggy";
+import Tooltip from "../Tooltip.vue";
 
 const props = defineProps<{
     index: number;
@@ -48,13 +49,15 @@ const page = usePage<PageWithSharedProps>();
         <span class="text-blue-500 mx-1 py-2 grow my-auto"
             >({{ user.username }})</span
         >
-        <Link
-            :href="route('administrator.user.edit', [user.id, type])"
-            class="transition ease-in-out duration-300 mx-1 hover:bg-sky-300 hover:shadow-xl hover:-translate-y-0.5 rounded-md px-3 py-2"
-            :test-data-id="`edit-user-${
-                user.role === 'Administrator' ? 'admin' : 'cas'
-            }-${user.id}-button`"
-            ><FontAwesomeIcon :icon="faPencil" />
-        </Link>
+        <Tooltip message="Επεξεργασία χρήστη">
+            <Link
+                :href="route('administrator.user.edit', [user.id, type])"
+                class="transition ease-in-out duration-300 mx-1 hover:bg-sky-300 hover:shadow-xl hover:-translate-y-0.5 rounded-md px-3 py-2"
+                :test-data-id="`edit-user-${
+                    user.role === 'Administrator' ? 'admin' : 'cas'
+                }-${user.id}-button`"
+                ><FontAwesomeIcon :icon="faPencil" />
+            </Link>
+        </Tooltip>
     </div>
 </template>

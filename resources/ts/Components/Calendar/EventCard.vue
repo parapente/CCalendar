@@ -14,6 +14,7 @@ import { useCalendarStore } from "@/Stores/calendarStore";
 import { computed, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import type { PageWithSharedProps } from "@/pageprops";
+import Tooltip from "../Tooltip.vue";
 
 const props = defineProps<{
     event: App.Models.CalendarEvent & { cas_user?: App.Models.CasUser };
@@ -54,58 +55,64 @@ const showUser = computed(() => {
                 <div class="pl-2 text-lg">
                     {{
                         DateTime.fromSQL(event.start_date).toLocaleString(
-                            DateTime.DATETIME_MED
+                            DateTime.DATETIME_MED,
                         )
                     }}
                     -
                     {{
                         DateTime.fromSQL(event.end_date).toLocaleString(
-                            DateTime.DATETIME_MED
+                            DateTime.DATETIME_MED,
                         )
                     }}
                 </div>
                 <div class="pl-2 text-sm">
                     ({{
                         calendarStore.calendars.find(
-                            (calendar) => calendar.id === event.calendar_id
+                            (calendar) => calendar.id === event.calendar_id,
                         )?.name
                     }})
                 </div>
             </div>
             <div class="flex grow justify-end">
-                <button
-                    class="my-1 px-3 py-2 rounded-lg bg-blue-500 shadow-md shadow-black hover:bg-blue-400 text-black print:hidden"
-                    @click="emit('editEvent', event.id)"
-                    v-if="
-                        page.props.cas_user &&
-                        page.props.cas_user.id === event.cas_user_id
-                    "
-                    test-data-id="event-card-edit-button"
-                >
-                    <FontAwesomeIcon :icon="faPencil" />
-                </button>
-                <button
-                    class="ml-2 my-1 px-3 py-2 rounded-lg bg-orange-500 shadow-md shadow-black hover:bg-orange-400 text-black print:hidden"
-                    @click="emit('cancelEvent', event.id)"
-                    v-if="
-                        page.props.cas_user &&
-                        page.props.cas_user.id === event.cas_user_id
-                    "
-                    test-data-id="event-card-cancel-button"
-                >
-                    <FontAwesomeIcon :icon="faBan" />
-                </button>
-                <button
-                    class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500 shadow-md shadow-black hover:bg-red-400 text-black print:hidden"
-                    @click="emit('deleteEvent', event.id)"
-                    v-if="
-                        page.props.cas_user &&
-                        page.props.cas_user.id === event.cas_user_id
-                    "
-                    test-data-id="event-card-delete-button"
-                >
-                    <FontAwesomeIcon :icon="faTrashCan" />
-                </button>
+                <Tooltip message="Επεξεργασία εκδήλωσης">
+                    <button
+                        class="my-1 px-3 py-2 rounded-lg bg-blue-500 shadow-md shadow-black hover:bg-blue-400 text-black print:hidden"
+                        @click="emit('editEvent', event.id)"
+                        v-if="
+                            page.props.cas_user &&
+                            page.props.cas_user.id === event.cas_user_id
+                        "
+                        test-data-id="event-card-edit-button"
+                    >
+                        <FontAwesomeIcon :icon="faPencil" />
+                    </button>
+                </Tooltip>
+                <Tooltip message="Ακύρωση εκδήλωσης">
+                    <button
+                        class="ml-2 my-1 px-3 py-2 rounded-lg bg-orange-500 shadow-md shadow-black hover:bg-orange-400 text-black print:hidden"
+                        @click="emit('cancelEvent', event.id)"
+                        v-if="
+                            page.props.cas_user &&
+                            page.props.cas_user.id === event.cas_user_id
+                        "
+                        test-data-id="event-card-cancel-button"
+                    >
+                        <FontAwesomeIcon :icon="faBan" />
+                    </button>
+                </Tooltip>
+                <Tooltip message="Διαγραφή εκδήλωσης">
+                    <button
+                        class="ml-2 my-1 px-3 py-2 rounded-lg bg-red-500 shadow-md shadow-black hover:bg-red-400 text-black print:hidden"
+                        @click="emit('deleteEvent', event.id)"
+                        v-if="
+                            page.props.cas_user &&
+                            page.props.cas_user.id === event.cas_user_id
+                        "
+                        test-data-id="event-card-delete-button"
+                    >
+                        <FontAwesomeIcon :icon="faTrashCan" />
+                    </button>
+                </Tooltip>
             </div>
         </div>
         <div class="flex items-center">

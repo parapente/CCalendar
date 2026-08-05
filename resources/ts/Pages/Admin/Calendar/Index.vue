@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Tooltip from "@/Components/Tooltip.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import {
     faCheckCircle,
@@ -27,7 +28,7 @@ const toggleActiveForCalendar = (calendar_id: number) => {
                     preserveScroll: true,
                 });
             },
-        }
+        },
     );
 };
 </script>
@@ -70,31 +71,40 @@ const toggleActiveForCalendar = (calendar_id: number) => {
                         class="mx-2 p-4 border-black border"
                         :style="{ 'background-color': calendar.color }"
                     ></div>
-                    <button
-                        as="button"
-                        class="ml-auto mr-4 px-3 py-2 rounded-lg"
-                        @click="toggleActiveForCalendar(calendar.id)"
-                        :test-data-id="`toggle-calendar-${calendar.id}-button`"
-                    >
-                        <FontAwesomeIcon
-                            class="text-green-500"
-                            v-if="calendar.active"
-                            :icon="faCheckCircle"
-                        /><FontAwesomeIcon
-                            class="text-red-500"
-                            v-if="!calendar.active"
-                            :icon="faXmarkCircle"
-                        />
-                    </button>
-                    <Link
-                        as="button"
-                        :href="
-                            route('administrator.calendar.edit', calendar.id)
-                        "
-                        class="px-3 py-2 bg-blue-500 hover:bg-blue-300 rounded-lg shadow-lg"
-                        :test-data-id="`edit-calendar-${calendar.id}-button`"
-                        ><FontAwesomeIcon :icon="faPen"
-                    /></Link>
+                    <Tooltip message="Ενεργοποίηση/Απενεργοποίηση ημερολογίου">
+                        <button
+                            as="button"
+                            class="ml-auto mr-4 px-3 py-2 rounded-lg"
+                            @click="toggleActiveForCalendar(calendar.id)"
+                            :test-data-id="`toggle-calendar-${calendar.id}-button`"
+                        >
+                            <FontAwesomeIcon
+                                class="text-green-500"
+                                v-if="calendar.active"
+                                :icon="faCheckCircle"
+                            /><FontAwesomeIcon
+                                class="text-red-500"
+                                v-if="!calendar.active"
+                                :icon="faXmarkCircle"
+                            />
+                        </button>
+                    </Tooltip>
+
+                    <Tooltip message="Επεξεργασία ημερολογίου">
+                        <Link
+                            as="button"
+                            :href="
+                                route(
+                                    'administrator.calendar.edit',
+                                    calendar.id,
+                                )
+                            "
+                            class="px-3 py-2 bg-blue-500 hover:bg-blue-300 rounded-lg shadow-lg"
+                            :test-data-id="`edit-calendar-${calendar.id}-button`"
+                        >
+                            <FontAwesomeIcon :icon="faPen" />
+                        </Link>
+                    </Tooltip>
                 </li>
             </ul>
         </div>
