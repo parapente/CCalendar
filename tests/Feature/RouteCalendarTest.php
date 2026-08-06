@@ -49,7 +49,7 @@ test('cas user can add event to calendar', function(): void {
     $this->assertDatabaseHas('calendar_events', $calendar_event);
 });
 
-test('cas user can update calendar event', function(): void {
+test('cas user can update own calendar event', function(): void {
     $calendar = Calendar::factory()->create();
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
@@ -79,6 +79,43 @@ test('cas user can update calendar event', function(): void {
     $response = $this->post(route('calendar.addEvent', $calendar), $updated_calendar_event);
     $response->assertOk();
     $this->assertDatabaseHas('calendar_events', $updated_calendar_event);
+});
+
+test('cas user cannot update another user\'s calendar event', function(): void {
+    $calendar = Calendar::factory()->create();
+    $cas_user = CasUser::factory()->user()->create([
+        'employee_number' => '123456789',
+    ]);
+    $other_user = CasUser::factory()->user()->create([
+        'employee_number' => '987654321',
+    ]);
+    $calendar_event = CalendarEvent::factory()->create([
+        'calendar_id' => $calendar->id,
+        'cas_user_id' => $other_user->id,
+    ]);
+
+    $updated_calendar_event = [
+        'id' => $calendar_event->id,
+        'title' => 'Test Event',
+        'description' => 'Test Description',
+        'start_date' => '2020-01-01',
+        'end_date' => '2020-01-02',
+        'location' => 'Test Location',
+        'url' => 'http://example.com'
+    ];
+    // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
+    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    $this->post(route('calendar.addEvent', $calendar), $updated_calendar_event)
+        ->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
+    $this->assertDatabaseMissing('calendar_events', $updated_calendar_event);
+
+    cas_login_user($cas_user);
+
+    $response = $this->post(route('calendar.addEvent', $calendar), $updated_calendar_event);
+    $response->assertOk();
+    $response->assertJson(['success' => false, 'message' => 'Δεν επιτρέπεται η λειτουργία σε αυτόν τον χρήστη']);
+    $calendar_event->refresh();
+    $this->assertDatabaseMissing('calendar_events', $updated_calendar_event);
 });
 
 test('cas user can delete calendar event', function(): void {
