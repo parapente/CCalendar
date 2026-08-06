@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCalendarRequest;
 use App\Http\Requests\UpdateCalendarRequest;
 use App\Models\Calendar;
 use App\Models\CalendarEvent;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CalendarController extends Controller
@@ -101,6 +102,12 @@ class CalendarController extends Controller
             // Ενημέρωσε παλιά εκδήλωση
             $calendarEvent = CalendarEvent::findOrFail($request->id);
 
+            /** @var \App\Models\CasUser $user */
+            $user = $request->input('cas_user');
+            if (!$user || ($user->id !== $calendarEvent->cas_user_id)) {
+                return json_encode(["success" => false, "message" => "Δεν επιτρέπεται η λειτουργία σε αυτόν τον χρήστη"]);
+            }
+
             $calendarEvent->update([
                 'title' => $request->title,
                 'description' => $request->description ?? "",
@@ -116,8 +123,14 @@ class CalendarController extends Controller
         return json_encode(["success" => true, "message" => "Η εκδήλωση προστέθηκε επιτυχώς!"]);
     }
 
-    public function deleteEvent(Calendar $calendar, CalendarEvent $event)
+    public function deleteEvent(Calendar $calendar, CalendarEvent $event, Request $request)
     {
+        /** @var \App\Models\CasUser $user */
+        $user = $request->input('cas_user');
+        if (!$user || ($user->id !== $event->cas_user_id)) {
+            return json_encode(["success" => false, "message" => "Δεν επιτρέπεται η λειτουργία σε αυτόν τον χρήστη"]);
+        }
+
         $deleted = $event->delete();
 
         if ($deleted) {
