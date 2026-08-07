@@ -16,7 +16,7 @@
         "autoprefixer": "^10.4.7",
         "axios": "^1.6.1",
         "cy-verify-downloads": "^0.2.3",
-        "cypress": "^13.6.4",
+        "cypress": "^15.20.0",
         "cypress-delete-downloads-folder": "^0.0.4",
         "laravel-vite-plugin": "^2.1.0",
         "postcss": "^8.4.14",
