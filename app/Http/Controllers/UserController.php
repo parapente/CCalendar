@@ -146,8 +146,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, string $id, string $type)
+    public function destroy(Request $request, string $id)
     {
+        $type = $request->input('type');
+
         if ($request->user()->id == $id && $type === 'admin') {
             return back()->withErrors(['error' => 'Δεν μπορείτε να διαγράψετε τον εαυτό σας']);
         }
