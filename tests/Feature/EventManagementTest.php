@@ -48,6 +48,29 @@ test('cas user can toggle cancelled event back to active', function (): void {
     expect($event->cancelled)->toBeFalsy();
 });
 
+it('handles gracefully toggling event save fail', function () {
+    $calendar = Calendar::factory()->create();
+    $cas_user = CasUser::factory()->user()->create([
+        'employee_number' => '123456789',
+    ]);
+    $event = CalendarEvent::factory()->create([
+        'calendar_id' => $calendar->id,
+        'cas_user_id' => $cas_user->id,
+        'cancelled' => false,
+    ]);
+
+    cas_login_user($cas_user);
+
+    $mockEvent = Mockery::mock($event)->makePartial();
+    $mockEvent->shouldReceive('save')->andReturn(false);
+    $mockEvent->shouldReceive('resolveRouteBinding')->andReturn($mockEvent);
+    $this->app->instance(CalendarEvent::class, $mockEvent);
+
+    $response = $this->post(route('calendarEvent.toggleActive', [$calendar, $event]));
+    $response->assertOk();
+    $response->assertJson(['success' => false, 'message' => 'Απέτυχε η αποθήκευση της τροποποίησης']);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Event Toggle Active - Non-Owner
