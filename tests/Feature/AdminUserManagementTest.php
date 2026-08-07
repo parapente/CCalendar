@@ -71,6 +71,66 @@ test('admin cannot deactivate themselves', function (): void {
 
 /*
 |--------------------------------------------------------------------------
+| Admin User Delete
+|--------------------------------------------------------------------------
+*/
+
+test('admin can delete another admin user', function (): void {
+    $admin = User::factory()->create();
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($admin)->delete(route('administrator.user.destroy', $user), ['type' => 'admin']);
+    $response->assertRedirect(route('administrator.user.index'));
+    $response->assertSessionHas('flash.bannerStyle', 'success');
+    $this->assertDatabaseMissing('users', ['id' => $user->id]);
+});
+
+test('admin can delete a cas user', function (): void {
+    $admin = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'User']);
+    $cas_user = CasUser::factory()->create([
+        'role_id' => $role->id,
+        'employee_number' => '123456789',
+    ]);
+
+    $response = $this->actingAs($admin)->delete(route('administrator.user.destroy', $cas_user), ['type' => 'cas']);
+    $response->assertRedirect(route('administrator.user.index'));
+    $response->assertSessionHas('flash.bannerStyle', 'success');
+    $this->assertDatabaseMissing('cas_users', ['id' => $cas_user->id]);
+});
+
+test('admin cannot delete themselves', function (): void {
+    $admin = User::factory()->create();
+
+    $response = $this->actingAs($admin)->delete(route('administrator.user.destroy', $admin), ['type' => 'admin']);
+    $response->assertSessionHasErrors('error');
+    $this->assertDatabaseHas('users', ['id' => $admin->id]);
+});
+
+test('admin can delete a cas supervisor', function (): void {
+    $admin = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'Supervisor']);
+    $cas_supervisor = CasUser::factory()->create([
+        'role_id' => $role->id,
+        'employee_number' => '111112',
+    ]);
+
+    $response = $this->actingAs($admin)->delete(route('administrator.user.destroy', $cas_supervisor), ['type' => 'cas']);
+    $response->assertRedirect(route('administrator.user.index'));
+    $response->assertSessionHas('flash.bannerStyle', 'success');
+    $this->assertDatabaseMissing('cas_users', ['id' => $cas_supervisor->id]);
+});
+
+test('unauthenticated user cannot delete a user', function (): void {
+    $user = User::factory()->create();
+
+    $response = $this->delete(route('administrator.user.destroy', $user), ['type' => 'admin']);
+    $response->assertRedirect(route('login'));
+    $this->assertDatabaseHas('users', ['id' => $user->id]);
+});
+
+/*
+|--------------------------------------------------------------------------
 | Unauthenticated Access
 |--------------------------------------------------------------------------
 */
