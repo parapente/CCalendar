@@ -187,4 +187,16 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Application Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify any custom configuration values for your application.
+    | These values can be accessed using the config() helper function.
+    |
+    */
+
+    'organization' => env('APP_ORGANIZATION', 'My Organization'),
+
 ];

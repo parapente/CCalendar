@@ -18,7 +18,7 @@ return new class extends Migration
             $table->dateTime('start_date')->index();
             $table->dateTime('end_date')->index();
             $table->string('location', 512);
-            $table->text('url', 1024);
+            $table->text('url');
             $table->unsignedBigInteger('calendar_id');
             $table->foreign('calendar_id')
                 ->references('id')

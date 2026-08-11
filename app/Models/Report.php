@@ -25,6 +25,10 @@ class Report extends Model
         'options'
     ];
 
+    /**
+     * Get the ReportData for the Report.
+     * @return HasMany<ReportData, Report>
+     */
     public function data(): HasMany
     {
         return $this->hasMany(ReportData::class);

@@ -18,7 +18,7 @@ class CalendarFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->sentence,
-            'color' => $this->faker->hexcolor,
+            'color' => $this->faker->hexColor,
             'active' => $this->faker->boolean,
         ];
     }

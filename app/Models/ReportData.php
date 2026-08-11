@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ReportData extends Model
 {
@@ -15,12 +16,20 @@ class ReportData extends Model
         'data'
     ];
 
-    public function cas_user()
+    /**
+     * Get the CasUser that owns the ReportData.
+     * @return BelongsTo<CasUser, ReportData>
+     */
+    public function cas_user(): BelongsTo
     {
         return $this->belongsTo(CasUser::class);
     }
 
-    public function report()
+    /**
+     * Get the Report that owns the ReportData.
+     * @return BelongsTo<Report, ReportData>
+     */
+    public function report(): BelongsTo
     {
         return $this->belongsTo(Report::class);
     }

@@ -18,6 +18,10 @@ class CasUser extends Model
         'active',
     ];
 
+    /**
+     * Get the Role that owns the CasUser.
+     * @return BelongsTo<Role, CasUser>
+     */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);

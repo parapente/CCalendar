@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CalendarEvent extends Model
 {
@@ -21,11 +22,19 @@ class CalendarEvent extends Model
         'cancelled',
     ];
 
-    public function calendar() {
+    /**
+     * Get the Calendar that owns the CalendarEvent.
+     * @return BelongsTo<Calendar, CalendarEvent>
+     */
+    public function calendar(): BelongsTo {
         return $this->belongsTo(Calendar::class);
     }
 
-    public function casUser() {
+    /**
+     * Get the CasUser that owns the CalendarEvent.
+     * @return BelongsTo<CasUser, CalendarEvent>
+     */
+    public function casUser(): BelongsTo {
         return $this->belongsTo(CasUser::class);
     }
 }

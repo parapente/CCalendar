@@ -1,5 +1,5 @@
 parameters:
-    level: 1
+    level: 3
     paths:
         - app
         - bootstrap
@@ -9,3 +9,4 @@ parameters:
 
 includes:
     - vendor/pestphp/pest-plugin-phpstan/extension.neon
+    - vendor/larastan/larastan/extension.neon

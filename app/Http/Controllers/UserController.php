@@ -84,11 +84,15 @@ class UserController extends Controller
     public function edit(string $id, string $type)
     {
         if ($type === 'admin') {
-            $user = User::findOrFail($id, ['id', 'name', 'username']);
-            $user->role = 'Administrator';
+            /** @var \App\Models\User $user */
+            $user = User::findOrFail($id, ['id', 'name', 'username'])
+                ->toArray();
+            $user['role'] = 'Administrator';
         } elseif ($type === 'cas') {
-            $user = CasUser::findOrFail($id, ['id', 'name', 'username', 'role_id', 'employee_number']);
-            $user->role = Role::find($user->role_id)->name;
+            /** @var \App\Models\CasUser $user */
+            $user = CasUser::findOrFail($id, ['id', 'name', 'username', 'role_id', 'employee_number'])
+                ->toArray();
+            $user['role'] = Role::find($user['role_id'])->name;
         } else {
             abort(404);
         }
@@ -121,6 +125,7 @@ class UserController extends Controller
         ]);
 
         if ($type === 'admin') {
+            /** @var \App\Models\User $user */
             $user = User::findOrFail($id);
 
             // Αν δεν θέλουμε να αλλάξουμε password, τότε θα είναι null

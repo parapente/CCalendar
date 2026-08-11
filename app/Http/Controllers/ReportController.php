@@ -142,7 +142,7 @@ class ReportController extends Controller
             ]);
         }
 
-        $users_that_answered = $report->data->map(fn($item) => $item->cas_user->id);
+        $users_that_answered = $report->data->map(fn(ReportData $item) => $item->cas_user->id);
 
         $missing = CasUser::where('active', 1)
             ->where('role_id', '!=', Role::where('name', 'Supervisor')->first()->id)
@@ -277,7 +277,7 @@ class ReportController extends Controller
             ->orderBy('start_date', 'asc')
             ->get();
 
-        $tableData = $events->map(function ($event, $key) {
+        $tableData = $events->map(function (CalendarEvent $event, $key) {
             $details = $event->description ? "{$event->description}\n" : '';
             $details .= $event->location ? "Τοποθεσία: {$event->location}\n" : '';
             $details .= $event->url ? "Ιστοσελίδα: {$event->url}\n" : '';
