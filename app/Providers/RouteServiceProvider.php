@@ -14,14 +14,13 @@ class RouteServiceProvider extends ServiceProvider
      * The path to your application's "home" route.
      *
      * Typically, users are redirected here after authentication.
-     *
-     * @var string
      */
-    public const HOME = '/administrator/';
+    public const string HOME = '/administrator/';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
+    #[\Override]
     public function boot(): void
     {
         RateLimiter::for('api', fn(Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()));

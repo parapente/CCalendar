@@ -10,9 +10,9 @@ class Report extends Model
 {
     use HasFactory;
 
-    public const TypeTrimester = 1;
+    public const int TypeTrimester = 1;
 
-    public const AvailableTypes = [
+    public const array AvailableTypes = [
         [
             'id' => 1,
             'name' => 'Τριμήνου',

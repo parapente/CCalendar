@@ -48,7 +48,7 @@ test('cas user can toggle cancelled event back to active', function (): void {
     expect($event->cancelled)->toBeFalsy();
 });
 
-it('handles gracefully toggling event save fail', function () {
+it('handles gracefully toggling event save fail', function (): void {
     $calendar = Calendar::factory()->create();
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',

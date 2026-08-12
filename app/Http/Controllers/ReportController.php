@@ -288,8 +288,8 @@ class ReportController extends Controller
 
             return [
                 'aa' => ++$key,
-                'start_date' => (new \DateTime($event->start_date))->format('d/m/Y H:i'),
-                'end_date' => (new \DateTime($event->end_date))->format('d/m/Y H:i'),
+                'start_date' => new \DateTime($event->start_date)->format('d/m/Y H:i'),
+                'end_date' => new \DateTime($event->end_date)->format('d/m/Y H:i'),
                 'type' => $event->calendar->name,
                 'title' => $event->title . ($event->cancelled ? ' (Ακυρώθηκε)' : ''),
                 'details' => $details,
@@ -298,8 +298,8 @@ class ReportController extends Controller
 
         \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
         $templateProcessor = new TemplateProcessor(app()->path().'/WordTemplates/calendarEvents.docx');
-        $templateProcessor->setValue('from', (new \DateTime($options->from))->format('d/m/Y'));
-        $templateProcessor->setValue('to', (new \DateTime($options->to))->format('d/m/Y'));
+        $templateProcessor->setValue('from', new \DateTime($options->from)->format('d/m/Y'));
+        $templateProcessor->setValue('to', new \DateTime($options->to)->format('d/m/Y'));
         $templateProcessor->cloneRowAndSetValues('aa', $tableData);
 
         \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(false);
