@@ -89,8 +89,8 @@ test('cas user sees events on shared calendars from other users', function (): v
 
     $response = $this->get(route('events', ['year' => 2024, 'month' => 1]));
     $response->assertOk()
-        ->assertJson(fn (AssertableJson $json) => $json->has(1)
-            ->first(fn (AssertableJson $json) => $json->where('title', $event->title)->etc()
+        ->assertJson(fn (AssertableJson $json): AssertableJson => $json->has(1)
+            ->first(fn (AssertableJson $json): AssertableJson => $json->where('title', $event->title)->etc()
             )
         );
 });
@@ -115,7 +115,7 @@ test('cas user does not see events on non-shared calendars from other users', fu
 
     $response = $this->get(route('events', ['year' => 2024, 'month' => 1]));
     $response->assertOk()
-        ->assertJson(fn (AssertableJson $json) => $json->has(0)
+        ->assertJson(fn (AssertableJson $json): AssertableJson => $json->has(0)
         );
 });
 
@@ -147,7 +147,7 @@ test('cas supervisor sees all events regardless of shared setting', function ():
 
     $response = $this->get(route('events', ['year' => 2024, 'month' => 1]));
     $response->assertOk()
-        ->assertJson(fn (AssertableJson $json) => $json->has(2)
+        ->assertJson(fn (AssertableJson $json): AssertableJson => $json->has(2)
         );
 });
 
@@ -182,6 +182,6 @@ test('inactive calendar events are not returned', function (): void {
 
     $response = $this->get(route('events', ['year' => 2024, 'month' => 1]));
     $response->assertOk()
-        ->assertJson(fn (AssertableJson $json) => $json->has(1)
+        ->assertJson(fn (AssertableJson $json): AssertableJson => $json->has(1)
         );
 });

@@ -36,7 +36,7 @@ class ReportController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate();
 
-            $answered = $reports->filter(fn($report) => count($report->data))
+            $answered = $reports->filter(fn($report): int => count($report->data))
                 ->map(fn($report) => $report->id)
                 ->toArray();
             $answered = array_values($answered);

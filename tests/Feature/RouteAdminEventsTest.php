@@ -62,11 +62,11 @@ it('returns calendar events when requested', function (): void {
         'month' => 1,
     ]));
     $response->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
+        ->assertJson(fn (AssertableJson $json): AssertableJson =>
             // Το αποτέλεσμα είναι πίνακας οπότε παίρνουμε το πρώτο αποτέλεσμα
             $json
                 ->has(3)
-                ->first(fn (AssertableJson $json) =>
+                ->first(fn (AssertableJson $json): AssertableJson =>
                     $json->where('title', $calendarEvent3->title)
                         ->where('description', $calendarEvent3->description)
                         ->etc()

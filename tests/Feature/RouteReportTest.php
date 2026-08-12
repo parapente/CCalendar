@@ -613,13 +613,13 @@ test('cas user cannot download all files of a report', function (): void {
     $casUsers = CasUser::factory()
         ->count(10)
         ->user()
-        ->sequence(fn (Sequence $sequence) => [
+        ->sequence(fn (Sequence $sequence): array => [
             'employee_number' => $sequence->index + 1,
         ])
         ->create();
     $reportData = ReportData::factory()
         ->count(10)
-        ->sequence(fn (Sequence $sequence) => [
+        ->sequence(fn (Sequence $sequence): array => [
             'cas_user_id' => $casUsers[$sequence->index]->id,
             'report_id' => $report['id'],
             'data' => json_encode([
@@ -665,13 +665,13 @@ test('cas supervisor can download all files of a report', function (): void {
     $casUsers = CasUser::factory()
         ->count(10)
         ->user()
-        ->sequence(fn (Sequence $sequence) => [
+        ->sequence(fn (Sequence $sequence): array => [
             'employee_number' => $sequence->index + 1,
         ])
         ->create();
     $reportData = ReportData::factory()
         ->count(10)
-        ->sequence(fn (Sequence $sequence) => [
+        ->sequence(fn (Sequence $sequence): array => [
             'cas_user_id' => $casUsers[$sequence->index]->id,
             'report_id' => $report['id'],
             'data' => json_encode([

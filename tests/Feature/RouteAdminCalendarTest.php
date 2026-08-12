@@ -87,7 +87,7 @@ test('admin can update an existing calendar', function (): void {
 });
 
 test('noone can delete an existing calendar', function (): void {
-    expect(fn() => route('administrator.calendar.delete'))
+    expect(fn(): string => route('administrator.calendar.delete'))
         ->toThrow(RouteNotFoundException::class);
 });
 

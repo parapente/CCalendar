@@ -48,7 +48,7 @@ expect()->extend('toBeOne', fn() => $this->toBe(1));
 |
 */
 
-function cas_login_user(CasUser $user)
+function cas_login_user(CasUser $user): void
 {
     test()->mock(CasAuthInterface::class, function ($mock) use ($user): void {
         $role = Role::find($user->role_id);

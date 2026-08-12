@@ -144,14 +144,14 @@ test('admin can download all files of a report', function (): void {
     $role = Role::factory()->create(['name' => 'User']);
     $casUsers = CasUser::factory()
         ->count(10)
-        ->sequence(fn (Sequence $sequence) => [
+        ->sequence(fn (Sequence $sequence): array => [
             'role_id' => $role->id,
             'employee_number' => $sequence->index + 1,
         ])
         ->create();
     $reportData = ReportData::factory()
         ->count(10)
-        ->sequence(fn (Sequence $sequence) => [
+        ->sequence(fn (Sequence $sequence): array => [
             'cas_user_id' => $casUsers[$sequence->index]->id,
             'report_id' => $report['id'],
             'data' => json_encode([
