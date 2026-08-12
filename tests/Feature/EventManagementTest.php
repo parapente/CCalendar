@@ -142,7 +142,7 @@ test('cas user can delete own event', function (): void {
 
     cas_login_user($cas_user);
 
-    $response = $this->delete(route('calendar.deleteEvent', [$calendar, $event]));
+    $response = $this->delete(route('calendarEvent.destroy', [$calendar, $event]));
     $response->assertOk();
     $this->assertDatabaseMissing('calendar_events', ['id' => $event->id]);
 });
@@ -162,7 +162,7 @@ test('cas user cannot delete another users event', function (): void {
 
     cas_login_user($other_user);
 
-    $response = $this->delete(route('calendar.deleteEvent', [$calendar, $event]));
+    $response = $this->delete(route('calendarEvent.destroy', [$calendar, $event]));
     $response->assertOk();
     $response->assertJson(['success' => false, 'message' => 'Δεν επιτρέπεται η λειτουργία σε αυτόν τον χρήστη']);
     $this->assertDatabaseHas('calendar_events', ['id' => $event->id]);
@@ -182,7 +182,7 @@ test('event is correctly associated with calendar and cas user', function (): vo
 
     cas_login_user($cas_user);
 
-    $this->post(route('calendar.addEvent', $calendar), [
+    $this->post(route('calendarEvent.store', $calendar), [
         'title' => 'Associated Event',
         'description' => 'Description',
         'start_date' => '2024-06-01',

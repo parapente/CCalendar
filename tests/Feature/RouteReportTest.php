@@ -6,8 +6,10 @@ use App\Models\CasUser;
 use App\Models\Report;
 use App\Models\ReportData;
 use Illuminate\Database\Eloquent\Factories\Sequence;
+use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 test('cas supervisors can see all reports', function (): void {
     $active_reports = Report::factory()->count(3)->create([
@@ -18,9 +20,9 @@ test('cas supervisors can see all reports', function (): void {
     ]);
 
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.index'))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '1234567890',
@@ -35,7 +37,7 @@ test('cas supervisors can see all reports', function (): void {
     }
 });
 
-test('cas users can see active reports', function(): void {
+test('cas users can see active reports', function (): void {
     $active_reports = Report::factory()->count(3)->create([
         'active' => true,
     ]);
@@ -44,9 +46,9 @@ test('cas users can see active reports', function(): void {
     ]);
 
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.index'))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '1234567890',
@@ -65,9 +67,9 @@ test('cas users can see active reports', function(): void {
 });
 
 test('cas user cannot create a new report', function (): void {
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.create'))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '1234567890',
@@ -93,9 +95,9 @@ test('cas user cannot create a new report', function (): void {
 
 test('cas supervisor can create a new report', function (): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.create'))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '1234567890',
@@ -125,12 +127,12 @@ test('cas supervisor can create a new report', function (): void {
 
 test('cas user cannot view inactive reports', function (): void {
     $report = Report::factory()->create([
-        'active' => false
+        'active' => false,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.show', $report))
-        ->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '1234567890',
@@ -144,12 +146,12 @@ test('cas user cannot view inactive reports', function (): void {
 
 test('cas supervisor can view inactive reports', function (): void {
     $report = Report::factory()->create([
-        'active' => false
+        'active' => false,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.show', $report))
-        ->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '1234567890',
@@ -164,12 +166,12 @@ test('cas supervisor can view inactive reports', function (): void {
 
 test('cas user can view an active report', function (): void {
     $report = Report::factory()->create([
-        'active' => true
+        'active' => true,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.show', $report))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '1234567890',
@@ -184,12 +186,12 @@ test('cas user can view an active report', function (): void {
 
 test('cas supervisor can view an active report', function (): void {
     $report = Report::factory()->create([
-        'active' => true
+        'active' => true,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.show', $report))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '1234567890',
@@ -204,12 +206,12 @@ test('cas supervisor can view an active report', function (): void {
 
 test('cas user cannot edit a report', function (): void {
     $report = Report::factory()->create([
-        'active' => true
+        'active' => true,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.edit', $report))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '1234567890',
@@ -223,12 +225,12 @@ test('cas user cannot edit a report', function (): void {
 
 test('cas supervisor can edit a report', function (): void {
     $report = Report::factory()->create([
-        'active' => true
+        'active' => true,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->get(route('report.edit', $report))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '1234567890',
@@ -243,7 +245,7 @@ test('cas supervisor can edit a report', function (): void {
 
 test('cas user cannot update a report', function (): void {
     $report = Report::factory()->create([
-        'active' => true
+        'active' => true,
     ]);
     $report_data = Report::factory()->make([
         'active' => false,
@@ -251,9 +253,9 @@ test('cas user cannot update a report', function (): void {
         'to' => '2020-01-02',
     ])->toArray();
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->put(route('report.update', $report), $report_data)
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '1234567890',
@@ -281,9 +283,9 @@ test('cas supervisor can update a report', function (): void {
         'to' => '2020-01-02',
     ])->toArray();
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->put(route('report.update', $report), $report_data)
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '1234567890',
@@ -305,12 +307,12 @@ test('cas supervisor can update a report', function (): void {
 
 test('cas user cannot delete a report', function (): void {
     $report = Report::factory()->create([
-        'active' => true
+        'active' => true,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->delete(route('report.destroy', $report))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '1234567890',
@@ -325,12 +327,12 @@ test('cas user cannot delete a report', function (): void {
 
 test('cas supervisor can delete a report', function (): void {
     $report = Report::factory()->create([
-        'active' => true
+        'active' => true,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->delete(route('report.destroy', $report))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '1234567890',
@@ -345,12 +347,12 @@ test('cas supervisor can delete a report', function (): void {
 
 test('cas user cannot toggle active status of a report', function (): void {
     $report = Report::factory()->create([
-        'active' => true
+        'active' => true,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->post(route('report.toggleActive', $report))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '1234567890',
@@ -366,12 +368,12 @@ test('cas user cannot toggle active status of a report', function (): void {
 
 test('cas supervisor can toggle active status of a report', function (): void {
     $report = Report::factory()->create([
-        'active' => true
+        'active' => true,
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $this->post(route('report.toggleActive', $report))
-        ->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+        ->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->supervisor()->create([
         'employee_number' => '1234567890',
@@ -406,9 +408,9 @@ test('cas user can download a doc with calendar events', function (): void {
         ]),
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('report.getCalendarToWord', $report));
-    $response->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+    $response->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     cas_login_user($cas_user);
 
@@ -438,9 +440,9 @@ test('cas supervisor can download a doc with calendar events', function (): void
         ]),
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('report.getCalendarToWord', $report));
-    $response->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+    $response->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     cas_login_user($cas_user);
 
@@ -453,11 +455,11 @@ test('cas user cannot upload a file on an inactive report', function (): void {
     $report = Report::factory()->create(['active' => false]);
     Storage::fake('local');
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->post(route('report.uploadReport', $report), [
         'file' => UploadedFile::fake()->create('report.pdf'),
     ]);
-    $response->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+    $response->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
@@ -477,11 +479,11 @@ test('cas user can upload a file on report', function (): void {
     $report = Report::factory()->create();
     Storage::fake('local');
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->post(route('report.uploadReport', $report), [
         'file' => UploadedFile::fake()->create('report.pdf'),
     ]);
-    $response->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+    $response->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     $cas_user = CasUser::factory()->user()->create([
         'employee_number' => '123456789',
@@ -526,12 +528,17 @@ test('cas users can download their files of a report', function (): void {
 
     Storage::shouldReceive('download')
         ->once()
-        ->with("reports/{$report->id}/{$report_data->cas_user_id}/test.txt", "real_test.txt")
-        ->andReturn(null);
+        ->with("reports/{$report->id}/{$report_data->cas_user_id}/test.txt", 'real_test.txt')
+        ->andReturn(new StreamedResponse(function () {
+            echo 'test';
+        }, 200, [
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => 'attachment; filename="real_test.txt"',
+        ]));
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('report.getFile', [$report, $report_data]));
-    $response->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+    $response->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     cas_login_user($cas_user);
 
@@ -558,12 +565,17 @@ test('cas supervisor can download files of a report', function (): void {
 
     Storage::shouldReceive('download')
         ->once()
-        ->with("reports/{$report->id}/{$report_data->cas_user_id}/test.txt", "real_test.txt")
-        ->andReturn(null);
+        ->with("reports/{$report->id}/{$report_data->cas_user_id}/test.txt", 'real_test.txt')
+        ->andReturn(new StreamedResponse(function () {
+            echo 'test';
+        }, 200, [
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => 'attachment; filename="real_test.txt"',
+        ]));
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('report.getFile', [$report, $report_data]));
-    $response->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+    $response->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     cas_login_user($cas_supervisor);
 
@@ -590,12 +602,12 @@ test('cas users cannot download files of other users of a report', function (): 
 
     Storage::shouldReceive('download')
         ->never()
-        ->with("reports/{$report->id}/{$report_data->cas_user_id}/test.txt", "real_test.txt")
+        ->with("reports/{$report->id}/{$report_data->cas_user_id}/test.txt", 'real_test.txt')
         ->andReturn(null);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('report.getFile', [$report, $report_data]));
-    $response->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+    $response->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     cas_login_user($cas_user);
 
@@ -636,12 +648,12 @@ test('cas user cannot download all files of a report', function (): void {
             ->storeAs($filename);
     }
     foreach ($files as $file) {
-        /** @var Illuminate\Foundation\Testing\TestCase $this */
+        /** @var TestCase $this */
         $this->assertTrue(Storage::exists($file));
     }
 
     $response = $this->get(route('report.getAllFiles', $report));
-    $response->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+    $response->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     cas_login_user($cas_user);
 
@@ -688,12 +700,12 @@ test('cas supervisor can download all files of a report', function (): void {
             ->storeAs($filename);
     }
     foreach ($files as $file) {
-        /** @var Illuminate\Foundation\Testing\TestCase $this */
+        /** @var TestCase $this */
         $this->assertTrue(Storage::exists($file));
     }
 
     $response = $this->get(route('report.getAllFiles', $report));
-    $response->assertRedirect(config('cas.cas_client_service'). config('cas.cas_uri'));
+    $response->assertRedirect(config('cas.cas_client_service').config('cas.cas_uri'));
 
     cas_login_user($cas_user);
 

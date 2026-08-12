@@ -34,7 +34,7 @@ test('cas user can add event to calendar', function(): void {
     ];
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
-    $this->post(route('calendar.addEvent', $calendar), $calendar_event)
+    $this->post(route('calendarEvent.store', $calendar), $calendar_event)
         ->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
     $this->assertDatabaseMissing('calendar_events', $calendar_event);
 
@@ -44,7 +44,7 @@ test('cas user can add event to calendar', function(): void {
 
     cas_login_user($cas_user);
 
-    $response = $this->post(route('calendar.addEvent', $calendar), $calendar_event);
+    $response = $this->post(route('calendarEvent.store', $calendar), $calendar_event);
     $response->assertOk();
     $this->assertDatabaseHas('calendar_events', $calendar_event);
 });
@@ -70,13 +70,13 @@ test('cas user can update own calendar event', function(): void {
     ];
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
-    $this->post(route('calendar.addEvent', $calendar), $updated_calendar_event)
+    $this->post(route('calendarEvent.store', $calendar), $updated_calendar_event)
         ->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
     $this->assertDatabaseMissing('calendar_events', $updated_calendar_event);
 
     cas_login_user($cas_user);
 
-    $response = $this->post(route('calendar.addEvent', $calendar), $updated_calendar_event);
+    $response = $this->post(route('calendarEvent.store', $calendar), $updated_calendar_event);
     $response->assertOk();
     $this->assertDatabaseHas('calendar_events', $updated_calendar_event);
 });
@@ -105,13 +105,13 @@ test('cas user cannot update another user\'s calendar event', function(): void {
     ];
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
-    $this->post(route('calendar.addEvent', $calendar), $updated_calendar_event)
+    $this->post(route('calendarEvent.store', $calendar), $updated_calendar_event)
         ->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
     $this->assertDatabaseMissing('calendar_events', $updated_calendar_event);
 
     cas_login_user($cas_user);
 
-    $response = $this->post(route('calendar.addEvent', $calendar), $updated_calendar_event);
+    $response = $this->post(route('calendarEvent.store', $calendar), $updated_calendar_event);
     $response->assertOk();
     $response->assertJson(['success' => false, 'message' => 'Δεν επιτρέπεται η λειτουργία σε αυτόν τον χρήστη']);
     $calendar_event->refresh();
@@ -130,13 +130,13 @@ test('cas user can delete calendar event', function(): void {
 
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
     /** @var Illuminate\Foundation\Testing\TestCase $this */
-    $this->delete(route('calendar.deleteEvent', [$calendar, $calendar_event]))
+    $this->delete(route('calendarEvent.destroy', [$calendar, $calendar_event]))
         ->assertRedirect(config('cas.cas_client_service') . config('cas.cas_uri'));
     $this->assertDatabaseHas('calendar_events', $calendar_event->toArray());
 
     cas_login_user($cas_user);
 
-    $response = $this->delete(route('calendar.deleteEvent', [$calendar, $calendar_event]));
+    $response = $this->delete(route('calendarEvent.destroy', [$calendar, $calendar_event]));
     $response->assertOk();
     $this->assertDatabaseMissing('calendar_events', $calendar_event->toArray());
 });

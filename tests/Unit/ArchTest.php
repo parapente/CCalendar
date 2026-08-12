@@ -1,6 +1,11 @@
 <?php
 
 declare(strict_types=1);
+use App\Actions\Fortify\PasswordValidationRules;
+use App\Contracts\CasAuthInterface;
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 arch()
     ->expect('App')
@@ -9,24 +14,24 @@ arch()
     ->toUseStrictEquality()
     ->not->toUse(['die', 'dd', 'dump', 'sleep', 'usleep', 'exit', 'var_dump', 'print_r']);
 
-    arch()
+arch()
     ->expect('App')
     ->toBeClasses()
     ->ignoring([
-        \App\Contracts\CasAuthInterface::class,
-        \App\Actions\Fortify\PasswordValidationRules::class,
-        ])
+        CasAuthInterface::class,
+        PasswordValidationRules::class,
+    ])
     ->toBeFinal()
     ->ignoring([
-        \App\Actions\Fortify\PasswordValidationRules::class,
-        \App\Contracts\CasAuthInterface::class,
-        \App\Http\Controllers\Controller::class
-        ]);
+        PasswordValidationRules::class,
+        CasAuthInterface::class,
+        Controller::class,
+    ]);
 
 arch()
     ->expect('App\Models')
-    ->toExtend(\Illuminate\Database\Eloquent\Model::class)
-    ->ignoring(\App\Models\User::class);
+    ->toExtend(Model::class)
+    ->ignoring(User::class);
 
 arch()
     ->expect('App\Contracts')

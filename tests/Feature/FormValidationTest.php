@@ -103,7 +103,7 @@ test('cas user cannot add event without required fields', function (): void {
 
     cas_login_user($cas_user);
 
-    $response = $this->post(route('calendar.addEvent', $calendar), []);
+    $response = $this->post(route('calendarEvent.store', $calendar), []);
     $response->assertSessionHasErrors(['title', 'start_date', 'end_date']);
 });
 
@@ -115,7 +115,7 @@ test('cas user cannot add event with invalid url', function (): void {
 
     cas_login_user($cas_user);
 
-    $response = $this->post(route('calendar.addEvent', $calendar), [
+    $response = $this->post(route('calendarEvent.store', $calendar), [
         'title' => 'Test Event',
         'start_date' => '2024-01-01',
         'end_date' => '2024-01-02',
@@ -132,7 +132,7 @@ test('cas user cannot add event with invalid start_date', function (): void {
 
     cas_login_user($cas_user);
 
-    $response = $this->post(route('calendar.addEvent', $calendar), [
+    $response = $this->post(route('calendarEvent.store', $calendar), [
         'title' => 'Test Event',
         'start_date' => 'not-a-date',
         'end_date' => '2024-01-02',
@@ -148,7 +148,7 @@ test('cas user cannot add event with invalid end_date', function (): void {
 
     cas_login_user($cas_user);
 
-    $response = $this->post(route('calendar.addEvent', $calendar), [
+    $response = $this->post(route('calendarEvent.store', $calendar), [
         'title' => 'Test Event',
         'start_date' => '2024-01-01',
         'end_date' => 'not-a-date',
@@ -164,7 +164,7 @@ test('cas user can add event with valid optional fields', function (): void {
 
     cas_login_user($cas_user);
 
-    $response = $this->post(route('calendar.addEvent', $calendar), [
+    $response = $this->post(route('calendarEvent.store', $calendar), [
         'title' => 'Test Event',
         'start_date' => '2024-01-01',
         'end_date' => '2024-01-02',

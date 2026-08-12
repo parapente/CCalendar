@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Actions;
 
-use App\Models\CasUser;
 use Inertia\Inertia;
 
-final class CasUserController extends Controller
+final class ShowInvalidCasUserAction
 {
-    public function invalidCasUser()
+    public function __invoke()
     {
         cas()->authenticate();
-        $user = array_filter(cas()->getAttributes(), fn($key): bool => in_array($key, ['cn', 'uid', 'employeenumber', 'mail']), ARRAY_FILTER_USE_KEY);
+        $user = array_filter(cas()->getAttributes(), fn ($key): bool => in_array($key, ['cn', 'uid', 'employeenumber', 'mail']), ARRAY_FILTER_USE_KEY);
 
         return Inertia::render('Auth/InvalidCasUser', ['user' => $user]);
     }

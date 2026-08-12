@@ -86,12 +86,12 @@ final class UserController extends Controller
     public function edit(string $id, string $type)
     {
         if ($type === 'admin') {
-            /** @var \App\Models\User $user */
+            /** @var User $user */
             $user = User::findOrFail($id, ['id', 'name', 'username'])
                 ->toArray();
             $user['role'] = 'Administrator';
         } elseif ($type === 'cas') {
-            /** @var \App\Models\CasUser $user */
+            /** @var CasUser $user */
             $user = CasUser::findOrFail($id, ['id', 'name', 'username', 'role_id', 'employee_number'])
                 ->toArray();
             $user['role'] = Role::find($user['role_id'])->name;
@@ -127,7 +127,7 @@ final class UserController extends Controller
         ]);
 
         if ($type === 'admin') {
-            /** @var \App\Models\User $user */
+            /** @var User $user */
             $user = User::findOrFail($id);
 
             // Αν δεν θέλουμε να αλλάξουμε password, τότε θα είναι null
@@ -172,31 +172,5 @@ final class UserController extends Controller
         return to_route('administrator.user.index')
             ->with('flash.bannerStyle', 'success')
             ->with('flash.banner', 'Ο χρήστης διαγράφηκε επιτυχώς');
-    }
-
-    /**
-     * Toggle the active status of the specified resource.
-     */
-    public function toggleActive(Request $request, string $id, string $type)
-    {
-        if ($request->user()->id === (int) $id && $type === 'admin') {
-            return back()->withErrors(['error' => 'Δεν μπορείτε να απενεργοποιήσετε τον εαυτό σας']);
-        }
-
-        if ($type === 'admin') {
-            $user = User::findOrFail($id);
-        } elseif ($type === 'cas') {
-            $user = CasUser::findOrFail($id);
-        } else {
-            abort(404);
-        }
-
-        $user->update(['active' => ! $user->active]);
-
-        $status = $user->active ? 'ενεργοποιήθηκε' : 'απενεργοποιήθηκε';
-
-        return to_route('administrator.user.index')
-            ->with('flash.bannerStyle', 'success')
-            ->with('flash.banner', "Ο χρήστης {$status} επιτυχώς");
     }
 }

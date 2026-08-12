@@ -159,7 +159,7 @@ const deleteCalendarEvent = (id: number) => {
     if (event) {
         axios
             .delete(
-                route("calendar.deleteEvent", [event.calendar_id, event.id]),
+                route("calendarEvent.destroy", [event.calendar_id, event.id]),
             )
             .then(
                 (
@@ -192,7 +192,7 @@ const deleteCalendarEvent = (id: number) => {
 
 const saveCalendarEvent = (event: App.Models.CalendarEvent) => {
     axios
-        .post(route("calendar.addEvent", event.calendar_id), event)
+        .post(route("calendarEvent.store", event.calendar_id), event)
         .then((res) => {
             if (res.data.success) {
                 getCalendarEventData(view.year.value, view.month.value);

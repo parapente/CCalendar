@@ -8,12 +8,14 @@ use App\Models\ReportData;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
+use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 test('admin can view reports', function (): void {
     // Χωρίς σύνδεση θα πρέπει να μας επαναφέρει στο login
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('administrator.report.index'));
     $response->assertRedirect(route('login'));
 
@@ -26,7 +28,7 @@ test('admin can view reports', function (): void {
 });
 
 test('admin can create a new report', function (): void {
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('administrator.report.create'));
     $response->assertRedirect(route('login'));
     $response = $this->post(route('administrator.report.store'), [
@@ -61,7 +63,7 @@ test('admin can create a new report', function (): void {
 
 test('admin can edit an existing report', function (): void {
     $report = Report::factory()->create();
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('administrator.report.edit', $report));
     $response->assertRedirect(route('login'));
 
@@ -72,7 +74,7 @@ test('admin can edit an existing report', function (): void {
 
 test('admin can update an existing report', function (): void {
     $report = Report::factory()->create();
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->put(route('administrator.report.update', $report), [
         'name' => 'Updated report',
         'type' => 1,
@@ -96,13 +98,13 @@ test('admin can update an existing report', function (): void {
         'options' => json_encode([
             'from' => '2021-01-01',
             'to' => '2021-01-02',
-            ]),
+        ]),
     ]);
 });
 
 test('admin can delete an existing report', function (): void {
     $report = Report::factory()->create();
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->delete(route('administrator.report.destroy', $report));
     $response->assertRedirect(route('login'));
 
@@ -116,13 +118,13 @@ test('admin can delete an existing report', function (): void {
         'options' => json_encode([
             'from' => '2021-01-01',
             'to' => '2021-01-02',
-            ]),
+        ]),
     ]);
 });
 
 test('admin can toggle active status of a report', function (): void {
     $report = Report::factory()->create();
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->post(route('administrator.report.toggleActive', $report));
     $response->assertRedirect(route('login'));
 
@@ -168,7 +170,7 @@ test('admin can download all files of a report', function (): void {
             ->storeAs($filename);
     }
     foreach ($files as $file) {
-        /** @var Illuminate\Foundation\Testing\TestCase $this */
+        /** @var TestCase $this */
         $this->assertTrue(Storage::exists($file));
     }
 
@@ -206,10 +208,14 @@ test('admin can download a file of a report', function (): void {
 
     Storage::shouldReceive('download')
         ->once()
-        ->with("reports/{$report->id}/{$reportData->cas_user_id}/test.txt", "real_test.txt")
-        ->andReturn(null);
+        ->with("reports/{$report->id}/{$reportData->cas_user_id}/test.txt", 'real_test.txt')
+        ->andReturn(new StreamedResponse(function () {
+            echo 'test';
+        }, 200, [
+            'Content-Type' => 'text/plain',
+        ]));
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('administrator.report.getFile', [$report, $reportData]));
     $response->assertRedirect(route('login'));
 
@@ -219,8 +225,7 @@ test('admin can download a file of a report', function (): void {
     $response->assertOk();
 });
 
-test('admin can upload a file on a report', function (): void {
-})->skip();
+test('admin can upload a file on a report', function (): void {})->skip();
 
 test('admin can download a doc with calendar events', function (): void {
     $calendar = Calendar::factory()->create();
@@ -245,7 +250,7 @@ test('admin can download a doc with calendar events', function (): void {
         ]),
     ]);
 
-    /** @var Illuminate\Foundation\Testing\TestCase $this */
+    /** @var TestCase $this */
     $response = $this->get(route('administrator.report.getCalendarToWord', $report));
     $response->assertRedirect(route('login'));
 
