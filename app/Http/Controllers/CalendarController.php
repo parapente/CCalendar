@@ -20,7 +20,7 @@ class CalendarController extends Controller
     {
         $calendars = Calendar::all();
 
-        return Inertia::render('Admin/Calendar/Index', compact('calendars'));
+        return Inertia::render('Admin/Calendar/Index', ['calendars' => $calendars]);
     }
 
     /**
@@ -48,7 +48,7 @@ class CalendarController extends Controller
      */
     public function edit(Calendar $calendar)
     {
-        return Inertia::render('Admin/Calendar/Edit', compact('calendar'));
+        return Inertia::render('Admin/Calendar/Edit', ['calendar' => $calendar]);
     }
 
     /**
@@ -129,13 +129,13 @@ class CalendarController extends Controller
     {
         $calendars = Calendar::where('active', true)->get();
 
-        return Inertia::render('Calendar', compact('calendars'));
+        return Inertia::render('Calendar', ['calendars' => $calendars]);
     }
 
     public function overview()
     {
         $calendars = Calendar::all();
 
-        return Inertia::render('Admin/Calendar/Overview', compact('calendars'));
+        return Inertia::render('Admin/Calendar/Overview', ['calendars' => $calendars]);
     }
 }

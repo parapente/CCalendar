@@ -12,7 +12,7 @@ class CasUserController extends Controller
         cas()->authenticate();
         $user = array_filter(cas()->getAttributes(), fn($key): bool => in_array($key, ['cn', 'uid', 'employeenumber', 'mail']), ARRAY_FILTER_USE_KEY);
 
-        return Inertia::render('Auth/InvalidCasUser', compact('user'));
+        return Inertia::render('Auth/InvalidCasUser', ['user' => $user]);
     }
 
     // public function getName(CasUser $user)

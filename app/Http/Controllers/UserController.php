@@ -29,7 +29,7 @@ class UserController extends Controller
             ->join('roles', 'roles.id', '=', 'cas_users.role_id')
             ->get();
 
-        return Inertia::render('Admin/User/Index', compact('users', 'casUsers'));
+        return Inertia::render('Admin/User/Index', ['users' => $users, 'casUsers' => $casUsers]);
     }
 
     /**
@@ -39,7 +39,7 @@ class UserController extends Controller
     {
         $roles = Role::all();
 
-        return Inertia::render('Admin/User/Create', compact('roles'));
+        return Inertia::render('Admin/User/Create', ['roles' => $roles]);
     }
 
     /**
@@ -99,7 +99,7 @@ class UserController extends Controller
 
         $roles = Role::all();
 
-        return Inertia::render('Admin/User/Edit', compact('user', 'type', 'roles'));
+        return Inertia::render('Admin/User/Edit', ['user' => $user, 'type' => $type, 'roles' => $roles]);
     }
 
     /**

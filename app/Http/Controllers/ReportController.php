@@ -58,10 +58,10 @@ class ReportController extends Controller
         }
 
         if ($user) {
-            return Inertia::render('Admin/Report/Index', compact('reports', 'answered'));
+            return Inertia::render('Admin/Report/Index', ['reports' => $reports, 'answered' => $answered]);
         }
 
-        return Inertia::render('Report/Index', compact('reports', 'answered'));
+        return Inertia::render('Report/Index', ['reports' => $reports, 'answered' => $answered]);
     }
 
     /**
