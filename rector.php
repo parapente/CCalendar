@@ -17,10 +17,10 @@ return RectorConfig::configure()
     ->withPreparedSets(
         typeDeclarations: true,
         typeDeclarationDocblocks: true,
-        codeQuality: true
+        codeQuality: true,
+        deadCode: true
     )
     ->withComposerBased(laravel: true)
     ->withFluentCallNewLine()
     ->withTreatClassesAsFinal()
-    ->withPhpSets(php84: true)
-    ->withDeadCodeLevel(0);
+    ->withPhpSets(php84: true);
