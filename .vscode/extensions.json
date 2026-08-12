@@ -45,10 +45,10 @@
         "yoavbls.pretty-ts-errors",
         "GitHub.vscode-pull-request-github",
         "bradlc.vscode-tailwindcss",
-        "msamgan.laravel-pint-vscode",
         "nhedger.inertia",
         "devsense.composer-php-vscode",
         "xdebug.php-debug",
-        "vue.volar"
+        "vue.volar",
+        "open-southeners.laravel-pint"
     ]
 }
