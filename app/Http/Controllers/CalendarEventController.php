@@ -65,7 +65,7 @@ class CalendarEventController extends Controller
         return $calendarEvents->toJson();
     }
 
-    public function toggleActive(Request $request, Calendar $calendar, CalendarEvent $event)
+    public function toggleActive(Request $request, Calendar $calendar, CalendarEvent $event): string
     {
         /** @var \App\Models\CasUser $user */
         $user = $request->input('cas_user');

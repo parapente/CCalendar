@@ -250,7 +250,7 @@ class ReportController extends Controller
             ->with('flash.banner', 'Αποτυχία διαγραφής αναφοράς!');
     }
 
-    public function toggleActive(Request $request, Report $report)
+    public function toggleActive(Request $request, Report $report): void
     {
         if (!$request->user() && $request->input('cas_user_role') !== 'Supervisor') {
             return;
@@ -277,7 +277,7 @@ class ReportController extends Controller
             ->orderBy('start_date', 'asc')
             ->get();
 
-        $tableData = $events->map(function (CalendarEvent $event, $key) {
+        $tableData = $events->map(function (CalendarEvent $event, $key): array {
             $details = $event->description ? "{$event->description}\n" : '';
             $details .= $event->location ? "Τοποθεσία: {$event->location}\n" : '';
             $details .= $event->url ? "Ιστοσελίδα: {$event->url}\n" : '';

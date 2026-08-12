@@ -63,13 +63,13 @@ class CalendarController extends Controller
             ->with('flash.banner', "Το ημερολόγιο $calendar->name ενημερώθηκε επιτυχώς");
     }
 
-    public function toggleActive(Calendar $calendar)
+    public function toggleActive(Calendar $calendar): void
     {
         $calendar->active = ! $calendar->active;
         $calendar->save();
     }
 
-    public function addEvent(Calendar $calendar, StoreCalendarEventRequest $request)
+    public function addEvent(Calendar $calendar, StoreCalendarEventRequest $request): string
     {
         if (! $request->id) {
             $calendar->calendarEvents()->create([
@@ -108,7 +108,7 @@ class CalendarController extends Controller
         return json_encode(['success' => true, 'message' => 'Η εκδήλωση προστέθηκε επιτυχώς!']);
     }
 
-    public function deleteEvent(Calendar $calendar, CalendarEvent $event, Request $request)
+    public function deleteEvent(Calendar $calendar, CalendarEvent $event, Request $request): string
     {
         /** @var CasUser $user */
         $user = $request->input('cas_user');

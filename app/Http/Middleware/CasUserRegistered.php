@@ -10,11 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CasUserRegistered
 {
-    protected $auth;
-
-    public function __construct(CasAuthInterface $auth)
+    public function __construct(protected CasAuthInterface $auth)
     {
-        $this->auth = $auth;
     }
 
     /**

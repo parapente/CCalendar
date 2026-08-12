@@ -14,11 +14,11 @@ return RectorConfig::configure()
         __DIR__ . '/routes',
         __DIR__ . '/tests',
     ])
+    ->withPreparedSets(typeDeclarations: true)
     ->withComposerBased(laravel: true)
     ->withFluentCallNewLine()
     ->withTreatClassesAsFinal()
     ->withPhpSets(php84: true)
-    ->withTypeCoverageLevel(0)
     ->withTypeCoverageDocblockLevel(0)
     ->withDeadCodeLevel(0)
     ->withCodeQualityLevel(0);
