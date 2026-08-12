@@ -20,7 +20,21 @@ final class Calendar extends Model
     ];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'active' => 'boolean',
+            'shared' => 'boolean',
+        ];
+    }
+
+    /**
      * Get the CalendarEvents for the Calendar.
+     *
      * @return HasMany<CalendarEvent, Calendar>
      */
     public function calendarEvents(): HasMany {

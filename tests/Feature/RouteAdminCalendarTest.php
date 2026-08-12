@@ -82,8 +82,8 @@ test('admin can update an existing calendar', function (): void {
     $calendar->refresh();
     expect($calendar->name)->toBe('Updated Calendar');
     expect($calendar->color)->toBe('#000001');
-    expect($calendar->active)->toBe(0);
-    expect($calendar->shared)->toBe(1);
+    expect($calendar->active)->toBe(false);
+    expect($calendar->shared)->toBe(true);
 });
 
 test('noone can delete an existing calendar', function (): void {

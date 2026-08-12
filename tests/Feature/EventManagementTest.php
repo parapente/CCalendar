@@ -61,12 +61,14 @@ it('handles gracefully toggling event save fail', function (): void {
 
     cas_login_user($cas_user);
 
-    $mockEvent = Mockery::mock($event)->makePartial();
-    $mockEvent->shouldReceive('save')->andReturn(false);
-    $mockEvent->shouldReceive('resolveRouteBinding')->andReturn($mockEvent);
-    $this->app->instance(CalendarEvent::class, $mockEvent);
+    CalendarEvent::saving(function (CalendarEvent $model): bool {
+        return false;
+    });
 
     $response = $this->post(route('calendarEvent.toggleActive', [$calendar, $event]));
+
+    CalendarEvent::flushEventListeners();
+
     $response->assertOk();
     $response->assertJson(['success' => false, 'message' => 'Απέτυχε η αποθήκευση της τροποποίησης']);
 });
