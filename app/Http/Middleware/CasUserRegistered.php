@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use App\Contracts\CasAuthInterface;
@@ -8,7 +10,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
-class CasUserRegistered
+final class CasUserRegistered
 {
     public function __construct(protected CasAuthInterface $auth)
     {

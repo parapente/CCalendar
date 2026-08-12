@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Contracts\CasAuthInterface;
 use App\Models\CasUser;
 use Illuminate\Http\Request;
 
-class ProductionCasAuthService implements CasAuthInterface
+final class ProductionCasAuthService implements CasAuthInterface
 {
     protected $cas;
 

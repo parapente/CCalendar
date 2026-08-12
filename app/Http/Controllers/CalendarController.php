@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCalendarEventRequest;
@@ -11,7 +13,7 @@ use App\Models\CasUser;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class CalendarController extends Controller
+final class CalendarController extends Controller
 {
     /**
      * Display a listing of the resource.

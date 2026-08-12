@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Calendar;
@@ -7,7 +9,7 @@ use App\Models\CalendarEvent;
 use App\Models\Role;
 use Illuminate\Http\Request;
 
-class CalendarEventController extends Controller
+final class CalendarEventController extends Controller
 {
     /**
      * Display a listing of the resource.

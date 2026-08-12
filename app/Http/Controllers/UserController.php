@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\CasUser;
@@ -10,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
-class UserController extends Controller
+final class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -155,7 +157,7 @@ class UserController extends Controller
     {
         $type = $request->input('type');
 
-        if ($request->user()->id == $id && $type === 'admin') {
+        if ($request->user()->id === (int) $id && $type === 'admin') {
             return back()->withErrors(['error' => 'Δεν μπορείτε να διαγράψετε τον εαυτό σας']);
         }
 
@@ -177,7 +179,7 @@ class UserController extends Controller
      */
     public function toggleActive(Request $request, string $id, string $type)
     {
-        if ($request->user()->id == $id && $type === 'admin') {
+        if ($request->user()->id === (int) $id && $type === 'admin') {
             return back()->withErrors(['error' => 'Δεν μπορείτε να απενεργοποιήσετε τον εαυτό σας']);
         }
 

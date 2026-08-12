@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Contracts\CasAuthInterface;
 use Illuminate\Http\Request;
 
-class TestCasAuthService implements CasAuthInterface
+final class TestCasAuthService implements CasAuthInterface
 {
     public function authenticate(Request $request): \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
     {

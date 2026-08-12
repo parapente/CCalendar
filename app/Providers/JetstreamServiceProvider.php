@@ -8,7 +8,7 @@ use App\Actions\Jetstream\DeleteUser;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Jetstream\Jetstream;
 
-class JetstreamServiceProvider extends ServiceProvider
+final class JetstreamServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReportRequest;
@@ -20,7 +22,7 @@ use PhpOffice\PhpWord\Element\PreserveText;
 use PhpOffice\PhpWord\TemplateProcessor;
 use ZipArchive;
 
-class ReportController extends Controller
+final class ReportController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -402,7 +404,7 @@ class ReportController extends Controller
         }
 
         $user_path = $cas_user ? "/cas/{$cas_user->id}" : "/user/" . request()->user()->id;
-        $now = DateTime::createFromFormat('U.u', microtime(true));
+        $now = DateTime::createFromFormat('U.u', (string) microtime(true));
 
         $zip = new ZipArchive;
         $zip_path = "/tmp" . $user_path . "/";
