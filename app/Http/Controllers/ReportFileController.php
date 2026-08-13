@@ -47,10 +47,16 @@ final class ReportFileController extends Controller
                 Storage::delete($old_file);
             }
 
-            $report_data->data = json_encode([
+            $file_data = json_encode([
                 'filename' => "$name",
                 'real_filename' => "{$file->getClientOriginalName()}",
             ]);
+
+            if ($file_data === false) {
+                throw new \Exception("Cannot encode file data. Filename: '$name', Real filename: '{$file->getClientOriginalName()}' ");
+            }
+
+            $report_data->data = $file_data;
             $report_data->save();
         } else {
             ReportData::create([

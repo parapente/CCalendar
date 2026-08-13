@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 final class CalendarEventToggleActiveAction
 {
-    public function __invoke(Request $request, Calendar $calendar, CalendarEvent $event): string
+    public function __invoke(Request $request, Calendar $calendar, CalendarEvent $event): string|false
     {
         /** @var CasUser|null $user */
         $user = $request->input('cas_user');

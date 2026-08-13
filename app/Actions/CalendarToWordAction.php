@@ -19,7 +19,7 @@ final class CalendarToWordAction
 {
     public function __invoke(Report $report): StreamedResponse
     {
-        $options = json_decode($report->options);
+        $options = json_decode($report->options ?? '');
         /** @var Collection<int, CalendarEvent> */
         $events = CalendarEvent::with('calendar')
             ->where('start_date', '>=', $options->from)
@@ -43,7 +43,7 @@ final class CalendarToWordAction
                 'aa' => ++$key,
                 'start_date' => new DateTime($event->start_date)->format('d/m/Y H:i'),
                 'end_date' => new DateTime($event->end_date)->format('d/m/Y H:i'),
-                'type' => $event->calendar->name,
+                'type' => $event->calendar?->name,
                 'title' => $event->title.($event->cancelled ? ' (Ακυρώθηκε)' : ''),
                 'details' => $details,
             ];
@@ -67,6 +67,10 @@ final class CalendarToWordAction
         $templateProcessor->saveAs(storage_path().'/'.$filename);
         $output = file_get_contents(storage_path().'/'.$filename);
         File::delete(storage_path().'/'.$filename);
+
+        if ($output === false) {
+            throw new \Exception('Error reading '.storage_path().'/'.$filename);
+        }
 
         return response()->streamDownload(function () use ($output): void {
             echo $output;

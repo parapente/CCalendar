@@ -69,7 +69,7 @@ final class CalendarEventController extends Controller
         return $calendarEvents->toJson();
     }
 
-    public function store(Calendar $calendar, StoreCalendarEventRequest $request): string
+    public function store(Calendar $calendar, StoreCalendarEventRequest $request): string|false
     {
         if (! $request->id) {
             $calendar->calendarEvents()->create([
@@ -85,6 +85,7 @@ final class CalendarEventController extends Controller
             ]);
         } else {
             // Ενημέρωσε παλιά εκδήλωση
+            /** @var CalendarEvent $calendarEvent */
             $calendarEvent = CalendarEvent::findOrFail($request->id);
 
             /** @var CasUser|null $user */
@@ -108,7 +109,7 @@ final class CalendarEventController extends Controller
         return json_encode(['success' => true, 'message' => 'Η εκδήλωση προστέθηκε επιτυχώς!']);
     }
 
-    public function destroy(Calendar $calendar, CalendarEvent $event, Request $request): string
+    public function destroy(Calendar $calendar, CalendarEvent $event, Request $request): string|false
     {
         /** @var CasUser|null $user */
         $user = $request->input('cas_user');

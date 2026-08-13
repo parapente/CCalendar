@@ -25,6 +25,10 @@ final class GetAllReportFilesAction
         $user_path = $cas_user ? "/cas/{$cas_user->id}" : '/user/'.request()->user()->id;
         $now = DateTime::createFromFormat('U.u', (string) microtime(true));
 
+        if ($now === false) {
+            throw new \DateException('Cannot create date from microtime');
+        }
+
         $zip = new ZipArchive;
         $zip_path = '/tmp'.$user_path.'/';
         Storage::makeDirectory($zip_path);
@@ -37,7 +41,7 @@ final class GetAllReportFilesAction
 
             // Αλλαγή ονόματος μέσα στο zip ώστε να μην υπάρχει πιθανότητα να
             // συμπέσουν δύο αρχεία να έχουν το ίδιο όνομα
-            $filename = $line->cas_user->name.'.'.pathinfo($decoded_data->filename)['extension'];
+            $filename = $line->cas_user->name.'.'.(pathinfo($decoded_data->filename)['extension'] ?? '');
             $zip->addFile($file_path, $filename);
             $zip->setCompressionName($filename, ZipArchive::CM_STORE);
         }

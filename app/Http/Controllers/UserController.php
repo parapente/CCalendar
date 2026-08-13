@@ -96,7 +96,9 @@ final class UserController extends Controller
             /** @var CasUser $user */
             $user = CasUser::findOrFail($id, ['id', 'name', 'username', 'role_id', 'employee_number'])
                 ->toArray();
-            $user['role'] = Role::find($user['role_id'])->name;
+            /** @var Role $role */
+            $role = Role::find($user['role_id']);
+            $user['role'] = $role->name;
         } else {
             abort(404);
         }

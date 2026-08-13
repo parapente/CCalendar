@@ -189,6 +189,13 @@ final class ReportController extends Controller
      */
     public function update(UpdateReportRequest $request, Report $report): RedirectResponse
     {
+        // Δες σε ποιο route θα επιστρέψουμε μετά την ενέργεια
+        if (request()->user()) {
+            $route = 'administrator.report.index';
+        } else {
+            $route = 'report.index';
+        }
+
         if (! $request->user() && $request->input('cas_user_role') !== 'Supervisor') {
             return redirect()->route('report.index')
                 ->with('flash.bannerStyle', 'danger')
@@ -197,17 +204,19 @@ final class ReportController extends Controller
 
         $report->name = $request->name;
         $report->type = $request->type;
-        $report->options = json_encode([
+        $options = json_encode([
             'from' => $request->from,
             'to' => $request->to,
         ]);
-        $result = $report->save();
 
-        if (request()->user()) {
-            $route = 'administrator.report.index';
-        } else {
-            $route = 'report.index';
+        if ($options === false) {
+            return redirect()->route($route)
+                ->with('flash.bannerStyle', 'danger')
+                ->with('flash.banner', 'Η επεξεργασία της αναφοράς απέτυχε! Αποτυχία ενημέρωσης των ημερομηνιών.');
         }
+
+        $report->options = $options;
+        $result = $report->save();
 
         if (! $result) {
             return redirect()->route($route)
