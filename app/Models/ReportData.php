@@ -17,7 +17,7 @@ final class ReportData extends Model
     /**
      * Get the CasUser that owns the ReportData.
      *
-     * @return BelongsTo<CasUser, ReportData>
+     * @return BelongsTo<CasUser, $this>
      */
     public function cas_user(): BelongsTo
     {
@@ -27,7 +27,7 @@ final class ReportData extends Model
     /**
      * Get the Report that owns the ReportData.
      *
-     * @return BelongsTo<Report, ReportData>
+     * @return BelongsTo<Report, $this>
      */
     public function report(): BelongsTo
     {

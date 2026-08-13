@@ -29,7 +29,7 @@ final class CalendarEvent extends Model
     /**
      * Get the Calendar that owns the CalendarEvent.
      *
-     * @return BelongsTo<Calendar, CalendarEvent>
+     * @return BelongsTo<Calendar, $this>
      */
     public function calendar(): BelongsTo
     {
@@ -39,7 +39,7 @@ final class CalendarEvent extends Model
     /**
      * Get the CasUser that owns the CalendarEvent.
      *
-     * @return BelongsTo<CasUser, CalendarEvent>
+     * @return BelongsTo<CasUser, $this>
      */
     public function casUser(): BelongsTo
     {

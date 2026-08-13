@@ -29,7 +29,7 @@ final class CasUser extends Model
     /**
      * Get the Role that owns the CasUser.
      *
-     * @return BelongsTo<Role, CasUser>
+     * @return BelongsTo<Role, $this>
      */
     public function role(): BelongsTo
     {

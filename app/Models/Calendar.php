@@ -30,7 +30,7 @@ final class Calendar extends Model
     /**
      * Get the CalendarEvents for the Calendar.
      *
-     * @return HasMany<CalendarEvent, Calendar>
+     * @return HasMany<CalendarEvent, $this>
      */
     public function calendarEvents(): HasMany
     {

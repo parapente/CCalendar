@@ -38,7 +38,7 @@ final class Report extends Model
     /**
      * Get the ReportData for the Report.
      *
-     * @return HasMany<ReportData, Report>
+     * @return HasMany<ReportData, $this>
      */
     public function data(): HasMany
     {
