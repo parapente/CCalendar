@@ -73,7 +73,7 @@ const toggleActive = () => {
     <div>
         <div
             class="flex flex-wrap flex-row bg-white dark:bg-gray-800 dark:text-white mx-4 my-4 rounded-lg p-4 shadow-lg dark:shadow-md dark:shadow-gray-700 content-center"
-            :class="{ 'opacity-50': user.active === 0 }"
+            :class="{ 'opacity-50': user.active === false }"
         >
             <div class="py-2 my-auto">
                 {{ index + 1 }}.
@@ -97,7 +97,7 @@ const toggleActive = () => {
                 />
                 {{ user.name }}
                 <span
-                    v-if="user.active === 0"
+                    v-if="user.active === false"
                     class="ml-2 text-xs bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 px-2 py-0.5 rounded"
                 >
                     Απενεργοποιημένος
