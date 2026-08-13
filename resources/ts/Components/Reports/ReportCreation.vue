@@ -3,7 +3,7 @@ import FormSection from "@/Components/FormSection.vue";
 import type { PageWithSharedProps } from "@/pageprops";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
-import route from "ziggy";
+import { route } from "ziggy";
 
 const props = defineProps<{
     types: Array<Record<string, string>>;

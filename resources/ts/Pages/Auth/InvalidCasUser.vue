@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from "@inertiajs/vue3";
-import route from "ziggy";
+import { route } from "ziggy";
 
 const props = defineProps<{
     user: Record<string, string>;

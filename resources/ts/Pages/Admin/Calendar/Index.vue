@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Link, router } from "@inertiajs/vue3";
-import route from "ziggy";
+import { route } from "ziggy";
 
 const props = defineProps<{
     calendars: App.Models.Calendar[];

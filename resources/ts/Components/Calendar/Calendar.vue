@@ -25,7 +25,7 @@ import { usePage } from "@inertiajs/vue3";
 import type { PageWithSharedProps } from "@/pageprops";
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-default.css";
-import route from "ziggy";
+import { route } from "ziggy-js";
 import ConfirmDeleteDialog from "./ConfirmDeleteDialog.vue";
 import EventModal from "./EventModal.vue";
 import { vIntersectionObserver } from "@vueuse/components";

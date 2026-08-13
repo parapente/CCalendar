@@ -11,7 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Link, router } from "@inertiajs/vue3";
 import { ref, type Ref } from "vue";
-import route from "ziggy";
+import { route } from "ziggy";
 import { usePage } from "@inertiajs/vue3";
 import type { PageWithSharedProps } from "@/pageprops";
 import type { PaginationProps } from "@/pagination";

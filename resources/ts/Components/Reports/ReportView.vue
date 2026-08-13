@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PageWithSharedProps } from "@/pageprops";
 import { useForm, usePage } from "@inertiajs/vue3";
-import route from "ziggy";
+import { route } from "ziggy";
 
 const props = defineProps<{
     report: App.Models.Report;
@@ -29,7 +29,7 @@ const onSubmit = () => {
     forms.post(
         route(routePrefix + "report.uploadReport", {
             id: props.report.id,
-        })
+        }),
     );
 };
 

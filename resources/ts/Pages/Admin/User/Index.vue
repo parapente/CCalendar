@@ -5,7 +5,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Link } from "@inertiajs/vue3";
 import { TransitionGroup } from "vue";
-import route from "ziggy";
+import { route } from "ziggy";
 
 const props = defineProps<{
     users: (App.Models.User & { role: string })[];

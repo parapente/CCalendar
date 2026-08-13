@@ -6,7 +6,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import route from "ziggy";
+import { route } from "ziggy";
 import type { PageWithSharedProps } from "@/pageprops";
 
 defineProps({
@@ -53,7 +53,7 @@ const page = usePage<PageWithSharedProps>();
                                     :href="route('administrator.user.index')"
                                     :active="
                                         route().current(
-                                            'administrator.user.index'
+                                            'administrator.user.index',
                                         )
                                     "
                                     test-data-id="user-link"
@@ -68,7 +68,7 @@ const page = usePage<PageWithSharedProps>();
                                     "
                                     :active="
                                         route().current(
-                                            'administrator.calendar.index'
+                                            'administrator.calendar.index',
                                         )
                                     "
                                     test-data-id="calendar-link"
@@ -83,7 +83,7 @@ const page = usePage<PageWithSharedProps>();
                                     "
                                     :active="
                                         route().current(
-                                            'administrator.calendar.overview'
+                                            'administrator.calendar.overview',
                                         )
                                     "
                                     test-data-id="overview-link"
@@ -96,7 +96,7 @@ const page = usePage<PageWithSharedProps>();
                                     :href="route('administrator.report.index')"
                                     :active="
                                         route().current(
-                                            'administrator.report.index'
+                                            'administrator.report.index',
                                         )
                                     "
                                     test-data-id="report-link"

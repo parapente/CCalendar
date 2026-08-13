@@ -6,7 +6,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import DangerButton from "@/Components/DangerButton.vue";
-import route from "ziggy";
+import { route } from "ziggy";
 import DropdownList from "@/Components/DropdownList.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 

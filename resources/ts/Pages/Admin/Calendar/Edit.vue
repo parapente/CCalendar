@@ -3,7 +3,7 @@ import Checkbox from "@/Components/Checkbox.vue";
 import FormSection from "@/Components/FormSection.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { useForm } from "@inertiajs/vue3";
-import route from "ziggy";
+import { route } from "ziggy";
 
 const props = defineProps<{
     calendar: App.Models.Calendar;
@@ -18,7 +18,7 @@ const forms = useForm({
 
 const onSubmit = () => {
     forms.put(
-        route("administrator.calendar.update", { calendar: props.calendar })
+        route("administrator.calendar.update", { calendar: props.calendar }),
     );
 };
 </script>

@@ -3,7 +3,7 @@ import FormSection from "@/Components/FormSection.vue";
 import type { PageWithSharedProps } from "@/pageprops";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
-import route from "ziggy";
+import { route } from "ziggy";
 
 const props = defineProps<{
     report: App.Models.Report;
@@ -49,7 +49,7 @@ const onSubmit = () => {
     forms.put(
         route(routePrefix + "report.update", {
             id: props.report.id,
-        })
+        }),
     );
 };
 </script>

@@ -5,7 +5,7 @@ import Banner from "@/Components/Banner.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import route from "ziggy";
+import { route } from "ziggy";
 import type { PageWithSharedProps } from "@/pageprops";
 import NavLink from "@/Components/NavLink.vue";
 
