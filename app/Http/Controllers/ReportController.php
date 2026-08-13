@@ -102,11 +102,11 @@ final class ReportController extends Controller
             $route = 'report.index';
         }
 
-        if (! $report) {
-            return redirect()->route($route)
-                ->with('flash.bannerStyle', 'danger')
-                ->with('flash.banner', 'Η δημιουργία αναφοράς απέτυχε!');
-        }
+        // if (! $report) {
+        //     return redirect()->route($route)
+        //         ->with('flash.bannerStyle', 'danger')
+        //         ->with('flash.banner', 'Η δημιουργία αναφοράς απέτυχε!');
+        // }
 
         return redirect()->route($route)
             ->with('flash.bannerStyle', 'success')
