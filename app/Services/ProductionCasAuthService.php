@@ -7,17 +7,19 @@ namespace App\Services;
 use App\Contracts\CasAuthInterface;
 use App\Models\CasUser;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Subfission\Cas\CasManager;
 
 final class ProductionCasAuthService implements CasAuthInterface
 {
-    protected $cas;
+    protected CasManager $cas;
 
     public function __construct()
     {
         $this->cas = app('cas');
     }
 
-    public function authenticate(Request $request): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response|null
+    public function authenticate(Request $request): ?Response
     {
         if ($this->cas->checkAuthentication()) {
             // Store the user credentials in a Laravel managed session
@@ -28,6 +30,7 @@ final class ProductionCasAuthService implements CasAuthInterface
             }
             $this->cas->authenticate();
         }
+
         return null;
     }
 

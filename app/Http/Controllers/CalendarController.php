@@ -7,14 +7,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCalendarRequest;
 use App\Http\Requests\UpdateCalendarRequest;
 use App\Models\Calendar;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 final class CalendarController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $calendars = Calendar::all();
 
@@ -24,7 +26,7 @@ final class CalendarController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Admin/Calendar/Create');
     }
@@ -32,7 +34,7 @@ final class CalendarController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCalendarRequest $request)
+    public function store(StoreCalendarRequest $request): RedirectResponse
     {
         Calendar::create($request->validated());
 
@@ -44,7 +46,7 @@ final class CalendarController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Calendar $calendar)
+    public function edit(Calendar $calendar): Response
     {
         return Inertia::render('Admin/Calendar/Edit', ['calendar' => $calendar]);
     }
@@ -52,7 +54,7 @@ final class CalendarController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCalendarRequest $request, Calendar $calendar)
+    public function update(UpdateCalendarRequest $request, Calendar $calendar): RedirectResponse
     {
         $calendar->update($request->validated());
 

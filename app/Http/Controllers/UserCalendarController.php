@@ -6,13 +6,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Calendar;
 use Inertia\Inertia;
+use Inertia\Response;
 
 final class UserCalendarController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $calendars = Calendar::where('active', true)->get();
 

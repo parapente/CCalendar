@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -19,7 +20,10 @@ use Laravel\Sanctum\HasApiTokens;
 final class User extends Authenticatable
 {
     use HasApiTokens;
+
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use Notifiable;
     use TwoFactorAuthenticatable;
 
@@ -35,6 +39,9 @@ final class User extends Authenticatable
         ];
     }
 
+    /**
+     * @return Attribute<null, string>
+     */
     protected function password(): Attribute
     {
         return Attribute::make(

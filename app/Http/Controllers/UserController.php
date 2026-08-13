@@ -7,17 +7,19 @@ namespace App\Http\Controllers;
 use App\Models\CasUser;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Inertia\Response;
 
 final class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $users = User::select(['id', 'name', 'username', 'active', DB::raw("'Administrator' as role")])->get();
 
@@ -37,7 +39,7 @@ final class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         $roles = Role::all();
 
@@ -47,7 +49,7 @@ final class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -57,8 +59,8 @@ final class UserController extends Controller
                 'max:255',
                 Rule::when(
                     $request->type === 'admin',
-                    Rule::unique('users'),
-                    Rule::unique('cas_users')),
+                    [Rule::unique('users')],
+                    [Rule::unique('cas_users')]),
             ],
             'employee_number' => ['string', 'nullable', 'max:255', Rule::requiredIf($request->type === 'cas')],
             'type' => ['required', 'string'],
@@ -83,7 +85,7 @@ final class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id, string $type)
+    public function edit(string $id, string $type): Response
     {
         if ($type === 'admin') {
             /** @var User $user */
@@ -107,7 +109,7 @@ final class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id, string $type)
+    public function update(Request $request, string $id, string $type): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -117,8 +119,8 @@ final class UserController extends Controller
                 'max:255',
                 Rule::when(
                     $type === 'admin',
-                    Rule::unique('users')->ignore($id),
-                    Rule::unique('cas_users')->ignore($id)),
+                    [Rule::unique('users')->ignore($id)],
+                    [Rule::unique('cas_users')->ignore($id)]),
             ],
             'employee_number' => ['string', 'nullable', 'max:255', Rule::requiredIf($request->type === 'cas')],
             'role_id' => [Rule::requiredIf($type === 'cas'), 'integer'],
@@ -153,7 +155,7 @@ final class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, string $id)
+    public function destroy(Request $request, string $id): RedirectResponse
     {
         $type = $request->input('type');
 

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\CasAuthInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 final class TestCasAuthService implements CasAuthInterface
 {
-    public function authenticate(Request $request): \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+    public function authenticate(Request $request): RedirectResponse
     {
-        return redirect(config('cas.cas_client_service') . config('cas.cas_uri'));
+        return redirect(config('cas.cas_client_service').config('cas.cas_uri'));
     }
 
     public function getCasUser(): array

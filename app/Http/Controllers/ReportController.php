@@ -10,16 +10,18 @@ use App\Models\CasUser;
 use App\Models\Report;
 use App\Models\ReportData;
 use App\Models\Role;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Inertia\Response;
 
 final class ReportController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $user = request()->user();
         $cas_user = $request->input('cas_user');
@@ -30,7 +32,7 @@ final class ReportController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate();
 
-            $answered = $reports->filter(fn ($report): int => count($report->data))
+            $answered = $reports->filter(fn ($report): bool => (bool) count($report->data))
                 ->map(fn ($report) => $report->id)
                 ->toArray();
             $answered = array_values($answered);
@@ -40,7 +42,7 @@ final class ReportController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate();
 
-            $answered = $reports->filter(fn ($report) => $report->data->where('cas_user_id', $cas_user->id)->count())
+            $answered = $reports->filter(fn ($report): bool => (bool) $report->data->where('cas_user_id', $cas_user->id)->count())
                 ->map(fn ($report) => $report->id)
                 ->toArray();
             $answered = array_values($answered);
@@ -61,7 +63,7 @@ final class ReportController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create(Request $request): Response|RedirectResponse
     {
         if (request()->user()) {
             return Inertia::render('Admin/Report/Create', ['types' => Report::AvailableTypes]);
@@ -79,7 +81,7 @@ final class ReportController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreReportRequest $request)
+    public function store(StoreReportRequest $request): RedirectResponse
     {
         if (! $request->user() && $request->input('cas_user_role') !== 'Supervisor') {
             return redirect()->route('report.index')
@@ -116,7 +118,7 @@ final class ReportController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Report $report)
+    public function show(Request $request, Report $report): Response|RedirectResponse
     {
         $cas_user = $request->input('cas_user');
         $cas_user_role = $request->input('cas_user_role');
@@ -152,12 +154,16 @@ final class ReportController extends Controller
                     'missing' => $missing,
                 ]);
         }
+
+        return redirect()->route('report.index')
+            ->with('flash.bannerStyle', 'danger')
+            ->with('flash.banner', 'Δεν έχετε δικαίωμα προβολής αναφοράς!');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, Report $report)
+    public function edit(Request $request, Report $report): Response|RedirectResponse
     {
         $cas_user_role = $request->input('cas_user_role');
 
@@ -181,7 +187,7 @@ final class ReportController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateReportRequest $request, Report $report)
+    public function update(UpdateReportRequest $request, Report $report): RedirectResponse
     {
         if (! $request->user() && $request->input('cas_user_role') !== 'Supervisor') {
             return redirect()->route('report.index')
@@ -217,7 +223,7 @@ final class ReportController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Report $report)
+    public function destroy(Request $request, Report $report): RedirectResponse
     {
         if (! $request->user() && $request->input('cas_user_role') !== 'Supervisor') {
             return redirect()->route('report.index')

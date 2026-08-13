@@ -53,7 +53,7 @@ final class CalendarToWordAction
         $templateProcessor = new TemplateProcessor(app()->path().'/WordTemplates/calendarEvents.docx');
         $templateProcessor->setValue('from', new DateTime($options->from)->format('d/m/Y'));
         $templateProcessor->setValue('to', new DateTime($options->to)->format('d/m/Y'));
-        $templateProcessor->cloneRowAndSetValues('aa', $tableData);
+        $templateProcessor->cloneRowAndSetValues('aa', $tableData->toArray());
 
         Settings::setOutputEscapingEnabled(false);
         $newline = new PreserveText('</w:t><w:br/><w:t>');

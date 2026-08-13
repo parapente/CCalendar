@@ -13,9 +13,9 @@ final class CalendarEventToggleActiveAction
 {
     public function __invoke(Request $request, Calendar $calendar, CalendarEvent $event): string
     {
-        /** @var CasUser $user */
+        /** @var CasUser|null $user */
         $user = $request->input('cas_user');
-        if (! $user || ($user->id !== $event->cas_user_id)) {
+        if ((! $user) || ($user->id !== $event->cas_user_id)) {
             return json_encode(['success' => false, 'message' => 'Δεν επιτρέπεται η λειτουργία σε αυτόν τον χρήστη']);
         }
 

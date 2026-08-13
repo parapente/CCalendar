@@ -24,7 +24,7 @@ class CasUserFactory extends Factory
         ];
     }
 
-    public function user(): Factory
+    public function user(): static
     {
         $role = Role::where('name', 'User')->first();
         if (! $role) {
@@ -38,7 +38,7 @@ class CasUserFactory extends Factory
         });
     }
 
-    public function supervisor(): Factory
+    public function supervisor(): static
     {
         $role = Role::where('name', 'Supervisor')->first();
         if (! $role) {

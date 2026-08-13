@@ -16,7 +16,7 @@ final class CalendarEventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(int $year, int $month)
+    public function index(int $year, int $month): string
     {
         $cas_user = request('cas_user');
         $getAll = false;
@@ -87,9 +87,9 @@ final class CalendarEventController extends Controller
             // Ενημέρωσε παλιά εκδήλωση
             $calendarEvent = CalendarEvent::findOrFail($request->id);
 
-            /** @var CasUser $user */
+            /** @var CasUser|null $user */
             $user = $request->input('cas_user');
-            if (! $user || ($user->id !== $calendarEvent->cas_user_id)) {
+            if ((! $user) || ($user->id !== $calendarEvent->cas_user_id)) {
                 return json_encode(['success' => false, 'message' => 'Δεν επιτρέπεται η λειτουργία σε αυτόν τον χρήστη']);
             }
 
@@ -110,9 +110,9 @@ final class CalendarEventController extends Controller
 
     public function destroy(Calendar $calendar, CalendarEvent $event, Request $request): string
     {
-        /** @var CasUser $user */
+        /** @var CasUser|null $user */
         $user = $request->input('cas_user');
-        if (! $user || ($user->id !== $event->cas_user_id)) {
+        if ((! $user) || ($user->id !== $event->cas_user_id)) {
             return json_encode(['success' => false, 'message' => 'Δεν επιτρέπεται η λειτουργία σε αυτόν τον χρήστη']);
         }
 

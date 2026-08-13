@@ -39,10 +39,10 @@ final class FortifyServiceProvider extends ServiceProvider
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         Fortify::authenticateUsing(function (Request $request) {
-            $user = User::where('username', $request->input(Fortify::username()))->first();
+            $user = User::where(Fortify::username(), $request->input(Fortify::username()))->first();
 
-            if ($user && Hash::check($request->password, $user->password)) {
-                if (!$user->active) {
+            if ($user && /** @phpstan-ignore argument.type */ Hash::check($request->password, $user->password)) {
+                if (! $user->active) {
                     return null;
                 }
 

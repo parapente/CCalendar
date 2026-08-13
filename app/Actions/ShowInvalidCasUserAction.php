@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use Inertia\Inertia;
+use Inertia\Response;
 
 final class ShowInvalidCasUserAction
 {
-    public function __invoke()
+    public function __invoke(): Response
     {
         cas()->authenticate();
         $user = array_filter(cas()->getAttributes(), fn ($key): bool => in_array($key, ['cn', 'uid', 'employeenumber', 'mail']), ARRAY_FILTER_USE_KEY);
