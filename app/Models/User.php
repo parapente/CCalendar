@@ -43,6 +43,18 @@ final class User extends Authenticatable
         'two_factor_secret',
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'active' => 'boolean',
+        ];
+    }
+
     protected function password(): Attribute
     {
         return Attribute::make(

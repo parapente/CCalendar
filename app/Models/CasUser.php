@@ -21,7 +21,20 @@ final class CasUser extends Model
     ];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'active' => 'boolean',
+        ];
+    }
+
+    /**
      * Get the Role that owns the CasUser.
+     *
      * @return BelongsTo<Role, CasUser>
      */
     public function role(): BelongsTo

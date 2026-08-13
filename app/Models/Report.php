@@ -24,11 +24,24 @@ final class Report extends Model
     protected $fillable = [
         'name',
         'type',
-        'options'
+        'options',
     ];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'active' => 'boolean',
+        ];
+    }
+
+    /**
      * Get the ReportData for the Report.
+     *
      * @return HasMany<ReportData, Report>
      */
     public function data(): HasMany

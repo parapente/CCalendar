@@ -25,18 +25,34 @@ final class CalendarEvent extends Model
     ];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'cancelled' => 'boolean',
+        ];
+    }
+
+    /**
      * Get the Calendar that owns the CalendarEvent.
+     *
      * @return BelongsTo<Calendar, CalendarEvent>
      */
-    public function calendar(): BelongsTo {
+    public function calendar(): BelongsTo
+    {
         return $this->belongsTo(Calendar::class);
     }
 
     /**
      * Get the CasUser that owns the CalendarEvent.
+     *
      * @return BelongsTo<CasUser, CalendarEvent>
      */
-    public function casUser(): BelongsTo {
+    public function casUser(): BelongsTo
+    {
         return $this->belongsTo(CasUser::class);
     }
 }
