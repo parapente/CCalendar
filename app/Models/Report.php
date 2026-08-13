@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Fillable(['name', 'type', 'options'])]
 final class Report extends Model
 {
     use HasFactory;
@@ -19,12 +21,6 @@ final class Report extends Model
             'id' => 1,
             'name' => 'Τριμήνου',
         ],
-    ];
-
-    protected $fillable = [
-        'name',
-        'type',
-        'options',
     ];
 
     /**

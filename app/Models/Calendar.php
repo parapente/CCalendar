@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Fillable(['name', 'color', 'active', 'shared'])]
 final class Calendar extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'name',
-        'color',
-        'active',
-        'shared'
-    ];
 
     /**
      * Get the attributes that should be cast.
@@ -37,7 +32,8 @@ final class Calendar extends Model
      *
      * @return HasMany<CalendarEvent, Calendar>
      */
-    public function calendarEvents(): HasMany {
+    public function calendarEvents(): HasMany
+    {
         return $this->hasMany(CalendarEvent::class);
     }
 }

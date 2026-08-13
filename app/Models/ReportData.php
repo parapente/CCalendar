@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Fillable(['cas_user_id', 'report_id', 'data'])]
 final class ReportData extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'cas_user_id',
-        'report_id',
-        'data'
-    ];
-
     /**
      * Get the CasUser that owns the ReportData.
+     *
      * @return BelongsTo<CasUser, ReportData>
      */
     public function cas_user(): BelongsTo
@@ -29,6 +26,7 @@ final class ReportData extends Model
 
     /**
      * Get the Report that owns the ReportData.
+     *
      * @return BelongsTo<Report, ReportData>
      */
     public function report(): BelongsTo
