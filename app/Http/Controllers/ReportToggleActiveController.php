@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Http\Controllers;
 
 use App\Models\Report;
 use Illuminate\Http\Request;
 
-final class ReportToggleActiveAction
+final class ReportToggleActiveController extends Controller
 {
+    /**
+     * Handle the incoming request.
+     */
     public function __invoke(Request $request, Report $report): void
     {
         if (! $request->user() && $request->input('cas_user_role') !== 'Supervisor') {

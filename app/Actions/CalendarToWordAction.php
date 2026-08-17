@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class CalendarToWordAction
 {
-    public function __invoke(Report $report): StreamedResponse
+    public function handle(Report $report): StreamedResponse
     {
         $options = json_decode($report->options ?? '');
         /** @var Collection<int, CalendarEvent> */

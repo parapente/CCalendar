@@ -4,24 +4,17 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\Models\CasUser;
 use App\Models\Report;
 use DateTime;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use ZipArchive;
 
 final class GetAllReportFilesAction
 {
-    public function __invoke(Request $request, Report $report): BinaryFileResponse
+    public function handle(Report $report, ?CasUser $cas_user): BinaryFileResponse
     {
-        $cas_user = $request->input('cas_user');
-        $cas_user_role = $request->input('cas_user_role');
-
-        if (! $request->user() && $cas_user_role !== 'Supervisor') {
-            abort(403);
-        }
-
         $user_path = $cas_user ? "/cas/{$cas_user->id}" : '/user/'.request()->user()->id;
         $now = DateTime::createFromFormat('U.u', (string) microtime(true));
 

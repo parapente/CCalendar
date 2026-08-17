@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Http\Controllers;
 
 use App\Models\Calendar;
 use Inertia\Inertia;
-use Inertia\Response;
 
-final class CalendarOverviewAction
+final class CalendarOverviewController extends Controller
 {
-    public function __invoke(): Response
+    /**
+     * Handle the incoming request.
+     */
+    public function __invoke()
     {
         $calendars = Calendar::all();
 

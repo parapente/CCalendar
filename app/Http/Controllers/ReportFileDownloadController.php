@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Http\Controllers;
 
 use App\Models\Report;
 use App\Models\ReportData;
@@ -10,8 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-final class GetReportFileAction
+final class ReportFileDownloadController extends Controller
 {
+    /**
+     * Handle the incoming request.
+     */
     public function __invoke(Request $request, Report $report, ReportData $reportData): StreamedResponse
     {
         $cas_user = $request->input('cas_user');

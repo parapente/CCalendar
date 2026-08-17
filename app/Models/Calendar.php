@@ -34,7 +34,7 @@ final class Calendar extends Model
      *
      * @return HasMany<CalendarEvent, $this>
      */
-    public function calendarEvents(): HasMany
+    public function events(): HasMany
     {
         return $this->hasMany(CalendarEvent::class);
     }

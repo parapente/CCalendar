@@ -20,7 +20,7 @@ test('calendar has many calendar events', function (): void {
         'cas_user_id' => $cas_user->id,
     ]);
 
-    expect($calendar->calendarEvents)->toHaveCount(3);
+    expect($calendar->events)->toHaveCount(3);
 });
 
 test('calendar events relationship returns correct models', function (): void {
@@ -31,7 +31,7 @@ test('calendar events relationship returns correct models', function (): void {
         'cas_user_id' => $cas_user->id,
     ]);
 
-    expect($calendar->calendarEvents->first()->id)->toBe($event->id);
+    expect($calendar->events->first()->id)->toBe($event->id);
 });
 
 /*

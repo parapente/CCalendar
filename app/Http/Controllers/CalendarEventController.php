@@ -72,7 +72,7 @@ final class CalendarEventController extends Controller
     public function store(Calendar $calendar, StoreCalendarEventRequest $request): string|false
     {
         if (! $request->id) {
-            $calendar->calendarEvents()->create([
+            $calendar->events()->create([
                 'title' => $request->title,
                 'description' => $request->description ?? '',
                 'start_date' => $request->start_date,

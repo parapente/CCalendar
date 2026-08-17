@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Http\Controllers;
 
 use App\Models\CasUser;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-final class UserToggleActiveAction
+final class UserToggleActiveController extends Controller
 {
     public function __invoke(Request $request, string $id, string $type): RedirectResponse
     {
